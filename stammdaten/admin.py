@@ -20,5 +20,5 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(Teilnehmer)
 class TeilnehmerAdmin(admin.ModelAdmin):
-    list_filter = ['group', 'profession', 'activ']
+    list_filter = ['group__team', 'group', 'profession', 'activ']
     search_fields = ['name']
