@@ -1,10 +1,13 @@
 from django.contrib import admin
 
-from .models import Ausbilder, Standort, Team, Beruf
+from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer
 # Register your models here.
 
 admin.site.register(Standort)
 admin.site.register(Beruf)
+admin.site.register(Gruppe)
+# admin.site.register(Teilnehmer)
+
 
 @admin.register(Ausbilder)
 class AusbilderAdmin(admin.ModelAdmin):
@@ -14,3 +17,8 @@ class AusbilderAdmin(admin.ModelAdmin):
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     filter_horizontal = ['aubi']
+
+@admin.register(Teilnehmer)
+class TeilnehmerAdmin(admin.ModelAdmin):
+    list_filter = ['group', 'profession', 'activ']
+    search_fields = ['name']

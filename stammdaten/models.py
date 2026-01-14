@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+
 # Create your models here
 
 class Ausbilder(models.Model):
@@ -65,6 +66,7 @@ class Beruf(models.Model):
     class Meta:
         verbose_name = "Beruf"
         verbose_name_plural = "Berufe"
+        ordering = ["short"]
 
     def __str__(self):
         return f"{self.name} ({self.short})"
@@ -72,3 +74,38 @@ class Beruf(models.Model):
     def get_absolute_url(self):
         return reverse("Beruf_detail", kwargs={"pk": self.pk})
 
+
+class Gruppe(models.Model):
+    name = models.CharField("Name", max_length=50)
+    short = models.CharField("Kürzel", max_length=10)
+    speaker = models.ForeignKey('Teilnehmer', verbose_name=("Gruppensprecher"), on_delete=models.SET_NULL, null=True, blank=True)
+    team = models.ForeignKey(Team, verbose_name="Team", on_delete=models.RESTRICT)
+    activ = models.BooleanField(("aktiv"), default=True)
+
+    class Meta:
+        verbose_name = "Gruppe"
+        verbose_name_plural = "Gruppen"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Gruppe_detail", kwargs={"pk": self.pk})
+
+class Teilnehmer(models.Model):
+    name = models.CharField("Name", max_length=50)
+    profession = models.ForeignKey(Beruf, verbose_name=("Beruf"), on_delete=models.RESTRICT)
+    group = models.ForeignKey(Gruppe, verbose_name=("Gruppe"), on_delete=models.CASCADE)
+    activ = models.BooleanField(("aktiv"), default=True)
+
+    class Meta:
+        verbose_name = "Teilnehmer"
+        verbose_name_plural = "Teilnehmer"
+        ordering = ["group", "name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.profession.short}/{self.group.short})"
+
+    def get_absolute_url(self):
+        return reverse("Teilnehmer_detail", kwargs={"pk": self.pk})
