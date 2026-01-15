@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer
+from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung
 # Register your models here.
 
 admin.site.register(Standort)
@@ -22,3 +22,8 @@ class TeamAdmin(admin.ModelAdmin):
 class TeilnehmerAdmin(admin.ModelAdmin):
     list_filter = ['group__team', 'group', 'profession', 'activ']
     search_fields = ['name']
+
+@admin.register(TNAnmerkung)
+class TNAnmerkungAdmin(admin.ModelAdmin):
+    list_filter = ['teilnehmer__group', 'teilnehmer', 'ausbilder']
+    search_fields = ['teilnehmer__name', 'comment']    

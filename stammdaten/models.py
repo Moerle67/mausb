@@ -109,3 +109,21 @@ class Teilnehmer(models.Model):
 
     def get_absolute_url(self):
         return reverse("Teilnehmer_detail", kwargs={"pk": self.pk})
+    
+class TNAnmerkung(models.Model):
+    teilnehmer = models.ForeignKey(Teilnehmer, verbose_name="Teilnehmer", on_delete=models.CASCADE)
+    ausbilder = models.ForeignKey(Ausbilder, verbose_name="Ausbilder", on_delete=models.CASCADE)
+    date = models.DateTimeField("Datum", auto_now=False, auto_now_add=True)
+    comment = models.TextField("Anmerkung")
+
+    class Meta:
+        verbose_name = "TNAnmerkung"
+        verbose_name_plural = "TNAnmerkungen"
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.teilnehmer} - {self.date}/{self.ausbilder.short}" 
+
+    def get_absolute_url(self):
+        return reverse("TNAnmerkungen_detail", kwargs={"pk": self.pk})
+
