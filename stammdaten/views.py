@@ -1,20 +1,27 @@
-from django.shortcuts import render
-from django.contrib.auth.views import LoginView
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+
 
 # Create your views here.
 
-class MyLoginView(LoginView):
-    redirect_authenticated_user = True
-    
-    def get_success_url(self):
-        return reverse_lazy('start') 
-    
-    def form_invalid(self, form):
-        messages.error(self.request,'Invalid username or password')
-        return self.render_to_response(self.get_context_data(form=form))
-
 def start(request):
     return HttpResponse("Startseite")
+
+def user_login(request):
+    name = request.POST['name']
+    password = request.POST['password']
+    cont = request.POST['cont']
+    user = authenticate(request, username=name, password=password)
+    print(cont)
+    if user is not None:
+        login(request, user)
+    return redirect(cont)
+    # Redirect to a success page.
+
+def user_logout(request):
+    cont = request.POST['cont']
+    logout(request)
+    return redirect(cont)
