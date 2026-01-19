@@ -7,13 +7,19 @@
             {{tn.name}} ({{tn.profession.short}})
         </div>
         <div class = "col-1">
-            <button type="button" class="btn btn-outline-success">Anwesend</button>
+            <button type="button" class="btn btn-outline-success" onclick="addtermin({{tn.id}}, 1)">Anwesend</button>
         </div>
         <div class = "col-1">
-            <button type="button" class="btn btn-outline-danger">Abwesend</button>
+            <button type="button" class="btn btn-outline-danger" onclick="addtermin({{tn.id}}, 2)">Abwesend</button>
         </div>
 
     </div>
     {% endfor %}
+    <script>
+        function addtermin(teilnehmer, code) {
+            console.log(teilnehmer,code);
+        }
+    </script>
 {% endblock content %}
+
 
