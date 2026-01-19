@@ -1,0 +1,21 @@
+{% extends "anwesenheit/anw_basis.html" %}
+
+{% block zusatzmenue %}
+    <form method="POST" class="col">
+    {% csrf_token %}
+        {{ teams | safe }}
+    </form>
+{% endblock zusatzmenue %}
+
+{% block js %}
+    <script>
+        function anw_group(id) {
+            if (id == "---") {
+                window.location.replace("{% url 'anw:start' %}"); 
+            } else {
+                aim = "{% url 'anw:anw_g' id=123 %}".replace('123', id);
+                window.location.replace(aim);
+            }
+        }
+    </script>
+{% endblock js %}

@@ -1,0 +1,19 @@
+{% extends "anwesenheit/anw_group.html" %}
+
+{% block content %}
+    {% for tn in teilnehmer %}
+    <div class="row m-2 border border-1 rounded-pill">
+        <div class = "col-3">
+            {{tn.name}} ({{tn.profession.short}})
+        </div>
+        <div class = "col-1">
+            <button type="button" class="btn btn-outline-success">Anwesend</button>
+        </div>
+        <div class = "col-1">
+            <button type="button" class="btn btn-outline-danger">Abwesend</button>
+        </div>
+
+    </div>
+    {% endfor %}
+{% endblock content %}
+

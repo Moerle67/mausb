@@ -17,9 +17,9 @@
 </head>
 
 <body>
-    <header class="d-print-none">
+    <header class="d-print-none mb-2">
         <!-- place navbar here -->
-        <div class="container-fluid bg-dark-subtle">
+        <div class="container-fluid bg-dark-subtle fixed-top shadow opacity-75">
             <div class="row g-2 border bg-dark-subtle">
                 <nav class="navbar navbar-expand-lg col">
                     <div class="container-fluid">
@@ -40,19 +40,19 @@
                                     <a class="nav-link" href="#">Rahmenlehrplan</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="/anw/">Anwesenheit</a>
+                                    <a class="nav-link" href="{% url 'anw:start' %}">Anwesenheit</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </nav>
-                <div class="col">
+                <div class="col row">
                     {% block zusatzmenue %}{% endblock zusatzmenue %}    
                 </div> 
                 {% comment %} Anmeldebereich {% endcomment %}
                 <div class="col">
                     {% if user.is_authenticated %}
-                    <form action="/plan/logout" method="POST">
+                    <form action="{% url 'stammdaten:logout' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{cont}}" name="cont">
                         <button class="float-end btn btn-outline-secondary">Abmelden</button>
@@ -72,7 +72,7 @@
         </div>
     </header>
     <main>
-        <div class="container">
+        <div class="container" style="margin-top: 5em;">
             {% block content %}
             <h1>Hello World!</h1>
             {% endblock content %}

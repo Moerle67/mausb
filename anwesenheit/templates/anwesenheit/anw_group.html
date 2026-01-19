@@ -1,0 +1,34 @@
+{% extends "anwesenheit/anw_basis.html" %}
+
+{% block zusatzmenue %}
+    <div class="col mb-2">
+        {{ teams | safe }}
+    </div>
+    <div class="col mb-2">
+        {{ groups | safe }}
+    </div>
+{% endblock zusatzmenue %}
+
+{% block js %}
+    <script>
+        function anw_group(id) {
+            if (id == "---") {
+                window.location.replace("{% url 'anw:start' %}"); 
+            } else {
+                aim = "{% url 'anw:anw_g' id=123 %}".replace('123', id);
+                window.location.replace(aim);
+            }
+        }
+    </script>
+
+    <script>
+        function anw_detail(id) {
+            if (id != "---") {
+                aim = "{% url 'anw:anw_detail' id=123 %}".replace('123', id);
+                window.location.replace(aim);
+            }
+        }
+    </script>
+
+    
+{% endblock js %}
