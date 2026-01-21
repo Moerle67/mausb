@@ -1,3 +1,4 @@
+import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 
@@ -63,5 +64,13 @@ def anw_detail(request, id, datum=-1):
 
 # Daten aus Formular speichern
 def savedate(request):
-    print(request.POST)
-    return HttpResponse("Here's the text of the web page.")
+    if request.method == 'POST':
+        answer = {
+            'error': False,
+        }
+        return HttpResponse(json.dumps(answer), content_type="application/json")
+    else:
+        answer = {
+            'error': True,
+        }
+        return HttpResponse(json.dumps(answer), content_type="application/json")

@@ -6,7 +6,7 @@
         <div class = "col-3">
             {{tn.name}} ({{tn.profession.short}})
         </div>
-        <div class="col-3 row">
+        <div class="col-3 row" id="btn{{tn.id}}">
             <div class = "col">
                 <button type="button" class="btn btn-outline-success" onclick="addtermin({{tn.id}}, 1)">Anwesend</button>
             </div>
@@ -22,7 +22,7 @@
     {% endfor %}
     <script>
         function addtermin(teilnehmer, code) {
-            console.log(teilnehmer, code);
+            anwesend = code == 1 ? true : false;
             $.ajax({
                 type: "POST",
                 url: "{% url 'anw:savedate' %}",
@@ -32,6 +32,13 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
+                    let btn_color = anwesend ? "success" : "danger";
+                    let btn_text = anwesend ? "Anwesend" : "Abwesend";
+                    let btn_code = anwesend ? 2 : 1;
+                    let str_btn = "<div class='col'>";
+                    str_btn += `<button type="button" class="btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
+                    str_btn += "</div>";
+                    $('#btn'+ teilnehmer).html(str_btn)    
                     let time = moment();
                     time = time.format('HH:MM');
                     let color = ""
