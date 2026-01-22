@@ -7,13 +7,23 @@
     <div class="col mb-2">
         {{ groups | safe }}
     </div>
+    <div class="col mb-2>">
+        <label for"date">Datum<label>
+        <input type="date" id="date" class="form-control" value="{{aim_date}}" onclick="set_date({{gruppe.id}}, this.value)">
+    </div>
+
 {% endblock zusatzmenue %}
 
 {% block js %}
-    <script>
+    <script> 
+        function set_date(gruppe, aim_date) {
+            aim = "{% url 'anw:anw_g' gruppe='1234' id= %}".replace('1234', gruppe).replace('5678' ,aim_date);
+            console.log(aim)
+        }
         function anw_group(id) {
             if (id == "---") {
                 window.location.replace("{% url 'anw:start' %}"); 
+
             } else {
                 aim = "{% url 'anw:anw_g' id=123 %}".replace('123', id);
                 window.location.replace(aim);

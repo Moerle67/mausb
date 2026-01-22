@@ -3,14 +3,12 @@
 {% block content %}
     <script>
         function generate_btn(teilnehmer, anwesend) {
-            console.log(anwesend);
             let btn_color = anwesend ? "success" : "danger";
             let btn_text = anwesend ? "Anwesend" : "Abwesend";
             let btn_code = anwesend ? 2 : 1;
             let str_btn =   "<div class='col-3'>";
             str_btn +=          `<button type="button" class="btn-block btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
             str_btn +=      "</div>";
-            console.log(str_btn);
             $('#btn'+ teilnehmer).html(str_btn);
         }
     </script>
@@ -35,14 +33,15 @@
         </div>
         <script>
             {% if tn.1 != 0 %}
-            anw = 
                 generate_btn({{tn.0.id}}, '{{tn.2.0.anwesend}}' == 'True' ? true : false);
             {% endif %}
         </script>    
     {% endfor %}
 
     <script>
+        function setdate(gruppe, aim_datum) {
 
+        }
         function addtermin(teilnehmer, code) {
             anwesend = code == 1 ? true : false;
             $.ajax({

@@ -210,3 +210,15 @@ def formZeile(*liste):
 
 def formLinie():
     return "<hr />"
+
+def formDate():
+    def __init__(self, name, liste = False, daten=False, filter=False, value=0, aktiv=True, submit=False, label=True, leerzeile=False, onclick=False):
+            self.liste = liste
+            self.submit = submit
+            self.label = label
+            self.leerzeile = leerzeile
+            self.onclick = onclick
+            self.filter = filter
+            self.daten = daten
+
+            

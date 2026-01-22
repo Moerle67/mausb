@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder
 from .models import TNAnwesend
 
-import stammdaten.classForm as cform 
+import stammdaten.classForm as cform
 
 from datetime import date, timezone
 from django.utils.timezone import activate
@@ -22,6 +22,7 @@ def start(request):
     
     teams = cform.FormAuswahl("Teams", Team, leerzeile=True, aktiv=True, onclick='anw_group(this.value)')
     
+   #
     content = {
         'cont': 'anw:start',
         'teams': teams,
@@ -42,6 +43,12 @@ def anw_group(request, id):
     return render(request,"anwesenheit/anw_group.html", content)
 
 def anw_detail(request, id, datum=-1):
+    if datum == -1:
+        datum = date.today()
+        passiv = False
+    else:
+        passiv = True
+
     gruppe = get_object_or_404(Gruppe, id=id)
     team = gruppe.team
     groups = Gruppe.objects.filter(activ=True, team=team)
@@ -52,7 +59,7 @@ def anw_detail(request, id, datum=-1):
     tn_group = Teilnehmer.objects.filter(activ=True, group=gruppe)
     elements = []
     for tn in tn_group:
-        ds = TNAnwesend.objects.filter(teilnehmer=tn, datum__date = date.today())
+        ds = TNAnwesend.objects.filter(teilnehmer=tn, datum__date = datum)
         if len(ds)>0:
             anwesend = ds[0].anwesend
             code = 1 if anwesend else 2
@@ -71,6 +78,8 @@ def anw_detail(request, id, datum=-1):
         'teams': teams,
         'groups': select_groups,
         'teilnehmer': elements,
+        'aim_date': datum.strftime("%Y-%m-%d"),
+        'gruppe': gruppe,
         
     }
     return render(request,"anwesenheit/anw_detail.html", content)
