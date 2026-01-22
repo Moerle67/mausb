@@ -2,7 +2,7 @@
 
 {% block content %}
     {% for tn in teilnehmer %}
-    <div class="row m-2 border border-1 rounded-pill">
+    <div class="row m-2 border border-1 rounded-pill row">
         <div class = "col-3">
             {{tn.name}} ({{tn.profession.short}})
         </div>
@@ -28,19 +28,22 @@
                 url: "{% url 'anw:savedate' %}",
                 data: {
                     teilnehmer: teilnehmer,
-                    code: code,
+                    anwesend: anwesend,
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
+                    // Button neu generieren
                     let btn_color = anwesend ? "success" : "danger";
                     let btn_text = anwesend ? "Anwesend" : "Abwesend";
                     let btn_code = anwesend ? 2 : 1;
-                    let str_btn = "<div class='col'>";
-                    str_btn += `<button type="button" class="btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
+                    let str_btn = "<div class='col-3'>";
+                    str_btn += `<button type="button" class="btn-block btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
                     str_btn += "</div>";
-                    $('#btn'+ teilnehmer).html(str_btn)    
-                    let time = moment();
-                    time = time.format('HH:MM');
+                    $('#btn'+ teilnehmer).html(str_btn)
+
+                    // Anwesenheitsliste generieren
+                    
+                    time = data['time']
                     let color = ""
                     if (code == '1') {
                         color = "text-success"

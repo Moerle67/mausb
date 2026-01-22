@@ -1,13 +1,15 @@
 import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
+from django.contrib.auth.models import User
 
-from stammdaten.models import Team, Gruppe, Teilnehmer
+from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder
 from .models import TNAnwesend
 
 import stammdaten.classForm as cform 
 
-from datetime import date
+from datetime import date, timezone
+from django.utils.timezone import activate
 
 # Create your views here.
 
@@ -65,8 +67,16 @@ def anw_detail(request, id, datum=-1):
 # Daten aus Formular speichern
 def savedate(request):
     if request.method == 'POST':
+        teilnehmer = request.POST['teilnehmer']
+        anwesend = request.POST['anwesend']
+        anwesend = True if anwesend=="true" else False
+        ds_ausbilder = get_object_or_404(Ausbilder, user=request.user)
+        ds_teilnehmer = get_object_or_404(Teilnehmer, id=teilnehmer)
+        ds_termin = TNAnwesend(teilnehmer=ds_teilnehmer, anwesend=anwesend, ausbilder = ds_ausbilder)
+        ds_termin.save()
         answer = {
             'error': False,
+            'time': ds_termin.datum.strftime("%H:%M"),
         }
         return HttpResponse(json.dumps(answer), content_type="application/json")
     else:

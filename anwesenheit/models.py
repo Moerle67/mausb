@@ -2,6 +2,7 @@ from django.db import models
 
 from stammdaten.models import Ausbilder, Teilnehmer
 
+
 # Create your models here.
 
 class TNAnwesend(models.Model):
