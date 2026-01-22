@@ -9,7 +9,7 @@
     </div>
     <div class="col mb-2>">
         <label for"date">Datum<label>
-        <input type="date" id="date" class="form-control" value="{{aim_date}}" onclick="set_date({{gruppe.id}}, this.value)">
+        <input type="date" id="date" class="form-control" value="{{aim_date}}" onchange="set_date({{gruppe.id}}, this.value)">
     </div>
 
 {% endblock zusatzmenue %}
@@ -17,8 +17,8 @@
 {% block js %}
     <script> 
         function set_date(gruppe, aim_date) {
-            aim = "{% url 'anw:anw_g' gruppe='1234' id= %}".replace('1234', gruppe).replace('5678' ,aim_date);
-            console.log(aim)
+            aim = "{% url 'anw:savedate_date' id=1234 aim_date='5678' %}".replace('1234', gruppe).replace('5678', aim_date);
+            window.location.replace(aim);
         }
         function anw_group(id) {
             if (id == "---") {

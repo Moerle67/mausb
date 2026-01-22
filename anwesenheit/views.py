@@ -1,3 +1,4 @@
+import datetime
 import json
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
@@ -8,7 +9,7 @@ from .models import TNAnwesend
 
 import stammdaten.classForm as cform
 
-from datetime import date, timezone
+from datetime import date, datetime
 from django.utils.timezone import activate
 
 # Create your views here.
@@ -42,12 +43,13 @@ def anw_group(request, id):
     }
     return render(request,"anwesenheit/anw_group.html", content)
 
-def anw_detail(request, id, datum=-1):
-    if datum == -1:
+def anw_detail(request, id, aim_date=-1):
+    if aim_date == -1:
         datum = date.today()
         passiv = False
     else:
         passiv = True
+        datum = datetime.strptime(aim_date, "%Y-%m-%d")
 
     gruppe = get_object_or_404(Gruppe, id=id)
     team = gruppe.team
@@ -80,6 +82,7 @@ def anw_detail(request, id, datum=-1):
         'teilnehmer': elements,
         'aim_date': datum.strftime("%Y-%m-%d"),
         'gruppe': gruppe,
+        'passiv': passiv,
         
     }
     return render(request,"anwesenheit/anw_detail.html", content)

@@ -21,10 +21,10 @@
             </div>
             <div class="col-3 row" id="btn{{tn.0.id}}">
                 <div class = "col">
-                    <button type="button" class="btn btn-outline-success" onclick="addtermin({{tn.0.id}}, 1)">Anwesend</button>
+                    <button type="button" class="btn btn-outline-success" {% if passiv %}disabled{% endif %} onclick="addtermin({{tn.0.id}}, 1)">Anwesend</button>
                 </div>
                 <div class = "col">
-                    <button type="button" class="btn btn-outline-danger" onclick="addtermin({{tn.0.id}}, 2)">Abwesend</button>
+                    <button type="button" class="btn btn-outline-danger" {% if passiv %}disabled{% endif %} onclick="addtermin({{tn.0.id}}, 2)">Abwesend</button>
                 </div>
             </div>
             <div class="col">
