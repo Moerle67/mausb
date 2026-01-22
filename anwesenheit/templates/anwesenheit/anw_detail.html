@@ -1,26 +1,48 @@
 {% extends "anwesenheit/anw_group.html" %}
 
 {% block content %}
-    {% for tn in teilnehmer %}
-    <div class="row m-2 border border-1 rounded-pill row">
-        <div class = "col-3">
-            {{tn.name}} ({{tn.profession.short}})
-        </div>
-        <div class="col-3 row" id="btn{{tn.id}}">
-            <div class = "col">
-                <button type="button" class="btn btn-outline-success" onclick="addtermin({{tn.id}}, 1)">Anwesend</button>
-            </div>
-            <div class = "col">
-                <button type="button" class="btn btn-outline-danger" onclick="addtermin({{tn.id}}, 2)">Abwesend</button>
-            </div>
-        </div>
-        <div class="col">
-            <p id="fz{{tn.id}}"></p>
-        </div> 
-
-    </div>
-    {% endfor %}
     <script>
+        function generate_btn(teilnehmer, anwesend) {
+            console.log(anwesend);
+            let btn_color = anwesend ? "success" : "danger";
+            let btn_text = anwesend ? "Anwesend" : "Abwesend";
+            let btn_code = anwesend ? 2 : 1;
+            let str_btn =   "<div class='col-3'>";
+            str_btn +=          `<button type="button" class="btn-block btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
+            str_btn +=      "</div>";
+            console.log(str_btn);
+            $('#btn'+ teilnehmer).html(str_btn);
+        }
+    </script>
+
+    {% for tn in teilnehmer %}
+         {% comment %} Keine Einträge für den Tag {% endcomment %}
+        <div class="row m-2 border border-1 rounded-pill row">
+            <div class = "col-3">
+                {{tn.0.name}} ({{tn.0.profession.short}})
+            </div>
+            <div class="col-3 row" id="btn{{tn.0.id}}">
+                <div class = "col">
+                    <button type="button" class="btn btn-outline-success" onclick="addtermin({{tn.0.id}}, 1)">Anwesend</button>
+                </div>
+                <div class = "col">
+                    <button type="button" class="btn btn-outline-danger" onclick="addtermin({{tn.0.id}}, 2)">Abwesend</button>
+                </div>
+            </div>
+            <div class="col">
+                <p id="fz{{tn.0.id}}">{{tn.3 | safe}}</p>
+            </div> 
+        </div>
+        <script>
+            {% if tn.1 != 0 %}
+            anw = 
+                generate_btn({{tn.0.id}}, '{{tn.2.0.anwesend}}' == 'True' ? true : false);
+            {% endif %}
+        </script>    
+    {% endfor %}
+
+    <script>
+
         function addtermin(teilnehmer, code) {
             anwesend = code == 1 ? true : false;
             $.ajax({
@@ -33,13 +55,7 @@
                 },
                 success: function(data) {
                     // Button neu generieren
-                    let btn_color = anwesend ? "success" : "danger";
-                    let btn_text = anwesend ? "Anwesend" : "Abwesend";
-                    let btn_code = anwesend ? 2 : 1;
-                    let str_btn = "<div class='col-3'>";
-                    str_btn += `<button type="button" class="btn-block btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
-                    str_btn += "</div>";
-                    $('#btn'+ teilnehmer).html(str_btn)
+                    generate_btn(teilnehmer, anwesend);
 
                     // Anwesenheitsliste generieren
                     

@@ -52,14 +52,25 @@ def anw_detail(request, id, datum=-1):
     tn_group = Teilnehmer.objects.filter(activ=True, group=gruppe)
     elements = []
     for tn in tn_group:
-        ds = TNAnwesend(teilnehmer=tn, datum = date.today())
-        
+        ds = TNAnwesend.objects.filter(teilnehmer=tn, datum__date = date.today())
+        if len(ds)>0:
+            anwesend = ds[0].anwesend
+            code = 1 if anwesend else 2
+            str_anw = ""
+            for termin in ds:
+                color = "text-success" if termin.anwesend else "text-danger"
+                time = termin.datum.strftime("%H:%M")
+                str_anw += f'<i class="bi bi-circle-fill me-2 ' + color +'"></i>' + time +'; '
+        else:
+            code = 0
+            str_anw = ""
+        elements.append((tn, code, ds, str_anw))
 
     content = {
         'cont': 'anw:start',
         'teams': teams,
         'groups': select_groups,
-        'teilnehmer': tn_group,
+        'teilnehmer': elements,
         
     }
     return render(request,"anwesenheit/anw_detail.html", content)
