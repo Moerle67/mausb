@@ -44,12 +44,16 @@ def anw_group(request, id):
     return render(request,"anwesenheit/anw_group.html", content)
 
 def anw_detail(request, id, aim_date=-1):
+    # aim_date != today --> Auswertung, Änderungen werden blockiert
     if aim_date == -1:
         datum = date.today()
         passiv = False
     else:
         passiv = True
-        datum = datetime.strptime(aim_date, "%Y-%m-%d")
+        datum = date.strptime(aim_date, "%Y-%m-%d")
+        print(datum, date.today())
+        if datum == date.today():    # --> doch aktueller Tag, Änderungen möglich
+            passiv = False
 
     gruppe = get_object_or_404(Gruppe, id=id)
     team = gruppe.team
