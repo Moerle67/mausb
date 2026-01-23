@@ -122,7 +122,7 @@ class TNAnmerkung(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return f"{self.teilnehmer} - {self.date}/{self.ausbilder.short}" 
+        return f"{self.teilnehmer} - ({self.date}/{self.ausbilder.short}) {self.comment} " 
 
     def get_absolute_url(self):
         return reverse("TNAnmerkungen_detail", kwargs={"pk": self.pk})

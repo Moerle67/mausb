@@ -16,7 +16,7 @@
     {% for tn in teilnehmer %}
          {% comment %} Keine Einträge für den Tag {% endcomment %}
         <div class="row m-2 border border-1 rounded-pill row">
-            <div class = "col-3">
+            <div class = "col-3" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}')">
                 {{tn.0.name}} ({{tn.0.profession.short}})
             </div>
             <div class="col-3 row {% if passiv %}d-none{% endif %}" id="btn{{tn.0.id}}">
@@ -39,8 +39,24 @@
     {% endfor %}
 
     <script>
-        function setdate(gruppe, aim_datum) {
-
+        function ontn(tn_id, tn_name) {
+            antwort = prompt(`Anmerkung zu TN: ${tn_name}: `);
+            // Abbruch --> antwort = null
+            if (antwort != null) {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'anw:anw_note' %}",
+                    data: {
+                        tn: tn_id,
+                        note: antwort,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        let answer_str=$('#fz'+tn_id).html()+`<span title="${data['ausbilder']} ${data['time']} - ${data['note']}"><i class="bi bi-envelope me-2"></i>;</span> `;
+                        $('#fz'+tn_id).html(answer_str);
+                    }
+                });
+            }
         }
         function addtermin(teilnehmer, code) {
             anwesend = code == 1 ? true : false;
@@ -65,8 +81,9 @@
                     }
                     else {
                         color = "text-danger"
-                    }   
-                    let string = '<i class="bi bi-circle-fill me-2 ' + color +'"></i>' + time +'; '+$('#fz'+teilnehmer).html()
+                    }
+                    let icon = code == '1' ? "hand-thumbs-up-fill" : "ban-fill";   
+                    let string = '<span title="'+data['ausbilder']+'"><i class="bi bi-'+ icon +' me-2 ' + color +'"></i>' + time +';</span> '+$('#fz'+teilnehmer).html()
                     $('#fz'+teilnehmer).html(string);
                 }
             });

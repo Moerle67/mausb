@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.models import User
 
-from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder
+from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder, TNAnmerkung
 from .models import TNAnwesend
 
 import stammdaten.classForm as cform
@@ -66,14 +66,18 @@ def anw_detail(request, id, aim_date=-1):
     elements = []
     for tn in tn_group:
         ds = TNAnwesend.objects.filter(teilnehmer=tn, datum__date = datum)
+        ds_notes = TNAnmerkung.objects.filter(teilnehmer=tn, date__date = datum)
         if len(ds)>0:
             anwesend = ds[0].anwesend
             code = 1 if anwesend else 2
             str_anw = ""
             for termin in ds:
                 color = "text-success" if termin.anwesend else "text-danger"
+                icon = "hand-thumbs-up-fill" if termin.anwesend else "ban-fill"
                 time = termin.datum.strftime("%H:%M")
-                str_anw += f'<i class="bi bi-circle-fill me-2 ' + color +'"></i>' + time +'; '
+                str_anw += f'<span title="'+termin.ausbilder.short+'"><i class="bi bi-'+ icon +' me-2 ' + color +'"></i>' + time +';</span> '
+                if len(ds_notes) > 0:       # Notizen vorhanden
+                    pass
         else:
             code = 0
             str_anw = ""
@@ -104,6 +108,7 @@ def savedate(request):
         answer = {
             'error': False,
             'time': ds_termin.datum.strftime("%H:%M"),
+            'ausbilder': ds_termin.ausbilder.short,
         }
         return HttpResponse(json.dumps(answer), content_type="application/json")
     else:
@@ -111,3 +116,16 @@ def savedate(request):
             'error': True,
         }
         return HttpResponse(json.dumps(answer), content_type="application/json")
+    
+def anw_note(request):
+    ds_tn = get_object_or_404(Teilnehmer, id=request.POST['tn'])
+    ds_ausbilder = get_object_or_404(Ausbilder, user=request.user)
+    ds  = TNAnmerkung(teilnehmer=ds_tn, ausbilder= ds_ausbilder, comment = request.POST['note'])
+    ds.save()
+    answer = {
+        'error': False,
+        'ausbilder': ds.ausbilder.short,
+        'note': ds.comment,
+        'time': ds.date.strftime('%d.%m.%Y %H:%M'),
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
