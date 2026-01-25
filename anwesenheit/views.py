@@ -50,9 +50,10 @@ def anw_detail(request, id, aim_date=-1):
         passiv = False
     else:
         passiv = True
-        datum = datetime.date.strptime(aim_date, "%Y-%m-%d")
-        print(datum, datetime.date.today())
+        datum = datetime.datetime.strptime(aim_date, "%Y-%m-%d").date()
+        # print(datum, datetime.date.today())
         if datum == datetime.date.today():    # --> doch aktueller Tag, Änderungen möglich
+            print("gleich")
             passiv = False
 
     gruppe = get_object_or_404(Gruppe, id=id)
