@@ -9,7 +9,7 @@ from .models import TNAnwesend
 
 import stammdaten.classForm as cform
 
-from datetime import date, datetime
+# from datetime import date, datetime
 from django.utils.timezone import activate
 
 # Create your views here.
@@ -25,8 +25,8 @@ def start(request):
     
    #
     content = {
-        'cont': 'anw:start',
-        'teams': teams,
+        'cont': 'anw:start',            # Zurück bei Anmeldung
+        'teams': teams,                 # Alle aktiven Teams
     }
     return render(request,"anwesenheit/anw_team.html", content)
 
@@ -46,13 +46,13 @@ def anw_group(request, id):
 def anw_detail(request, id, aim_date=-1):
     # aim_date != today --> Auswertung, Änderungen werden blockiert
     if aim_date == -1:
-        datum = date.today()
+        datum = datetime.date.today()
         passiv = False
     else:
         passiv = True
-        datum = date.strptime(aim_date, "%Y-%m-%d")
-        print(datum, date.today())
-        if datum == date.today():    # --> doch aktueller Tag, Änderungen möglich
+        datum = datetime.date.strptime(aim_date, "%Y-%m-%d")
+        print(datum, datetime.date.today())
+        if datum == datetime.date.today():    # --> doch aktueller Tag, Änderungen möglich
             passiv = False
 
     gruppe = get_object_or_404(Gruppe, id=id)
@@ -76,11 +76,16 @@ def anw_detail(request, id, aim_date=-1):
                 icon = "hand-thumbs-up-fill" if termin.anwesend else "ban-fill"
                 time = termin.datum.strftime("%H:%M")
                 str_anw += f'<span title="'+termin.ausbilder.short+'"><i class="bi bi-'+ icon +' me-2 ' + color +'"></i>' + time +';</span> '
-                if len(ds_notes) > 0:       # Notizen vorhanden
-                    pass
         else:
             code = 0
             str_anw = ""
+        if len(ds_notes) > 0:       # Notizen vorhanden
+            str_anw += '<span title="'
+            for ds_note in ds_notes:
+                str_anw += f"{ds_note.ausbilder.short} {ds_note.date.strftime("%H:%M")} - {ds_note.comment}\n"
+            str_anw += '"><i class="bi bi-envelope me-2"></i>;</span>'
+
+
         elements.append((tn, code, ds, str_anw))
 
     content = {
@@ -116,7 +121,8 @@ def savedate(request):
             'error': True,
         }
         return HttpResponse(json.dumps(answer), content_type="application/json")
-    
+
+# Notiz über Teilnehmer    
 def anw_note(request):
     ds_tn = get_object_or_404(Teilnehmer, id=request.POST['tn'])
     ds_ausbilder = get_object_or_404(Ausbilder, user=request.user)
