@@ -7,24 +7,26 @@
             let btn_text = anwesend ? "Anwesend" : "Abwesend";
             let btn_code = anwesend ? 2 : 1;
             let str_btn =   "<div class='col-3'>";
-            str_btn +=          `<button type="button" class="btn-block btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code})">${btn_text}</button>`;
+            str_btn +=          `<button type="button" class="btn-block btn btn-outline-${btn_color}" onclick="addtermin(${teilnehmer}, ${btn_code}, false)">${btn_text}</button>`;
             str_btn +=      "</div>";
             $('#btn'+ teilnehmer).html(str_btn);
         }
     </script>
-
+    <div class="col text-center">
+        <h2>{{gruppe}}  <span id="count_anw">{{count_tn_anw}}</span>/{{count_tn}}</h2>
+    </div>
     {% for tn in teilnehmer %}
          {% comment %} Keine Einträge für den Tag {% endcomment %}
         <div class="row m-2 border border-1 rounded-pill row">
-            <div class = "col-3" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}')">
+            <div class = "col-3" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">
                 {{tn.0.name}} ({{tn.0.profession.short}})
             </div>
             <div class="col-3 row {% if passiv %}d-none{% endif %}" id="btn{{tn.0.id}}">
                 <div class = "col">
-                    <button type="button" class="btn btn-outline-success"  onclick="addtermin({{tn.0.id}}, 1)">Anwesend</button>
+                    <button type="button" class="btn btn-outline-success"  onclick="addtermin({{tn.0.id}}, 1, true)">Anwesend</button>
                 </div>
                 <div class = "col">
-                    <button type="button" class="btn btn-outline-danger" onclick="addtermin({{tn.0.id}}, 2)">Abwesend</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="addtermin({{tn.0.id}}, 2, true)">Abwesend</button>
                 </div>
             </div>
             <div class="col">
@@ -58,7 +60,7 @@
                 });
             }
         }
-        function addtermin(teilnehmer, code) {
+        function addtermin(teilnehmer, code, newtermin) {
             anwesend = code == 1 ? true : false;
             $.ajax({
                 type: "POST",
@@ -71,7 +73,16 @@
                 success: function(data) {
                     // Button neu generieren
                     generate_btn(teilnehmer, anwesend);
-
+                    // Zähler Überschrift hochzählen
+                    let counter = parseInt($('#count_anw').text());
+                    if (anwesend) {
+                        counter++;
+                    } else {
+                        if (!newtermin) {
+                            counter--;
+                        }
+                    }
+                    $('#count_anw').text(counter);
                     // Anwesenheitsliste generieren
                     
                     time = data['time']

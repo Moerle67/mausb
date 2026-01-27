@@ -64,13 +64,17 @@ def anw_detail(request, id, aim_date=-1):
     select_groups = cform.FormAuswahl("Gruppe", daten=groups, leerzeile=True, value=id, onclick='anw_detail(this.value)')
 
     tn_group = Teilnehmer.objects.filter(activ=True, group=gruppe)
+    tn_count = len(tn_group)
+    tn_count_anw = 0
     elements = []
     for tn in tn_group:
         ds = TNAnwesend.objects.filter(teilnehmer=tn, datum__date = datum)
         ds_notes = TNAnmerkung.objects.filter(teilnehmer=tn, date__date = datum)
+
         if len(ds)>0:
             anwesend = ds[0].anwesend
             code = 1 if anwesend else 2
+            tn_count_anw += 1 if anwesend else 0                    # Anzahl der Anwesenden hochzählen
             str_anw = ""
             for termin in ds:
                 color = "text-success" if termin.anwesend else "text-danger"
@@ -97,6 +101,8 @@ def anw_detail(request, id, aim_date=-1):
         'aim_date': datum.strftime("%Y-%m-%d"),
         'gruppe': gruppe,
         'passiv': passiv,
+        'count_tn': tn_count,
+        'count_tn_anw': tn_count_anw
         
     }
     return render(request,"anwesenheit/anw_detail.html", content)
