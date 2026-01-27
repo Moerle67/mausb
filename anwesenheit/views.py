@@ -9,6 +9,8 @@ from .models import TNAnwesend
 
 import stammdaten.classForm as cform
 
+from django.contrib.auth.decorators import permission_required
+
 # from datetime import date, datetime
 from django.utils.timezone import activate
 
@@ -30,19 +32,21 @@ def start(request):
     }
     return render(request,"anwesenheit/anw_team.html", content)
 
+
 def anw_group(request, id):
     team = get_object_or_404(Team, id=id)
     teams = cform.FormAuswahl("Teams", Team, leerzeile=True, aktiv=True, value=team.id,  onclick='anw_group(this.value)')
     groups = Gruppe.objects.filter(activ=True, team=team)
     select_groups = cform.FormAuswahl("Gruppe", daten=groups, leerzeile=True, onclick='anw_detail(this.value)')
     content = {
-        'cont': 'anw:anw_g',
+        'cont': 'anw:anw_g/1',
         'team': team,
         'teams': teams,
         'groups': select_groups,
     }
     return render(request,"anwesenheit/anw_group.html", content)
 
+# @permission_required('anwesenheit.tnanwesend_add')
 def anw_detail(request, id, aim_date=-1):
     # aim_date != today --> Auswertung, Änderungen werden blockiert
     if aim_date == -1:
