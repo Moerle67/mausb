@@ -1,9 +1,12 @@
-mausb/__pycache__/*
 db.sqlite3
-anwesenheit/__pycache__/*
+
+mausb/__pycache__/*
+
 anwesenheit/migrations/
+anwesenheit/__pycache__/*
+
+stammdaten/migrations/
+stammdaten/__pycache__/
 
 start/migrations/
 start/__pycache__/
-*/__pycache__/*
-stammdaten/migrations/__pycache__/*

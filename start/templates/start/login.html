@@ -1,0 +1,12 @@
+{% extends "start/start.html" %}
+
+{% block content %}
+<div class="col-2 text-center">
+    <form action="/your-name/" method="post">
+        {% csrf_token %}
+        {% for form in forms %}
+            {{ form | safe }}
+        {% endfor %}
+    </form>
+</div>
+{% endblock content %}

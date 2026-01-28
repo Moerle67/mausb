@@ -32,8 +32,9 @@ def start(request):
     }
     return render(request,"anwesenheit/anw_team.html", content)
 
-
+@permission_required('stammdaten.gruppe_show')
 def anw_group(request, id):
+    # Auswahl der Gruppe
     team = get_object_or_404(Team, id=id)
     teams = cform.FormAuswahl("Teams", Team, leerzeile=True, aktiv=True, value=team.id,  onclick='anw_group(this.value)')
     groups = Gruppe.objects.filter(activ=True, team=team)
@@ -46,7 +47,7 @@ def anw_group(request, id):
     }
     return render(request,"anwesenheit/anw_group.html", content)
 
-# @permission_required('anwesenheit.tnanwesend_add')
+@permission_required('anwesenheit.tnanwesend_add')
 def anw_detail(request, id, aim_date=-1):
     # aim_date != today --> Auswertung, Änderungen werden blockiert
     if aim_date == -1:
