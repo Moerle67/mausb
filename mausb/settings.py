@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     'stammdaten.apps.StammdatenConfig',
     'anwesenheit.apps.AnwesenheitConfig',
+    'start.apps.StartConfig',
 ]
 
 MIDDLEWARE = [

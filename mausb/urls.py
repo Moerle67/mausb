@@ -21,4 +21,5 @@ urlpatterns = [
     path('stammdaten/',include('stammdaten.urls')),
     path('anw/', include('anwesenheit.urls')),
     path('admin/', admin.site.urls, name="admin"),
+    path('', include('start.urls')),
 ]

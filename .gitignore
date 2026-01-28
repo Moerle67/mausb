@@ -2,5 +2,8 @@ mausb/__pycache__/*
 db.sqlite3
 anwesenheit/__pycache__/*
 anwesenheit/migrations/
+
+start/migrations/
+start/__pycache__/
 */__pycache__/*
 stammdaten/migrations/__pycache__/*
