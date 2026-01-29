@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'stammdaten.apps.StammdatenConfig',
-    'anwesenheit.apps.AnwesenheitConfig',
-    'start.apps.StartConfig',
+    'stammdaten.apps.StammdatenConfig',             # Stammdaten
+    'anwesenheit.apps.AnwesenheitConfig',           # Anwesenheit der TN 
+    'start.apps.StartConfig',                       # Startbildschirm
+    'ausbildungsplan.apps.AusbildungsplanConfig',   # Ausbildungsplan
 ]
 
 MIDDLEWARE = [

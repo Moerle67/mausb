@@ -39,7 +39,7 @@
                                     <a class="nav-link text-danger" aria-current="page" href="/admin" target="__blank">Admin</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="#">Ausbildungsplan</a>
+                                    <a class="nav-link" aria-current="page" href="{% url 'ausbildungsplan:start' %}">Ausbildungsplan</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="#">Rahmenlehrplan</a>
@@ -79,8 +79,11 @@
     <main>
         <div class="container" style="margin-top: 5em;">
             {% block content %}
-            <h1>Herzlich willkommen!</h1>
             {% endblock content %}
+        </div>
+        <div class="container-fluid" style="margin-top: 5em;">
+            {% block content_fluid %}
+            {% endblock content_fluid %}
         </div>
     </main>
     <footer>
