@@ -13,13 +13,14 @@
         }
     </script>
     <div class="col text-center">
-        <h2>{{gruppe}}  <span id="count_anw">{{count_tn_anw}}</span>/{{count_tn}}</h2>
+        <h2>{{gruppe}}  <span id="count_anw" >{{count_tn_anw}}</span>/{{count_tn}} </h2>
     </div>
     {% for tn in teilnehmer %}
          {% comment %} Keine Einträge für den Tag {% endcomment %}
-        <div class="row m-2 border border-1 rounded-pill row">
-            <div class = "col-3" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">
-                {{tn.0.name}} ({{tn.0.profession.short}})
+        <div class="row m-2 border border-2 rounded-pill row border-dark shadow bg-light bg-opacity-50">
+            <div class = "col-4 fs-4">
+                <a href="/admin/stammdaten/teilnehmer/{{tn.0.id}}/change/" target="__blank"><i class="bi bi-sliders text-body-secondary"></i></a>
+                <span onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">{{tn.0.name}} ({{tn.0.profession.short}})</span>
             </div>
             <div class="col-3 row {% if passiv %}d-none{% endif %}" id="btn{{tn.0.id}}">
                 <div class = "col">

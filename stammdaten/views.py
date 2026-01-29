@@ -18,7 +18,7 @@ def user_login(request):
     if user is not None:
         login(request, user)
     if ":" in cont:                     # url auflösen
-        count = reverse(count)
+        cont = reverse(cont)
     return redirect(cont)
     # Redirect to a success page.
 

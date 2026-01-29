@@ -1,0 +1,10 @@
+body {
+    background-image: url("../pics/hintergrund1.png");
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; /* Resize the background image to cover the entire container */
+    /* filter: saturate(50%); */
+    background-color: rgba(255,255,255,0.7);
+    background-blend-mode: lighten;
+    height: 95vh;
+}
