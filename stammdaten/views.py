@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -15,9 +15,10 @@ def user_login(request):
     password = request.POST['password']
     cont = request.POST['cont']
     user = authenticate(request, username=name, password=password)
-    print(cont)
     if user is not None:
         login(request, user)
+    if ":" in cont:                     # url auflösen
+        count = reverse(count)
     return redirect(cont)
     # Redirect to a success page.
 
