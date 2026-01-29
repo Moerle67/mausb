@@ -17,7 +17,7 @@
     </div>
     {% for tn in teilnehmer %}
          {% comment %} Keine Einträge für den Tag {% endcomment %}
-        <div class="row m-2 border border-2 rounded-pill row border-dark shadow bg-light bg-opacity-50">
+        <div class="row m-2 border border-2 rounded-pill row border-dark shadow bg-light bg-opacity-75">
             <div class = "col-4 fs-4">
                 <a href="/admin/stammdaten/teilnehmer/{{tn.0.id}}/change/" target="__blank"><i class="bi bi-sliders text-body-secondary"></i></a>
                 <span onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">{{tn.0.name}} ({{tn.0.profession.short}})</span>
