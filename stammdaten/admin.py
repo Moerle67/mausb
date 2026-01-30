@@ -1,11 +1,12 @@
 from django.contrib import admin
 
-from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung
+from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung, Raum
 # Register your models here.
 
 admin.site.register(Standort)
 admin.site.register(Beruf)
 admin.site.register(Gruppe)
+admin.site.register(Raum)
 # admin.site.register(Teilnehmer)
 
 

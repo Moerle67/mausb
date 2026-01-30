@@ -24,6 +24,22 @@ class Ausbilder(models.Model):
     def get_absolute_url(self):
         return reverse("Ausbilder_detail", kwargs={"pk": self.pk})
 
+class Raum(models.Model):
+    bezeichnung = models.CharField("Bezeichnung", max_length=10)
+    info = models.TextField(("Info"))
+    row = models.IntegerField(("Reihen"), default=1)
+    col = models.IntegerField(("Spalten"), default=1)
+
+    class Meta:
+        verbose_name = "Raum"
+        verbose_name_plural = "Räume"
+
+    def __str__(self):
+        return f"{self.bezeichnung} - {self.info}"
+
+    def get_absolute_url(self):
+        return reverse("Raum_detail", kwargs={"pk": self.pk})
+
 class Standort(models.Model):
     short = models.CharField(("Kürzel"), max_length=10)
     ort = models.CharField("Ort", max_length=50)
@@ -81,6 +97,7 @@ class Gruppe(models.Model):
     speaker = models.ForeignKey('Teilnehmer', verbose_name=("Gruppensprecher"), on_delete=models.SET_NULL, null=True, blank=True)
     team = models.ForeignKey(Team, verbose_name="Team", on_delete=models.RESTRICT)
     activ = models.BooleanField(("aktiv"), default=True)
+    raum = models.ForeignKey(Raum, verbose_name="Raum", on_delete=models.RESTRICT, null = True, blank = True)
 
     class Meta:
         verbose_name = "Gruppe"

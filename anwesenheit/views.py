@@ -147,3 +147,6 @@ def anw_note(request):
         'time': ds.date.strftime('%d.%m.%Y %H:%M'),
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def anw_raum(request, group, date):
+    return render(request, "anwesenheit/anw_plan.html")

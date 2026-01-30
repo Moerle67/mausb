@@ -12,8 +12,13 @@
             $('#btn'+ teilnehmer).html(str_btn);
         }
     </script>
-    <div class="col text-center">
-        <h2>{{gruppe}}  <span id="count_anw" >{{count_tn_anw}}</span>/{{count_tn}} </h2>
+    <div class="row">  
+        <div class="col text-center">
+            <h2>{{gruppe}}  <span id="count_anw" >{{count_tn_anw}}</span>/{{count_tn}} </h2>
+        </div>
+        <div class="col">
+            <button type="button" class="btn btn-outline-dark float-end">Raum</button>
+        </div>
     </div>
     {% for tn in teilnehmer %}
          {% comment %} Keine Einträge für den Tag {% endcomment %}
