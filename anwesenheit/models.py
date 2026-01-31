@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from stammdaten.models import Ausbilder, Teilnehmer
 
