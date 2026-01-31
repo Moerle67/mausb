@@ -12,6 +12,6 @@ stammdaten/migrations/__pycache__/
 start/__pycache__/
 
 ausbildungsplan/__pycache__/
-ausbildungsplan/migrations/
+ausbildungsplan/migrations/__pycache__/
 
 

@@ -3,12 +3,26 @@
 {% block title %}Sitzplan{% endblock title %}
 
 {% block content_fluid %}
-{{raum.row}}
-{{raum}}
-{% for row=0 to raum.row %}
-    <div class="row shadow border">
-        , 
+<div class="row">
+    {% comment %} Sitzplan {% endcomment %}
+    <div class="col-9">
+        <h1>Sitzplan Raum {{raum}}</h1>
+        {% for reihe in elements %}
+            <div class="row border">
+            {% for spalte in reihe %}
+                <div class="col border shadow m-3 display-3">
+                    : {{spalte}}
+                </div>
+            {% endfor %}    
+            </div>   
+        {% endfor %}
     </div>
-{% endfor %}
 
+    {% comment %} Leiste Teilnehmer {% endcomment %}
+    <div class="col-2">
+        {% for tn in teilnehmer %}
+        <div class="border col m-2 shadow"> {{tn}} </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock content_fluid %}

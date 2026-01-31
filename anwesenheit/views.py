@@ -5,7 +5,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.models import User
 
 from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder, TNAnmerkung
-from .models import TNAnwesend
+from .models import TNAnwesend, Sitzplan
 
 import stammdaten.classForm as cform
 
@@ -150,8 +150,22 @@ def anw_note(request):
 
 def anw_raum(request, group, date):
     group = get_object_or_404(Gruppe, id = group)
+    lst_tn = Teilnehmer.objects.filter(group=group, activ=True)
     raum = group.raum
+    elements = []
+    if raum:
+        for reihe in range(raum.row):
+            lst_reihe = []
+            for spalte in range(raum.col):
+                plan =  Sitzplan.objects.filter(row=reihe, col=spalte, raum=raum)
+                if len(plan)>0:
+                    lst_reihe.append(plan[0].teilnehmer)
+                else:
+                    lst_reihe.append(None)   
+            elements.append(lst_reihe)  
     content = {
         'raum': raum,
+        'elements': elements,
+        'teilnehmer': lst_tn,
     }
     return render(request, "anwesenheit/anw_plan.html", content)
