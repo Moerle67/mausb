@@ -10,8 +10,12 @@
         {% for reihe in elements %}
             <div class="row border">
             {% for spalte in reihe %}
-                <div class="col border shadow m-3 display-3">
-                    : {{spalte}}
+                {% if raum.gang == forloop.counter %} 
+                    <div class="col shadow rounded-pill "></div>
+                {% endif %}
+                <div class="col border shadow m-3 display-6 text-center rounded-pill bg-light bg-opacity-75"
+                 ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}), {{raum.id}}" ondragover="dragoverHandler(event)">
+                    {{spalte}}
                 </div>
             {% endfor %}    
             </div>   
@@ -21,8 +25,23 @@
     {% comment %} Leiste Teilnehmer {% endcomment %}
     <div class="col-2">
         {% for tn in teilnehmer %}
-        <div class="border col m-2 shadow"> {{tn}} </div>
+        <div id={{tn.id}} class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">{{tn}}</div>
         {% endfor %}
     </div>
 </div>
+<script>
+function dragstartHandler(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function dragoverHandler(ev) {
+  ev.preventDefault();
+}
+
+function dropHandler(ev, spalte, zeile, raum) {
+  ev.preventDefault();
+  const data = ev.dataTransfer.getData("text");
+  console.log(data, zeile, spalte, raum);
+}
+</script>
 {% endblock content_fluid %}

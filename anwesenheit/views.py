@@ -161,7 +161,7 @@ def anw_raum(request, group, date):
                 if len(plan)>0:
                     lst_reihe.append(plan[0].teilnehmer)
                 else:
-                    lst_reihe.append(None)   
+                    lst_reihe.append(".")   
             elements.append(lst_reihe)  
     content = {
         'raum': raum,

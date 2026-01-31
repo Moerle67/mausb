@@ -27,9 +27,10 @@ class Ausbilder(models.Model):
 class Raum(models.Model):
     bezeichnung = models.CharField("Bezeichnung", max_length=10)
     info = models.TextField(("Info"))
-    row = models.IntegerField(("Reihen"), default=1)
-    col = models.IntegerField(("Spalten"), default=1)
-
+    row = models.IntegerField(("Reihen"), default=5)
+    col = models.IntegerField(("Spalten"), default=6)
+    gang = models.IntegerField(("Gang"), default=3)
+    
     class Meta:
         verbose_name = "Raum"
         verbose_name_plural = "Räume"

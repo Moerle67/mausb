@@ -29,7 +29,7 @@ class Sitzplan(models.Model):
     teilnehmer = models.ForeignKey(Teilnehmer, verbose_name=("Teilnehmer"), on_delete=models.CASCADE)
     col = models.IntegerField(("Spalte"))
     row = models.IntegerField(("Reihe"))
-
+ 
     class Meta:
         verbose_name = ("Sitzplan")
         verbose_name_plural = ("Sitzpläne")
