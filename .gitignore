@@ -2,13 +2,12 @@ db.sqlite3
 
 mausb/__pycache__/*
 
-anwesenheit/migrations/
+
 anwesenheit/__pycache__/*
 
-stammdaten/migrations/
+
 stammdaten/__pycache__/
 
-start/migrations/
 start/__pycache__/
 
 ausbildungsplan/__pycache__/
