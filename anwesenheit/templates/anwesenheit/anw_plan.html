@@ -1,3 +1,14 @@
 {% extends "stammdaten/base.html" %}
 
 {% block title %}Sitzplan{% endblock title %}
+
+{% block content_fluid %}
+{{raum.row}}
+{{raum}}
+{% for row=0 to raum.row %}
+    <div class="row shadow border">
+        , 
+    </div>
+{% endfor %}
+
+{% endblock content_fluid %}

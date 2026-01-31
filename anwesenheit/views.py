@@ -149,4 +149,9 @@ def anw_note(request):
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 def anw_raum(request, group, date):
-    return render(request, "anwesenheit/anw_plan.html")
+    group = get_object_or_404(Gruppe, id = group)
+    raum = group.raum
+    content = {
+        'raum': raum,
+    }
+    return render(request, "anwesenheit/anw_plan.html", content)
