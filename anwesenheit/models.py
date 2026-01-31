@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 
-from stammdaten.models import Ausbilder, Teilnehmer
+from stammdaten.models import Ausbilder, Teilnehmer, Raum
 
 
 # Create your models here.
@@ -24,3 +24,18 @@ class TNAnwesend(models.Model):
     def get_absolute_url(self):
         return reverse("TNAnwesend_detail", kwargs={"pk": self.pk})
 
+class Sitzplan(models.Model):
+    raum =  models.ForeignKey(Raum, verbose_name=("Raum"), on_delete=models.CASCADE)
+    teilnehmer = models.ForeignKey(Teilnehmer, verbose_name=("Teilnehmer"), on_delete=models.CASCADE)
+    col = models.IntegerField(("Spalte"))
+    row = models.IntegerField(("Reihe"))
+
+    class Meta:
+        verbose_name = ("Sitzplan")
+        verbose_name_plural = ("Sitzpläne")
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse("Sitzplan_detail", kwargs={"pk": self.pk})

@@ -4,11 +4,14 @@ mausb/__pycache__/*
 
 
 anwesenheit/__pycache__/*
-
+anwesenheit/migrations/__pycache__/
 
 stammdaten/__pycache__/
+stammdaten/migrations/__pycache__/
 
 start/__pycache__/
 
 ausbildungsplan/__pycache__/
 ausbildungsplan/migrations/
+
+
