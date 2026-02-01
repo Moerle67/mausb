@@ -164,9 +164,9 @@ def anw_raum(request, group, date):
             for spalte in range(raum.col):
                 plan =  Sitzplan.objects.filter(row=reihe, col=spalte, raum=raum)
                 if len(plan)>0:
-                    lst_reihe.append(plan[0].teilnehmer)
+                    lst_reihe.append(plan[0])
                 else:
-                    lst_reihe.append(".")   
+                    lst_reihe.append(None)   
             elements.append(lst_reihe)  
     content = {
         'raum': raum,
@@ -196,5 +196,17 @@ def saveplan(request):
         'teilnehmer': ds_teilnehmer.__str__(),
         'teilnehmer_old': ds_tn_alt.__str__(),
         'tno_id': ds_tn_alt.id if ds_tn_alt else None
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def delplan(request):
+    ds = get_object_or_404(Sitzplan, id=request.POST['id'])
+    zeile = ds.row
+    spalte = ds.col
+    ds.delete()
+    answer = {
+        'zeile': zeile,
+        'spalte': spalte,
+        'error': False,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")

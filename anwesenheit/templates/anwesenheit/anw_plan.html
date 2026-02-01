@@ -15,7 +15,7 @@
                 {% endif %}
                 <div id="sitz{{forloop.parentloop.counter0}}_{{forloop.counter0}}" class="col border shadow m-3 text-center rounded-pill bg-light bg-opacity-75"
                  ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}, {{raum.id}})" ondragover="dragoverHandler(event)">
-                    {{spalte}}
+                   {% if spalte %}{{spalte.teilnehmer}} <i class="bi bi-trash" onclick="del_sitz({{spalte.id}})"></i>{% else %} - {% endif %} 
                 </div>
             {% endfor %}    
             </div>   
@@ -67,6 +67,21 @@ function dropHandler(ev, spalte, zeile, raum) {
     });
   // Remove TN  
 
+}
+
+function del_sitz(id) {
+    $.ajax({
+        type: "POST",
+        url: "{% url 'anw:delplan' %}",
+        data: {
+            id: id,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(data) {
+            $('#sitz'+data['zeile']+'_'+data['spalte']).text("-")
+        }
+    });
+    
 }
 </script>
 {% endblock content_fluid %}

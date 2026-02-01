@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import start, anw_group, anw_detail, savedate, anw_note, anw_raum, saveplan
+from .views import start, anw_group, anw_detail, savedate, anw_note, anw_raum, saveplan, delplan
 
 app_name = "anw"
     
@@ -13,4 +13,5 @@ urlpatterns = [
     path('savedate', savedate ,name='savedate'),
 
     path('saveplan', saveplan, name='saveplan'),
+    path('delplan', delplan, name='delplan'),
 ]
