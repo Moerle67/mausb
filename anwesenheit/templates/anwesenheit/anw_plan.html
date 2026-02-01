@@ -23,7 +23,7 @@
     </div>
 
     {% comment %} Leiste Teilnehmer {% endcomment %}
-    <div class="col-2">
+    <div class="col-2" id="liste_tn">
         {% for tn in teilnehmer %}
         <div id="{{tn.id}}" class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">{{tn}}</div>
         {% endfor %}
@@ -54,10 +54,15 @@ function dropHandler(ev, spalte, zeile, raum) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(data) {
-            
             // Change Sitz
-            console.log(teilnehmer);
             $('#sitz'+zeile+'_'+spalte).text(data['teilnehmer']);
+             // Remove TN
+            $('#'+teilnehmer).remove();
+            if (data['teilnehmer_old'] != 'None'){
+                let div_str = '<div id="'+data['tno_id']+'" class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">'+data['teilnehmer_old']+'</div>'
+                $( "#liste_tn" ).append(div_str);
+            }
+            
         }
     });
   // Remove TN  

@@ -180,11 +180,16 @@ def saveplan(request):
     ds_teilnehmer = get_object_or_404(Teilnehmer, id=teilnehmer)
   
     ds_sitz, create = Sitzplan.objects.get_or_create(raum=ds_raum, row = zeile, col = spalte)
+
+    ds_tn_alt = ds_sitz.teilnehmer
     ds_sitz.teilnehmer = ds_teilnehmer
     ds_sitz.save()
 
+    print(ds_teilnehmer, ds_tn_alt)
     answer = {
         'error': False,
         'teilnehmer': ds_teilnehmer.__str__(),
+        'teilnehmer_old': ds_tn_alt.__str__(),
+        'tno_id': ds_tn_alt.id if ds_tn_alt else None
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
