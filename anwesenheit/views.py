@@ -185,5 +185,6 @@ def saveplan(request):
 
     answer = {
         'error': False,
+        'teilnehmer': ds_teilnehmer.__str__(),
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")

@@ -13,7 +13,7 @@
                 {% if raum.gang == forloop.counter %} 
                     <div class="col shadow rounded-pill "></div>
                 {% endif %}
-                <div class="col border shadow m-3 text-center rounded-pill bg-light bg-opacity-75"
+                <div id="sitz{{forloop.parentloop.counter0}}_{{forloop.counter0}}" class="col border shadow m-3 text-center rounded-pill bg-light bg-opacity-75"
                  ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}, {{raum.id}})" ondragover="dragoverHandler(event)">
                     {{spalte}}
                 </div>
@@ -25,7 +25,7 @@
     {% comment %} Leiste Teilnehmer {% endcomment %}
     <div class="col-2">
         {% for tn in teilnehmer %}
-        <div id={{tn.id}} class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">{{tn}}</div>
+        <div id="{{tn.id}}" class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">{{tn}}</div>
         {% endfor %}
     </div>
 </div>
@@ -54,9 +54,12 @@ function dropHandler(ev, spalte, zeile, raum) {
             csrfmiddlewaretoken: '{{ csrf_token }}'
         },
         success: function(data) {
+            
+            // Change Sitz
+            console.log(teilnehmer);
+            $('#sitz'+zeile+'_'+spalte).text(data['teilnehmer']);
         }
     });
-  // Change Sitz
   // Remove TN  
 
 }
