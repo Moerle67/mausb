@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import start, anw_group, anw_detail, savedate, anw_note, anw_raum
+from .views import start, anw_group, anw_detail, savedate, anw_note, anw_raum, saveplan
 
 app_name = "anw"
     
@@ -10,5 +10,7 @@ urlpatterns = [
     path('detail/<int:id>/<str:aim_date>', anw_detail ,name='savedate_date'), 
     path('raum/<int:group>/<str:date>', anw_raum ,name='anw_raum'), 
     path('detail_tnnote/', anw_note, name='anw_note'), 
-    path('savedate', savedate ,name='savedate'),    
+    path('savedate', savedate ,name='savedate'),
+
+    path('saveplan', saveplan, name='saveplan'),
 ]

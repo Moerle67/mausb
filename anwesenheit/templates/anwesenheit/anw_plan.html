@@ -13,8 +13,8 @@
                 {% if raum.gang == forloop.counter %} 
                     <div class="col shadow rounded-pill "></div>
                 {% endif %}
-                <div class="col border shadow m-3 display-6 text-center rounded-pill bg-light bg-opacity-75"
-                 ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}), {{raum.id}}" ondragover="dragoverHandler(event)">
+                <div class="col border shadow m-3 text-center rounded-pill bg-light bg-opacity-75"
+                 ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}, {{raum.id}})" ondragover="dragoverHandler(event)">
                     {{spalte}}
                 </div>
             {% endfor %}    
@@ -39,9 +39,26 @@ function dragoverHandler(ev) {
 }
 
 function dropHandler(ev, spalte, zeile, raum) {
-  ev.preventDefault();
-  const data = ev.dataTransfer.getData("text");
-  console.log(data, zeile, spalte, raum);
+    ev.preventDefault();
+    const teilnehmer = ev.dataTransfer.getData("text");
+    // console.log(teilnehmer, zeile, spalte, raum);
+    // Backend Save data
+    $.ajax({
+        type: "POST",
+        url: "{% url 'anw:saveplan' %}",
+        data: {
+            raum: raum,
+            zeile: zeile,
+            spalte: spalte,
+            teilnehmer: teilnehmer,
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(data) {
+        }
+    });
+  // Change Sitz
+  // Remove TN  
+
 }
 </script>
 {% endblock content_fluid %}

@@ -26,7 +26,7 @@ class TNAnwesend(models.Model):
 
 class Sitzplan(models.Model):
     raum =  models.ForeignKey(Raum, verbose_name=("Raum"), on_delete=models.CASCADE)
-    teilnehmer = models.ForeignKey(Teilnehmer, verbose_name=("Teilnehmer"), on_delete=models.CASCADE)
+    teilnehmer = models.ForeignKey(Teilnehmer, verbose_name=("Teilnehmer"), on_delete=models.CASCADE, null=True)
     col = models.IntegerField(("Spalte"))
     row = models.IntegerField(("Reihe"))
  
@@ -35,7 +35,7 @@ class Sitzplan(models.Model):
         verbose_name_plural = ("Sitzpläne")
 
     def __str__(self):
-        return self.name
+        return f"{self.raum} ({self.row}/{self.col} {self.teilnehmer})"
 
     def get_absolute_url(self):
         return reverse("Sitzplan_detail", kwargs={"pk": self.pk})

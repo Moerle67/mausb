@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.models import User
 
-from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder, TNAnmerkung
+from stammdaten.models import Team, Gruppe, Teilnehmer, Ausbilder, TNAnmerkung, Raum
 from .models import TNAnwesend, Sitzplan
 
 import stammdaten.classForm as cform
@@ -169,3 +169,21 @@ def anw_raum(request, group, date):
         'teilnehmer': lst_tn,
     }
     return render(request, "anwesenheit/anw_plan.html", content)
+
+def saveplan(request):
+
+    raum = request.POST['raum']
+    teilnehmer = request.POST['teilnehmer']
+    spalte = request.POST['spalte']
+    zeile = request.POST['zeile']
+    ds_raum = get_object_or_404(Raum, id=raum)
+    ds_teilnehmer = get_object_or_404(Teilnehmer, id=teilnehmer)
+  
+    ds_sitz, create = Sitzplan.objects.get_or_create(raum=ds_raum, row = zeile, col = spalte)
+    ds_sitz.teilnehmer = ds_teilnehmer
+    ds_sitz.save()
+
+    answer = {
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
