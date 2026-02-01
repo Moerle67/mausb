@@ -150,8 +150,13 @@ def anw_note(request):
 
 def anw_raum(request, group, date):
     group = get_object_or_404(Gruppe, id = group)
-    lst_tn = Teilnehmer.objects.filter(group=group, activ=True)
     raum = group.raum
+    lst_tn = Teilnehmer.objects.filter(group=group, activ=True)
+    lst_teilnehmer= []
+    for tn in lst_tn:
+        if len(Sitzplan.objects.filter(raum = raum, teilnehmer = tn)) == 0:
+            lst_teilnehmer.append(tn)
+
     elements = []
     if raum:
         for reihe in range(raum.row):
@@ -166,7 +171,7 @@ def anw_raum(request, group, date):
     content = {
         'raum': raum,
         'elements': elements,
-        'teilnehmer': lst_tn,
+        'teilnehmer': lst_teilnehmer,
     }
     return render(request, "anwesenheit/anw_plan.html", content)
 
