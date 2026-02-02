@@ -47,7 +47,7 @@ def anw_group(request, id):
     }
     return render(request,"anwesenheit/anw_group.html", content)
 
-@permission_required('anwesenheit.tnanwesend_add')
+@permission_required('stammdaten.tnanwesend_add')
 def anw_detail(request, id, aim_date=-1):
     # aim_date != today --> Auswertung, Änderungen werden blockiert
     if aim_date == -1:
