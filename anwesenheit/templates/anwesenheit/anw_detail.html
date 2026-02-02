@@ -17,7 +17,7 @@
             <h2>{{gruppe}}  <span id="count_anw" >{{count_tn_anw}}</span>/{{count_tn}} </h2>
         </div>
         <div class="col">
-            <button type="button" class="btn btn-outline-dark float-end">Raum</button>
+            <a href="{% url 'anw:anw_raum' group=gruppe.id date=aim_date %}"><button type="button" class="btn btn-outline-dark float-end">Raum</button></a>
         </div>
     </div>
     {% for tn in teilnehmer %}
