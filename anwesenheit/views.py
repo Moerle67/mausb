@@ -32,7 +32,7 @@ def start(request):
     }
     return render(request,"anwesenheit/anw_team.html", content)
 
-@permission_required('stammdaten.gruppe_show')
+@permission_required('stammdaten.view_gruppe', raise_exception=True)
 def anw_group(request, id):
     # Auswahl der Gruppe
     team = get_object_or_404(Team, id=id)
@@ -47,7 +47,7 @@ def anw_group(request, id):
     }
     return render(request,"anwesenheit/anw_group.html", content)
 
-@permission_required('anwesenheit.tnanwesend_add')
+@permission_required('anwesenheit.add_tnanwesend', raise_exception=True)
 def anw_detail(request, id, aim_date=-1):
     # aim_date != today --> Auswertung, Änderungen werden blockiert
     if aim_date == -1:
@@ -58,7 +58,6 @@ def anw_detail(request, id, aim_date=-1):
         datum = datetime.datetime.strptime(aim_date, "%Y-%m-%d").date()
         # print(datum, datetime.date.today())
         if datum == datetime.date.today():    # --> doch aktueller Tag, Änderungen möglich
-            print("gleich")
             passiv = False
 
     gruppe = get_object_or_404(Gruppe, id=id)
@@ -176,7 +175,6 @@ def anw_raum(request, group, date):
     return render(request, "anwesenheit/anw_plan.html", content)
 
 def saveplan(request):
-
     raum = request.POST['raum']
     teilnehmer = request.POST['teilnehmer']
     spalte = request.POST['spalte']

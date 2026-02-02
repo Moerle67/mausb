@@ -10,6 +10,7 @@ stammdaten/__pycache__/
 stammdaten/migrations/__pycache__/
 
 start/__pycache__/
+start/migrations/__pycache__/
 
 ausbildungsplan/__pycache__/
 ausbildungsplan/migrations/__pycache__/
