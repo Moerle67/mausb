@@ -1,6 +1,47 @@
 {% extends "anwesenheit/anw_group.html" %}
 
 {% block content %}
+<style>
+.hover-title {
+    display: inline;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.hover-image {
+    visibility: hidden;
+}
+
+body:not(.mobile) .hover-title:hover + .hover-image {
+    visibility: visible;
+    pointer-events: none;
+}
+
+.hover-image {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    pointer-events: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+/* Change width and height to scale images */
+    width: 90vw;
+    height: 90vh;
+}
+
+.hover-image img {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    margin-bottom: 0;
+}
+</style>
     <script>
         function generate_btn(teilnehmer, anwesend) {
             let btn_color = anwesend ? "success" : "danger";
@@ -25,8 +66,9 @@
         <div class="row m-2 border border-2 rounded-pill row border-dark shadow bg-light bg-opacity-75">
             <div class = "col-4 fs-4">
                 <a href="/admin/stammdaten/teilnehmer/{{tn.0.id}}/change/" target="__blank"><i class="bi bi-sliders text-body-secondary"></i></a>
-                <span onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">{{tn.0.name}} ({{tn.0.profession.short}})</span>
-            </div>
+                <span class="hover-title" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">{{tn.0.name}} ({{tn.0.profession.short}})</span>
+                {% if tn.0.picture %}<div class="hover-image bg-opacity-100 shadow"><img src="{{ tn.0.picture.url }}"/></div>{% endif %}
+            </div>  
             <div class="col-3 row {% if passiv %}d-none{% endif %}" id="btn{{tn.0.id}}">
                 <div class = "col">
                     <button type="button" class="btn btn-outline-success"  onclick="addtermin({{tn.0.id}}, 1, true)">Anwesend</button>

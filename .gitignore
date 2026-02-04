@@ -16,3 +16,5 @@ ausbildungsplan/__pycache__/
 ausbildungsplan/migrations/__pycache__/
 
 mausb/settings.py
+media/stammdaten/tnimg/
+
