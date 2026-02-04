@@ -30,14 +30,14 @@ body:not(.mobile) .hover-title:hover + .hover-image {
 .hover-image {
     display: flex;
     position: fixed;
-    top: 50%;
-    left: 50%;
+    top: 65%;
+    left: 85%;
     transform: translate(-50%, -50%);
     z-index: 100;
     pointer-events: none;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; 
 
 /* Change width and height to scale images */
     width: 90vw;
