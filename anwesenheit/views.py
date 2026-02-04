@@ -112,6 +112,7 @@ def anw_detail(request, id, aim_date=-1):
     return render(request,"anwesenheit/anw_detail.html", content)
 
 # Daten aus Formular speichern
+@permission_required('anwesenheit.add_tnanwesend', raise_exception=True)
 def savedate(request):
     if request.method == 'POST':
         teilnehmer = request.POST['teilnehmer']
@@ -134,6 +135,7 @@ def savedate(request):
         return HttpResponse(json.dumps(answer), content_type="application/json")
 
 # Notiz über Teilnehmer    
+@permission_required('stammdaten.add_tnanmerkung', raise_exception=True)
 def anw_note(request):
     ds_tn = get_object_or_404(Teilnehmer, id=request.POST['tn'])
     ds_ausbilder = get_object_or_404(Ausbilder, user=request.user)
