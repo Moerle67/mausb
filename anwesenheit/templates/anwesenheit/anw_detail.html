@@ -29,7 +29,7 @@
             <div class = "col-4 fs-4">
                 <a href="/admin/stammdaten/teilnehmer/{{tn.0.id}}/change/" target="__blank"><i class="bi bi-sliders text-body-secondary"></i></a>
                 <span class="hover-title" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">{{tn.0.name}} ({{tn.0.profession.short}})</span>
-                {% if tn.0.picture %}<div class="hover-image bg-opacity-100 shadow"><img src="{{ tn.0.picture.url }}"/></div>{% endif %}
+                {% if tn.0.picture %}<div class="hover-image bg-opacity-100 shadow"><img class="" src="{{ tn.0.picture.url }}"/></div>{% endif %}
             </div>  
             <div class="col-3 row {% if passiv %}d-none{% endif %}" id="btn{{tn.0.id}}">
                 <div class = "col">
