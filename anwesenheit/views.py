@@ -111,7 +111,8 @@ def anw_detail(request, id, aim_date=-1):
     }
     return render(request,"anwesenheit/anw_detail.html", content)
 
-# Daten aus Formular speichern
+# Anwesenheit Status aus Ajax speichern
+@permission_required('anwesenheit.add_tnanwesend', raise_exception=True)
 def savedate(request):
     if request.method == 'POST':
         teilnehmer = request.POST['teilnehmer']
@@ -133,7 +134,8 @@ def savedate(request):
         }
         return HttpResponse(json.dumps(answer), content_type="application/json")
 
-# Notiz über Teilnehmer    
+# Notiz über Teilnehmer
+@permission_required('stammdaten.add_tnanmerkung', raise_exception=True)    
 def anw_note(request):
     ds_tn = get_object_or_404(Teilnehmer, id=request.POST['tn'])
     ds_ausbilder = get_object_or_404(Ausbilder, user=request.user)
@@ -147,6 +149,7 @@ def anw_note(request):
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+@permission_required('anwesenheit.view_sitzplan', raise_exception=True)
 def anw_raum(request, group, date):
     group = get_object_or_404(Gruppe, id = group)
     raum = group.raum
@@ -174,6 +177,7 @@ def anw_raum(request, group, date):
     }
     return render(request, "anwesenheit/anw_plan.html", content)
 
+@permission_required('anwesenheit.change_sitzplan', raise_exception=True)
 def saveplan(request):
     raum = request.POST['raum']
     teilnehmer = request.POST['teilnehmer']
@@ -197,6 +201,7 @@ def saveplan(request):
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+@permission_required('anwesenheit.delete_sitzplan', raise_exception=True)
 def delplan(request):
     ds = get_object_or_404(Sitzplan, id=request.POST['id'])
     zeile = ds.row

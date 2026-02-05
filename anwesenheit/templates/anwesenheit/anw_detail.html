@@ -15,22 +15,27 @@
             $('#btn'+ teilnehmer).html(str_btn);
         }
     </script>
-    <div class="row">  
+    <div class="row"> 
+        {% comment %} Überschrift mit Gruppenzähler {% endcomment %}
         <div class="col text-center">
             <h2>{{gruppe}}  <span id="count_anw" >{{count_tn_anw}}</span>/{{count_tn}} </h2>
         </div>
+        {% comment %} Button Raum {% endcomment %}
         <div class="col">
             <a href="{% url 'anw:anw_raum' group=gruppe.id date=aim_date %}"><button type="button" class="btn btn-outline-dark float-end">Raum</button></a>
         </div>
     </div>
+    {% comment %} Liste Teilnehmer {% endcomment %}
     {% for tn in teilnehmer %}
          {% comment %} Keine Einträge für den Tag {% endcomment %}
         <div class="row m-2 border border-2 rounded-pill row border-dark shadow bg-light bg-opacity-75">
+            {% comment %} Name und eventuell Bild Teilnehmer {% endcomment %}
             <div class = "col-4 fs-4">
                 <a href="/admin/stammdaten/teilnehmer/{{tn.0.id}}/change/" target="__blank"><i class="bi bi-sliders text-body-secondary"></i></a>
                 <span class="hover-title" onclick="ontn({{tn.0.id}}, '{{tn.0.name}}', true)">{{tn.0.name}} ({{tn.0.profession.short}})</span>
                 {% if tn.0.picture %}<div class="hover-image bg-opacity-100 shadow"><img class="" src="{{ tn.0.picture.url }}"/></div>{% endif %}
-            </div>  
+            </div>
+            {% comment %} Button Anwesenheit {% endcomment %}
             <div class="col-3 row {% if passiv %}d-none{% endif %}" id="btn{{tn.0.id}}">
                 <div class = "col">
                     <button type="button" class="btn btn-outline-success"  onclick="addtermin({{tn.0.id}}, 1, true)">Anwesend</button>

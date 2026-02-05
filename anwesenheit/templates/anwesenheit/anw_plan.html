@@ -17,7 +17,6 @@
                  ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}, {{raum.id}})" ondragover="dragoverHandler(event)">
                     {% if spalte %}<span class="hover-title">{{spalte.teilnehmer}} <i class="bi bi-trash" onclick="del_sitz({{spalte.id}})"></i></span>{% else %} - {% endif %}
                     {% if spalte %}{% if spalte.teilnehmer.picture %}<div class="hover-image bg-opacity-100 shadow"><img src="{{ spalte.teilnehmer.picture.url }}"/></div>{% endif %}{% endif %}
-
                 </div>
             {% endfor %}    
             </div>   
@@ -27,7 +26,8 @@
     {% comment %} Leiste Teilnehmer {% endcomment %}
     <div class="col-2" id="liste_tn">
         {% for tn in teilnehmer %}
-        <div id="{{tn.id}}" class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">{{tn}}</div>
+            <div id="{{tn.id}}" class="border col-12 m-2 shadow hover-title" draggable="true" ondragstart="dragstartHandler(event)">{{tn}}</div>
+            {% if tn.picture %}<div class="hover-image bg-opacity-100 shadow"><img src="{{ tn.picture.url }}"/></div>{% endif %}
         {% endfor %}
     </div>
 </div>
