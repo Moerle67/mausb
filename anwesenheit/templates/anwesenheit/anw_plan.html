@@ -5,8 +5,15 @@
 {% block content_fluid %}
 <div class="row">
     {% comment %} Sitzplan {% endcomment %}
-    <div class="col-9">
-        <h1>Sitzplan Raum {{raum}}</h1>
+    <div class="col-9 row">
+        <div class="col">
+            <h1>Sitzplan Raum {{raum.bezeichnung}}</h1>
+        </div>
+        {% comment %} Button Raum {% endcomment %}
+        <div class="col">
+            <a href="{% url 'anw:anw_detail' id=gruppe.id %}"><button type="button" class="btn btn-outline-dark float-end">Anwesenheit</button></a>
+        </div>
+ 
         {% for reihe in elements %}
             <div class="row border">
             {% for spalte in reihe %}

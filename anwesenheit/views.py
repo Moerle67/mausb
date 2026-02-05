@@ -154,6 +154,7 @@ def anw_raum(request, group, date):
     group = get_object_or_404(Gruppe, id = group)
     raum = group.raum
     lst_tn = Teilnehmer.objects.filter(group=group, activ=True)
+    print(group, raum)
     lst_teilnehmer= []
     for tn in lst_tn:
         if len(Sitzplan.objects.filter(raum = raum, teilnehmer = tn)) == 0:
@@ -171,6 +172,7 @@ def anw_raum(request, group, date):
                     lst_reihe.append(None)   
             elements.append(lst_reihe)  
     content = {
+        'gruppe': group,
         'raum': raum,
         'elements': elements,
         'teilnehmer': lst_teilnehmer,
