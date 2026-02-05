@@ -12,4 +12,5 @@ class TNAnmerkungAdmin(admin.ModelAdmin):
 @admin.register(Sitzplan)
 class SitzplanAdmin(admin.ModelAdmin):
     list_filter = ['raum', 'teilnehmer']
-    search_fields = ['teilnehmer']
+
+
