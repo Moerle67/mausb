@@ -1,7 +1,7 @@
 from django.urls import path
 
 
-from .views import start, anw_group, anw_detail, savedate, anw_note, anw_raum, saveplan, delplan
+from .views import start, anw_group, anw_detail, savedate, anw_note, anw_raum, saveplan, delplan, savedateplan
 
 app_name = "anw"
     
@@ -13,6 +13,7 @@ urlpatterns = [
     path('raum/<int:group>/<str:date>', anw_raum ,name='anw_raum'), 
     path('detail_tnnote/', anw_note, name='anw_note'), 
     path('savedate', savedate, name='savedate'),
+    path('savedateplan', savedateplan, name='savedateplan'),
 
     path('saveplan', saveplan, name='saveplan'),
     path('delplan', delplan, name='delplan'),

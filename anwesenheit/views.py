@@ -154,7 +154,6 @@ def anw_raum(request, group, date):
     group = get_object_or_404(Gruppe, id = group)
     raum = group.raum
     lst_tn = Teilnehmer.objects.filter(group=group, activ=True)
-    print(group, raum)
     lst_teilnehmer= []
     for tn in lst_tn:
         if len(Sitzplan.objects.filter(raum = raum, teilnehmer = tn)) == 0:
@@ -166,8 +165,15 @@ def anw_raum(request, group, date):
             lst_reihe = []
             for spalte in range(raum.col):
                 plan =  Sitzplan.objects.filter(row=reihe, col=spalte, raum=raum)
-                if len(plan)>0:
-                    lst_reihe.append(plan[0])
+                if len(plan)>0: #Teilnehmer am Platz vorhanden
+                    # Anwesenheit aktueller Tag prüfen
+                    akt_datum = datetime.date.today()
+                    anw_ds = TNAnwesend.objects.filter(teilnehmer = plan[0].teilnehmer, datum__date = akt_datum)
+                    if len(anw_ds) == 0 :         # kein Datensatz --> keine aktuelle Buchung
+                        bg_color_code = "bg-secondary bg-gradient"
+                    else:                       # DS vorhanden, nach Datum sortiert, der letzte gilt
+                        bg_color_code = "bg-success bg-gradient" if anw_ds[0].anwesend else "bg-danger bg-gradient"
+                    lst_reihe.append((plan[0], bg_color_code))
                 else:
                     lst_reihe.append(None)   
             elements.append(lst_reihe)  
@@ -180,6 +186,7 @@ def anw_raum(request, group, date):
     return render(request, "anwesenheit/anw_plan.html", content)
 
 @permission_required('anwesenheit.change_sitzplan', raise_exception=True)
+# Sitzplatz speichern D&D
 def saveplan(request):
     raum = request.POST['raum']
     teilnehmer = request.POST['teilnehmer']
@@ -194,24 +201,64 @@ def saveplan(request):
     ds_sitz.teilnehmer = ds_teilnehmer
     ds_sitz.save()
 
+    # Anwesenheitsfarbe ermitteln
+    ds_tn_anw = TNAnwesend.objects.filter(teilnehmer=ds_teilnehmer, datum__date = datetime.date.today())
+    if len(ds_tn_anw) == 0:
+        bg_color = "bg-secondary"
+    else:
+        bg_color = "bg-success" if ds_tn_anw[0].anwesend else "bg-danger"
+
     print(ds_teilnehmer, ds_tn_alt)
     answer = {
         'error': False,
         'teilnehmer': ds_teilnehmer.__str__(),
         'teilnehmer_old': ds_tn_alt.__str__(),
-        'tno_id': ds_tn_alt.id if ds_tn_alt else None
+        'tno_id': ds_tn_alt.id if ds_tn_alt else None,
+        'bg_color': bg_color,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 @permission_required('anwesenheit.delete_sitzplan', raise_exception=True)
 def delplan(request):
-    ds = get_object_or_404(Sitzplan, id=request.POST['id'])
+    print(request.POST)
+    ds = get_object_or_404(Sitzplan, id=int(request.POST['id']))
     zeile = ds.row
     spalte = ds.col
     ds.delete()
     answer = {
         'zeile': zeile,
         'spalte': spalte,
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+# Anwesenheit aus Sitzplan speichern
+@permission_required('anwesenheit.add_tnanwesend', raise_exception=True)
+def savedateplan(request):
+    ds_tn = get_object_or_404(Teilnehmer, id=request.POST['teilnehmer'])
+    # Aktuelle Anwesenheit?
+    ds_tn_anw = TNAnwesend.objects.filter(teilnehmer=ds_tn, datum__date = datetime.date.today())
+    if len(ds_tn_anw)==0 :              # Noch keine Eintragung erstmal abwesend
+        anwesenheit = False
+    else:                               # ansonsten Gegenteil der letzten Eintragung
+        anwesenheit = not ds_tn_anw[0].anwesend
+    # Ausbilder ermitteln
+    ds_ausbilder = get_object_or_404(Ausbilder, user=request.user)
+    # DS erzeugen
+    ds = TNAnwesend(teilnehmer = ds_tn, ausbilder = ds_ausbilder, anwesend = anwesenheit)
+    # DS speichern
+    ds.save()
+      
+    # Hintergrundfarbe festlegen
+    bg_color_code = "bg-success" if anwesenheit else "bg-danger"
+
+    #Sitzplan lesen
+    ds_sitzplan = Sitzplan.objects.get(teilnehmer=ds_tn)
+
+    answer = {
+        'bg_color': bg_color_code,
+        'zeile': ds_sitzplan.row,
+        'spalte': ds_sitzplan.col,
         'error': False,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
