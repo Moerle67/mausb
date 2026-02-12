@@ -16,9 +16,11 @@
         {% for reihe in elements %}
             <div class="row border">
             {% for spalte in reihe %}
+                {% comment %} Reihe für Gang freilassen {% endcomment %}
                 {% if raum.gang == forloop.counter %} 
                     <div class="col shadow rounded-pill "></div>
                 {% endif %}
+                {% comment %} Sitzplatz für Sitzplatz {% endcomment %}
                 <div id="sitz{{forloop.parentloop.counter0}}_{{forloop.counter0}}" class="{{spalte.1}} col border shadow m-3 text-center rounded-pill bg-opacity-75"
                  ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}, {{raum.id}})" ondragover="dragoverHandler(event)">
                     {% if spalte %}
@@ -49,16 +51,17 @@
 </div>
 <script>
 function dragstartHandler(ev) {
-  ev.dataTransfer.setData("text", ev.target.id);
+  ev.dataTransfer.setData("teilnehmer", ev.target.id);
 }
 
 function dragoverHandler(ev) {
   ev.preventDefault();
 }
 
+// D&D auf TN auf Sitzplatz
 function dropHandler(ev, spalte, zeile, raum) {
     ev.preventDefault();
-    const teilnehmer = ev.dataTransfer.getData("text");
+    const teilnehmer = ev.dataTransfer.getData("teilnehmer");
     // console.log(teilnehmer, zeile, spalte, raum);
     // Backend Save data
     $.ajax({
@@ -83,7 +86,11 @@ function dropHandler(ev, spalte, zeile, raum) {
             // Hintergrundfarbe setzen
             $('#sitz'+zeile+'_'+spalte).addClass(data['bg_color']);
 
-             // Remove TN von Liste rechts
+            // Papierkorb einfügen
+            trash_string = `<i class="bi bi-trash" onclick="del_sitz(${data['plan_id']})"></i>`;
+            $('#sitz'+zeile+'_'+spalte).append(trash_string);
+
+            // Remove TN von Liste rechts
             $('#'+teilnehmer).remove();
             if (data['teilnehmer_old'] != 'None'){
                 let div_str = '<div id="'+data['tno_id']+'" class="border col m-2 shadow" draggable="true" ondragstart="dragstartHandler(event)">'+data['teilnehmer_old']+'</div>'
@@ -97,7 +104,6 @@ function dropHandler(ev, spalte, zeile, raum) {
 }
 
 function del_sitz(id) {
-    console.log(id);
     $.ajax({
         type: "POST",
         url: "{% url 'anw:delplan' %}",

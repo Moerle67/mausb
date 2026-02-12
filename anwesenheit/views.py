@@ -215,12 +215,12 @@ def saveplan(request):
         'teilnehmer_old': ds_tn_alt.__str__(),
         'tno_id': ds_tn_alt.id if ds_tn_alt else None,
         'bg_color': bg_color,
+        'plan_id': ds_sitz.id, 
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 @permission_required('anwesenheit.delete_sitzplan', raise_exception=True)
 def delplan(request):
-    print(request.POST)
     ds = get_object_or_404(Sitzplan, id=int(request.POST['id']))
     zeile = ds.row
     spalte = ds.col
