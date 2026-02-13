@@ -81,10 +81,15 @@ function dropHandler(ev, spalte, zeile, raum) {
                         </span>`
             $('#sitz'+zeile+'_'+spalte).html(div_string);
 
+            // Bild hinzufügen
+            image_str = `<div class="hover-image bg-opacity-100 shadow"><img src="${data['tn_picture']}"></div>`;
+            $('#sitz'+zeile+'_'+spalte).append(image_str);
+            
             // Hintergrundfarben löschen
             $('#sitz'+zeile+'_'+spalte).removeClass('bg-secondary');
             $('#sitz'+zeile+'_'+spalte).removeClass('bg-success');
             $('#sitz'+zeile+'_'+spalte).removeClass('bg-danger');
+            
 
             // Hintergrundfarbe setzen
             $('#sitz'+zeile+'_'+spalte).addClass(data['bg_color']);
@@ -92,6 +97,7 @@ function dropHandler(ev, spalte, zeile, raum) {
             // Papierkorb einfügen
             trash_string = `<i class="bi bi-trash" onclick="del_sitz(${data['plan_id']})"></i>`;
             $('#sitz'+zeile+'_'+spalte).append(trash_string);
+
 
             // Remove TN von Liste rechts
             $('#'+teilnehmer).remove();
@@ -121,6 +127,10 @@ function del_sitz(id) {
             $('#sitz'+data['zeile']+'_'+data['spalte']).removeClass('bg-secondary');
             $('#sitz'+data['zeile']+'_'+data['spalte']).removeClass('bg-success');
             $('#sitz'+data['zeile']+'_'+data['spalte']).removeClass('bg-danger');
+
+            // Gelöschter Teilnehmer zur TN-Liste hinzufügen
+            str_tn_listeintrag = `<div id="${data['teilnehmer_id']}" class="border col-12 m-2 shadow hover-title" draggable="true" ondragstart="dragstartHandler(event)">${data['teilnehmer']}</div>`;
+            $('#liste_tn').append(str_tn_listeintrag);
         }
     });
     

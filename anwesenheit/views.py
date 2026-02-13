@@ -215,6 +215,7 @@ def saveplan(request):
         'teilnehmer_id': ds_teilnehmer.id,
         'teilnehmer_old': ds_tn_alt.__str__(),
         'tno_id': ds_tn_alt.id if ds_tn_alt else None,
+        'tn_picture': ds_sitz.teilnehmer.picture.url,
         'bg_color': bg_color,
         'plan_id': ds_sitz.id, 
     }
@@ -223,6 +224,7 @@ def saveplan(request):
 @permission_required('anwesenheit.delete_sitzplan', raise_exception=True)
 def delplan(request):
     ds = get_object_or_404(Sitzplan, id=int(request.POST['id']))
+    ds_teilnehmer = ds.teilnehmer
     zeile = ds.row
     spalte = ds.col
     ds.delete()
@@ -230,6 +232,8 @@ def delplan(request):
         'zeile': zeile,
         'spalte': spalte,
         'error': False,
+        'teilnehmer_id': ds_teilnehmer.id,
+        'teilnehmer': ds_teilnehmer.__str__(),
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
