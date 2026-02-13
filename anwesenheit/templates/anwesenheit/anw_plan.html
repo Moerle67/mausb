@@ -76,7 +76,10 @@ function dropHandler(ev, spalte, zeile, raum) {
         },
         success: function(data) {
             // Change Sitz
-            $('#sitz'+zeile+'_'+spalte).text(data['teilnehmer']);
+            div_string = `<span class="hover-title" onclick="onclick_plan(${data['teilnehmer_id']})">
+                           ${data['teilnehmer']} 
+                        </span>`
+            $('#sitz'+zeile+'_'+spalte).html(div_string);
 
             // Hintergrundfarben löschen
             $('#sitz'+zeile+'_'+spalte).removeClass('bg-secondary');

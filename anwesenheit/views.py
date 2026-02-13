@@ -212,6 +212,7 @@ def saveplan(request):
     answer = {
         'error': False,
         'teilnehmer': ds_teilnehmer.__str__(),
+        'teilnehmer_id': ds_teilnehmer.id,
         'teilnehmer_old': ds_tn_alt.__str__(),
         'tno_id': ds_tn_alt.id if ds_tn_alt else None,
         'bg_color': bg_color,
