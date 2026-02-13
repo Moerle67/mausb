@@ -56,7 +56,6 @@ def anw_detail(request, id, aim_date=None):
     else:
         passiv = True
         datum = datetime.datetime.strptime(aim_date, "%Y-%m-%d").date()
-        # print(datum, datetime.date.today())
         if datum == datetime.date.today():    # --> doch aktueller Tag, Änderungen möglich
             passiv = False
 
@@ -208,7 +207,6 @@ def saveplan(request):
     else:
         bg_color = "bg-success" if ds_tn_anw[0].anwesend else "bg-danger"
 
-    print(ds_teilnehmer, ds_tn_alt)
     answer = {
         'error': False,
         'teilnehmer': ds_teilnehmer.__str__(),
@@ -234,6 +232,7 @@ def delplan(request):
         'error': False,
         'teilnehmer_id': ds_teilnehmer.id,
         'teilnehmer': ds_teilnehmer.__str__(),
+        'tn_picture': ds_teilnehmer.picture.url,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
@@ -241,6 +240,7 @@ def delplan(request):
 @permission_required('anwesenheit.add_tnanwesend', raise_exception=True)
 def savedateplan(request):
     ds_tn = get_object_or_404(Teilnehmer, id=request.POST['teilnehmer'])
+
     # Aktuelle Anwesenheit?
     ds_tn_anw = TNAnwesend.objects.filter(teilnehmer=ds_tn, datum__date = datetime.date.today())
     if len(ds_tn_anw)==0 :              # Noch keine Eintragung erstmal abwesend
