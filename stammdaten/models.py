@@ -161,7 +161,7 @@ class LaptopTN(models.Model):
             ordering = ['tn', '-ausgabe']
 
     def __str__(self):
-        return f"{self.number} - {self.tn} ({self.ausgabe} - {self.rueckname})"
+        return f"{self.number} - {self.tn} ({self.ausgabe} - {self.ruecknahme})"
 
     def get_absolute_url(self):
         return reverse("LaptopTN_detail", kwargs={"pk": self.pk})
