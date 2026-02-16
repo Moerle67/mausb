@@ -121,7 +121,7 @@ class Teilnehmer(models.Model):
     class Meta:
         verbose_name = "Teilnehmer"
         verbose_name_plural = "Teilnehmer"
-        ordering = ["group", "name"]
+        ordering = ["name"]
 
     def __str__(self):
         return f"{self.name} ({self.profession.short}/{self.group.short})"
