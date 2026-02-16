@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
-from stammdaten.models import Team
+from .models import Daytime, Block
+from stammdaten.models import Team, Gruppe
 
 import datetime
 # Create your views here.
@@ -23,14 +24,35 @@ def start(request, team=None, date=None):
                                 }))
     else:
         date = datetime.datetime.strptime(date, date_format_str).date()
+    # Tagsezeiten
+    vm_ds = Daytime.objects.get(short="vm")
+    nm_ds = Daytime.objects.get(short="nm")
 
     # Montag bestimmen
     date_moday = date - datetime.timedelta(days=date.weekday())
-    elements = []
-    days = []
+    days = []           # Wochentage als String
+    days_date = []      # Wochentage als Date Objekt
     for i in range(5):
         day = date_moday + datetime.timedelta(days=i)
         days.append(day.strftime(date_format_str))
+        days_date.append(day)
+
+    elements = []
+    gruppen = []
+    # Gruppen der Teams aussuchen
+    gruppen_lst = Gruppe.objects.filter(team=team, activ=True)
+
+    for gruppe in gruppen_lst:
+        eine_gruppe = []
+        eine_gruppe.append(gruppe)
+        # Einzelne Wochentage
+        eine_gruppe_days = []     
+        eine_gruppe.append(days)
+        for day in days_date:    
+            # Block Vormittag
+            block_vm = Block.objects.filter(group = gruppe, date = day, daytime = vm_ds)
+            # Block Nachmittag
+            block_nm = Block.objects.filter(group = gruppe, date = day, daytime = nm_ds) 
     content = {
         'days': days,
     }

@@ -13,7 +13,7 @@ class Daytime(models.Model):
         verbose_name_plural = ("Tageszeiten")
 
     def __str__(self):
-        return f"{self.short}/{self.description}"
+        return f"{self.short}/{self.long}"
 
     def get_absolute_url(self):
         return reverse("Daytime_detail", kwargs={"pk": self.pk})
@@ -32,7 +32,7 @@ class Block(models.Model):
         ordering = ["group", "date", "daytime"]
 
     def __str__(self):
-        return f"{self.group.short} - {self.date}/{self.daytime.description} - {'' if self.teacher is None else self.teacher.user.last_name}"
+        return f"{self.group.short} - {self.date}/{self.daytime.long} - {'' if self.teacher is None else self.teacher.user.last_name}"
 
     def get_absolute_url(self):
         return reverse("Block_detail", kwargs={"pk": self.pk})
