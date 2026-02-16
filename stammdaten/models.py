@@ -153,6 +153,7 @@ class LaptopTN(models.Model):
     ausgabevon = models.ForeignKey(Ausbilder, related_name = "Ausbilderausg", verbose_name="Ausgegeben von", on_delete=models.CASCADE, null=True, blank=True)
     rueckname = models.DateField("Rückname", auto_now=False, auto_now_add=False, null=True, blank=True)
     ruecknamevon = models.ForeignKey(Ausbilder, related_name = "Ausbilderrueck" ,verbose_name="zurück genommen von", on_delete=models.CASCADE, null=True, blank=True)
+    anmerkung = models.TextField("Anmerkung", null=True, blank=True)
 
     class Meta:
             verbose_name = "Teilnehmer Laptop"
