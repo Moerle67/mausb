@@ -33,3 +33,5 @@ class TNAnmerkungAdmin(admin.ModelAdmin):
 class LaptopTNAdmin(admin.ModelAdmin):
     list_filter = ['tn__group', 'tn', 'number', 'ausgabe', 'ruecknahme']
     search_fields = ['number', 'tn__name']
+
+    
