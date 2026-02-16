@@ -146,3 +146,21 @@ class TNAnmerkung(models.Model):
     def get_absolute_url(self):
         return reverse("TNAnmerkungen_detail", kwargs={"pk": self.pk})
 
+class LaptopTN(models.Model):
+    number = models.CharField("Laptop Nummmer", max_length=50)
+    tn = models.ForeignKey(Teilnehmer, verbose_name="Teilnehmer", on_delete=models.CASCADE)
+    ausgabe = models.DateField("Ausgabe", auto_now=False, auto_now_add=False)
+    ausgabevon = models.ForeignKey(Ausbilder, related_name = "Ausbilderausg", verbose_name="Ausgegeben von", on_delete=models.CASCADE, null=True, blank=True)
+    rueckname = models.DateField("Rückname", auto_now=False, auto_now_add=False, null=True, blank=True)
+    ruecknamevon = models.ForeignKey(Ausbilder, related_name = "Ausbilderrueck" ,verbose_name="zurück genommen von", on_delete=models.CASCADE, null=True, blank=True)
+
+    class Meta:
+            verbose_name = "Teilnehmer Laptop"
+            verbose_name_plural = "Teilnehmer Laptops"
+            ordering = ['tn', '-ausgabe']
+
+    def __str__(self):
+        return f"{self.number} - {self.tn} ({self.ausgabe} - {self.rueckname})"
+
+    def get_absolute_url(self):
+        return reverse("LaptopTN_detail", kwargs={"pk": self.pk})

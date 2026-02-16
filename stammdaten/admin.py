@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung, Raum
+from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung, Raum, LaptopTN
 # Register your models here.
 
 admin.site.register(Standort)
@@ -28,3 +28,8 @@ class TeilnehmerAdmin(admin.ModelAdmin):
 class TNAnmerkungAdmin(admin.ModelAdmin):
     list_filter = ['teilnehmer__group', 'teilnehmer', 'ausbilder']
     search_fields = ['teilnehmer__name', 'comment']    
+
+@admin.register(LaptopTN)
+class LaptopTNAdmin(admin.ModelAdmin):
+    list_filter = ['tn', 'number', 'ausgabe', 'rueckname']
+    search_fields = ['number', 'tn']        

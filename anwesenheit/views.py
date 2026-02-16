@@ -47,6 +47,7 @@ def anw_group(request, id):
     }
     return render(request,"anwesenheit/anw_group.html", content)
 
+
 @permission_required('anwesenheit.add_tnanwesend', raise_exception=True)
 def anw_detail(request, id, aim_date=None):
     # aim_date != today --> Auswertung, Änderungen werden blockiert
