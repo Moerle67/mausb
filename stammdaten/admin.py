@@ -31,7 +31,6 @@ class TNAnmerkungAdmin(admin.ModelAdmin):
 
 @admin.register(LaptopTN)
 class LaptopTNAdmin(admin.ModelAdmin):
-    list_filter = ['tn__group', 'tn', 'number', 'ausgabe', 'ruecknahme']
+    list_filter = ['tn__group', 'tn', 'number', 'ausgabe']
     search_fields = ['number', 'tn__name']
 
-    
