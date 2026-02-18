@@ -37,23 +37,37 @@ def start(request, team=None, date=None):
         days.append(day.strftime(date_format_str))
         days_date.append(day)
 
-    elements = []
+    daten_plan = []
     gruppen = []
     # Gruppen der Teams aussuchen
     gruppen_lst = Gruppe.objects.filter(team=team, activ=True)
-
+    daten_plan.append(days)
     for gruppe in gruppen_lst:
-        eine_gruppe = []
-        eine_gruppe.append(gruppe)
+        eine_gruppe = []                # Liste für eine Gruppe
+        eine_gruppe.append(gruppe)      
         # Einzelne Wochentage
-        eine_gruppe_days = []     
-        eine_gruppe.append(days)
+        eine_gruppe_days = []
+        # Block Vormittag
+        plan_vm = []     
         for day in days_date:    
-            # Block Vormittag
             block_vm = Block.objects.filter(group = gruppe, date = day, daytime = vm_ds)
-            # Block Nachmittag
-            block_nm = Block.objects.filter(group = gruppe, date = day, daytime = nm_ds) 
+            block_vm = None if len(block_vm) == 0 else block_vm[0]
+            plan_vm.append(block_vm)
+        eine_gruppe_days.append(plan_vm)
+        # Block Nachmittag
+        plan_nm = []
+        for day in days_date:    
+            block_nm = Block.objects.filter(group = gruppe, date = day, daytime = nm_ds)
+            block_nm = None if len(block_nm) == 0 else block_nm[0]
+            plan_nm.append(block_nm)
+        eine_gruppe_days.append(plan_nm)
+
+        eine_gruppe.append(eine_gruppe_days)
+        gruppen.append(eine_gruppe)    
+    print(gruppen)
+    daten_plan.append(gruppen)
     content = {
         'days': days,
+        'gruppen_plan': daten_plan,
     }
     return render(request, "ausbildungsplan/plan.html", content)

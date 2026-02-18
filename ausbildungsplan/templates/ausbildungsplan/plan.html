@@ -2,35 +2,30 @@
 
 {% block content_fluid %}
     <div class="row">
-        <table class="table">
-        <thead>
+        <table class="table table-bordered">
             <tr>
                 <th scope="col">#</th>
-                {% for day in days %}
-                    <th scope="col" class="m-2 bg-info">{{day}}</th>
+                {% comment %} Datum als Überschrift {% endcomment %}
+                {% for day in gruppen_plan.0 %}
+                    <th scope="col text-center">{{day}}</th> 
+                {% endfor %}            
+        {% comment %} Gruppe für Gruppe     {% endcomment %}
+
+        {% for gruppe in gruppen_plan.1 %}
+            {% comment %} vormittag {% endcomment %} 
+            <tr>
+                {% comment %} Überschrift Gruppe {% endcomment %}
+                <th scope="col>">{{gruppe.0.short}}</th>
+                {% for block in gruppe.1.0 %}
+                   <td class="shadow text-center">
+                    {{block.teacher.short}} <br />
+                    {{block.content}}
+                   </td>
                 {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
+                {% comment %} nachmittag {% endcomment %}
             <tr>
-            <th scope="row">1</th>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            </tr>
-            <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            </tr>
-            <tr>
-            <th scope="row">3</th>
-            <td>Larry</td>
-            <td>the Bird</td>
-            <td>@twitter</td>
-            </tr>
-        </tbody>
+            {% comment %} Zwischenlinie {% endcomment %}
+        {% endfor %}
         </table>
     </div>
 {% endblock content_fluid %}
