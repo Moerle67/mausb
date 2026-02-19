@@ -1,31 +1,35 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content_fluid %}
-    <div class="row">
-        <table class="table table-bordered">
-            <tr>
-                <th scope="col">#</th>
-                {% comment %} Datum als Überschrift {% endcomment %}
-                {% for day in gruppen_plan.0 %}
-                    <th scope="col text-center">{{day}}</th> 
-                {% endfor %}            
-        {% comment %} Gruppe für Gruppe     {% endcomment %}
-
-        {% for gruppe in gruppen_plan.1 %}
-            {% comment %} vormittag {% endcomment %} 
-            <tr>
-                {% comment %} Überschrift Gruppe {% endcomment %}
-                <th scope="col>">{{gruppe.0.short}}</th>
-                {% for block in gruppe.1.0 %}
-                   <td class="shadow text-center">
-                    {{block.teacher.short}} <br />
-                    {{block.content}}
-                   </td>
-                {% endfor %}
-                {% comment %} nachmittag {% endcomment %}
-            <tr>
-            {% comment %} Zwischenlinie {% endcomment %}
+    <div class="row mb-3">
+        {% comment %} Auswahl Datum {% endcomment %}
+        <div class="col-1 border border-2 border-black text-center me-3 shadow" style="background-color: #EB362C">
+            <input id="dateselect" type="date" style="background-color: #EB362C" value="" onchange="dat_onchange({{team.id}})"/>
+        </div>
+        {% comment %} Datumsleiste  {% endcomment %}
+        {% for day in days %}
+        <div class="col-2 border border-2 border-black text-center me-3 shadow display-6" style="background-color: #4CD8EB">
+            {{day}}
+        </div>    
         {% endfor %}
-        </table>
+        {% for gruppe in gruppen_plan %}
+
+            <div class="col-1 border border-1 border-black text-center me-3 shadow" style="background-color: #4CD8EB">
+                {{gruppe.0}}
+            </div>
+            {% for day in gruppe.1.0 %}
+            <div class="col-2 border border-1 border-black text-center me-3 shadow">
+                {{day.teacher.user.last_name}}
+            </div>    
+            {% endfor %}
+        {% endfor %}       
     </div>
+    
+    <script>
+        function dat_onchange(team) {
+            let dates = $('#dateselect').val();
+            var formattedDate = moment(dates).format('DD.MM.YYYY');
+            window.location = `/plan/${team}/${formattedDate}`;
+        }
+    </script>    
 {% endblock content_fluid %}

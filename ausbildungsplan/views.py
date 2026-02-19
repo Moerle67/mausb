@@ -41,7 +41,7 @@ def start(request, team=None, date=None):
     gruppen = []
     # Gruppen der Teams aussuchen
     gruppen_lst = Gruppe.objects.filter(team=team, activ=True)
-    daten_plan.append(days)
+    # daten_plan.append(days)
     for gruppe in gruppen_lst:
         eine_gruppe = []                # Liste für eine Gruppe
         eine_gruppe.append(gruppe)      
@@ -64,10 +64,10 @@ def start(request, team=None, date=None):
 
         eine_gruppe.append(eine_gruppe_days)
         gruppen.append(eine_gruppe)    
-    print(gruppen)
     daten_plan.append(gruppen)
     content = {
+        'team': team,
         'days': days,
-        'gruppen_plan': daten_plan,
+        'gruppen_plan': gruppen,
     }
     return render(request, "ausbildungsplan/plan.html", content)
