@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 
 from .models import Daytime, Block
-from stammdaten.models import Team, Gruppe
+from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder
 
 import datetime
 # Create your views here.
@@ -28,6 +28,9 @@ def start(request, team=None, date=None):
     vm_ds = Daytime.objects.get(short="vm")
     nm_ds = Daytime.objects.get(short="nm")
     daytimes = (vm_ds, nm_ds)
+
+    # Listen bschäfftigter Mitarbeiter
+    besch_ma = []
     # Montag bestimmen
     date_moday = date - datetime.timedelta(days=date.weekday())
     days = []           # Wochentage als String
@@ -41,28 +44,51 @@ def start(request, team=None, date=None):
     gruppen = []
     # Gruppen der Teams aussuchen
     gruppen_lst = Gruppe.objects.filter(team=team, activ=True)
+    ma_beschaeftigt = [[[], [], [], [], []], [[], [], [], [], []]]
     # daten_plan.append(days)
     for gruppe in gruppen_lst:
         eine_gruppe = []                # Liste für eine Gruppe
         eine_gruppe.append(gruppe)      
         # Einzelne Wochentage
         eine_gruppe_days = []
+
         # Block Tageszeiten
+        daytime_cnt = 0
         for daytime in daytimes:
-            plan = []     
+            plan = []
+            besch_ma_day = []
+            day_cnt = 0    
             for day in days_date:    
-                block_vm = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
-                block_vm = None if len(block_vm) == 0 else block_vm[0]
-                plan.append(block_vm)
+                block = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
+                block = None if len(block) == 0 else block[0]
+                # Mitarbeiter in Liste "beschäftigt" eintragen
+                plan.append(block)
+                if block:
+                    ma_beschaeftigt[daytime_cnt][day_cnt].append(block.teacher)
+                day_cnt += 1
+            besch_ma.append(besch_ma_day)        # Mitarbeiter beschäftigt((vm: Tag1 - Tag5),(nm: Tag1 - Tag5))               
             eine_gruppe_days.append(plan)
+            daytime_cnt += 1
         eine_gruppe.append(eine_gruppe_days)
         gruppen.append(eine_gruppe)    
     daten_plan.append(gruppen)
-
-    # Freie Mitarbeiter 
+    # Freie Mitarbeiter
+    # Alle Mitarbeiter laden
+    ma_lst = Ausbilder.objects.filter(team=team, activ = True)
     freie_ma_lst = []
-    # Vormittag 
-    freie_ma_vm_lst = []
+    # Mitarbeiter in Liste beschäftigt suchen
+    for daytime in range(2):
+        for i in range(5):
+            freie_ma_lst.append(ma_lst)
+            # Jetzt durchsuchen
+            for ma in freie_ma_lst
+    # Vormittag
+    # Nachmittag
+    # Mitarbeiter in Liste Abwesend suchen
+    # Datum
+    # Wochentag
+
+    # print(freie_ma_lst)
     content = {
         'team': team,
         'days': days,

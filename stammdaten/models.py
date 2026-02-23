@@ -165,3 +165,33 @@ class LaptopTN(models.Model):
 
     def get_absolute_url(self):
         return reverse("LaptopTN_detail", kwargs={"pk": self.pk})
+
+class AbwesendMA(models.Model):
+    WD_CHOICES = (
+        (0, 'Montag'),
+        (1, 'Dienstag'),
+        (2, 'Mittwoch'),
+        (3, 'Donnerstag'),
+        (4, 'Freitag')
+    )
+    DAYTIME_CHOICES = (
+        ("gt", "Ganztag"),
+        ("am", "Vormittag"),
+        ("pm", "Nachmittag"),
+    )
+    aubi = models.ForeignKey(Ausbilder, verbose_name=("Ausbilder"), on_delete=models.CASCADE)
+    date = models.DateField(("Datum     entweder"), auto_now=False, auto_now_add=False, null=True, blank=True)
+    day = models.IntegerField(("Wochentag oder    "), choices=WD_CHOICES, null=True, blank=True)
+    daytime = models.CharField(("Tageszeit oder"), max_length=2, choices=DAYTIME_CHOICES, default="gt")
+    comment = models.TextField(("Kommentar"), null=True, blank=True)
+    
+    class Meta:
+        verbose_name = ("Abwesenheit Mitarbeiter")
+        verbose_name_plural = ("Abwesenheiten Mitarbeiter")
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.aubi} ({'' if self.date is None else self.date}{'' if self.day is None else self.day} - {self.daytime})"
+
+    def get_absolute_url(self):
+        return reverse("AubiBlock_detail", kwargs={"pk": self.pk})
