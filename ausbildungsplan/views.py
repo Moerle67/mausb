@@ -74,16 +74,21 @@ def start(request, team=None, date=None):
     daten_plan.append(gruppen)
     # Freie Mitarbeiter
     # Alle Mitarbeiter laden
-    ma_lst = Ausbilder.objects.filter(team=team, activ = True)
-    freie_ma_lst = []
+    ma_lst = list(Ausbilder.objects.filter(team=team, activ = True))
+    freie_ma_lst = [[[], [], [], [], []], [[], [], [], [], []]]
     # Mitarbeiter in Liste beschäftigt suchen
+    # Vormittag, Nachmittag
     for daytime in range(2):
-        for i in range(5):
-            freie_ma_lst.append(ma_lst)
+        for day in range(5):
+            freie_ma_lst[daytime][day] = ma_lst.copy()
             # Jetzt durchsuchen
-            for ma in freie_ma_lst
-    # Vormittag
-    # Nachmittag
+            for ma in freie_ma_lst[daytime][day]:
+                # print(ma, ma_beschaeftigt[daytime][day])
+                if ma in ma_beschaeftigt[daytime][day]:
+                    print("remove", daytime, day, ma)
+                    freie_ma_lst[daytime][day].remove(ma)
+    
+    print("freie Mitarbeiter", freie_ma_lst)
     # Mitarbeiter in Liste Abwesend suchen
     # Datum
     # Wochentag
