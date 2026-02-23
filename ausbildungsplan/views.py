@@ -58,6 +58,11 @@ def start(request, team=None, date=None):
         eine_gruppe.append(eine_gruppe_days)
         gruppen.append(eine_gruppe)    
     daten_plan.append(gruppen)
+
+    # Freie Mitarbeiter 
+    freie_ma_lst = []
+    # Vormittag 
+    freie_ma_vm_lst = []
     content = {
         'team': team,
         'days': days,
