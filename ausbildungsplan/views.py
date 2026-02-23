@@ -27,7 +27,7 @@ def start(request, team=None, date=None):
     # Tagsezeiten
     vm_ds = Daytime.objects.get(short="vm")
     nm_ds = Daytime.objects.get(short="nm")
-
+    daytimes = (vm_ds, nm_ds)
     # Montag bestimmen
     date_moday = date - datetime.timedelta(days=date.weekday())
     days = []           # Wochentage als String
@@ -47,27 +47,21 @@ def start(request, team=None, date=None):
         eine_gruppe.append(gruppe)      
         # Einzelne Wochentage
         eine_gruppe_days = []
-        # Block Vormittag
-        plan_vm = []     
-        for day in days_date:    
-            block_vm = Block.objects.filter(group = gruppe, date = day, daytime = vm_ds)
-            block_vm = None if len(block_vm) == 0 else block_vm[0]
-            plan_vm.append(block_vm)
-        eine_gruppe_days.append(plan_vm)
-        # Block Nachmittag
-        plan_nm = []
-        for day in days_date:    
-            block_nm = Block.objects.filter(group = gruppe, date = day, daytime = nm_ds)
-            block_nm = None if len(block_nm) == 0 else block_nm[0]
-            plan_nm.append(block_nm)
-        eine_gruppe_days.append(plan_nm)
-
+        # Block Tageszeiten
+        for daytime in daytimes:
+            plan = []     
+            for day in days_date:    
+                block_vm = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
+                block_vm = None if len(block_vm) == 0 else block_vm[0]
+                plan.append(block_vm)
+            eine_gruppe_days.append(plan)
         eine_gruppe.append(eine_gruppe_days)
         gruppen.append(eine_gruppe)    
     daten_plan.append(gruppen)
     content = {
         'team': team,
         'days': days,
+        'daytimes': daytimes,
         'gruppen_plan': gruppen,
     }
     return render(request, "ausbildungsplan/plan.html", content)
