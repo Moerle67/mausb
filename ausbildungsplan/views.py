@@ -83,12 +83,10 @@ def start(request, team=None, date=None):
             freie_ma_lst[daytime][day] = ma_lst.copy()
             # Jetzt durchsuchen
             for ma in freie_ma_lst[daytime][day]:
-                # print(ma, ma_beschaeftigt[daytime][day])
+                # Wenn MA an dem Tag und Tageszeit beschäftigt ist, streichen
                 if ma in ma_beschaeftigt[daytime][day]:
-                    print("remove", daytime, day, ma)
                     freie_ma_lst[daytime][day].remove(ma)
     
-    print("freie Mitarbeiter", freie_ma_lst)
     # Mitarbeiter in Liste Abwesend suchen
     # Datum
     # Wochentag
@@ -99,5 +97,6 @@ def start(request, team=None, date=None):
         'days': days,
         'daytimes': daytimes,
         'gruppen_plan': gruppen,
+        'freie_ma': freie_ma_lst,
     }
     return render(request, "ausbildungsplan/plan.html", content)
