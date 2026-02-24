@@ -64,7 +64,11 @@
             </div>
             {% comment %} Spalte 2 - 6 {% endcomment %}
             {% for day in  daytime %}
-            <div class="col-2 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: #4CD8EB" >
+            <div 
+                class = "col-2 border border-2 border-black text-center me-3 shadow d-print-none" 
+                style = "background-color: #4CD8EB" 
+                id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
+            >
                 {% for ma in day %}
                     <button 
                         id = "ma_{{ma.id}}" 
@@ -131,7 +135,7 @@
                     $(`#block_${group_row}_${daytime}_${day}`).attr('style', '');
                     
                     // MA in freie Ausbilder hinzufügen
-                    
+                    $(`#lfm_${daytime}_${day}`).append(`<button id="ma_${data['aubi_id']}" draggable="true" ondragstart="drag_btnma(event)" typ="button" class="shadow rounded-3 m-1" style="background-color: ${data['aubi_bg']}; color: ${data['aubi_fg']}">${data['aubi_name']}</button>`);
                 }
             });            
         }

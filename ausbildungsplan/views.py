@@ -132,7 +132,9 @@ def rem_block(request):
     block_ds.delete()
     answer = {
             'aubi_id': aubi.id,
-            'aubi_name:': aubi.user.last_name, 
+            'aubi_name': aubi.user.last_name,
+            'aubi_fg': aubi.fg_color,
+            'aubi_bg': aubi.bg_color, 
             'error': False,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")    
