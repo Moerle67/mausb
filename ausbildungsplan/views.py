@@ -86,7 +86,8 @@ def start(request, team=None, date=None):
             freie_ma_lst[daytime][day] = ma_lst.copy()
             # Beschäftigte Mitarbeiter abziehen
             for element in ma_beschaeftigt[daytime][day]:
-                freie_ma_lst[daytime][day].remove(element)
+                if element in freie_ma_lst[daytime][day]:
+                    freie_ma_lst[daytime][day].remove(element)
     
     # Mitarbeiter in Liste Abwesend suchen
     # Datum
