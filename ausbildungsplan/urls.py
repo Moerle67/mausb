@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.start, name = "start"),                      # Start ohne Paramter
     path('<int:team>', views.start, name = "team"),             # Start mit Team ID
     path('<int:team>/<str:date>', views.start, name = "date"),  # Start mit Team ID und Datum 'dd.mm.yyyy'
-    path('ausw_pp', views.ausw_pp, name = "ausw_pp"),  # Start mit Team ID und Datum 'dd.mm.yyyy'
+    path('ausw_pp', views.ausw_pp, name = "ausw_pp"),           # Plug & Play neuer Block'
+    path('rem_block', views.rem_block, name = "rem_block"),     # Block löschen
 
 ]

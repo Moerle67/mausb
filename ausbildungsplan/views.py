@@ -125,3 +125,14 @@ def ausw_pp(request):
             'error': False,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def rem_block(request):
+    block_ds = get_object_or_404(Block, id = int(request.POST['block_id']))
+    aubi = block_ds.teacher
+    block_ds.delete()
+    answer = {
+            'aubi_id': aubi.id,
+            'aubi_name:': aubi.user.last_name, 
+            'error': False,
+        }
+    return HttpResponse(json.dumps(answer), content_type="application/json")    

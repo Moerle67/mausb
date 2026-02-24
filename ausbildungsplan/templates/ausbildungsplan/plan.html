@@ -28,16 +28,20 @@
                 {% comment %} Ausbildung 2. - 6. Spalte {% endcomment %}
                 {% for day in daytime %}
                 <div class="col-2 border border-1 border-black rounded-4 text-center me-3 shadow"
-                    id    = "block_{{forloop.parentloop.counter0}}_{{forloop.counter0}}" 
+                    id    = "block_{{forloop.parentloop.parentloop.counter0}}_{{forloop.parentloop.counter0}}_{{forloop.counter0}}" 
                     style      = "background-color: {{day.teacher.bg_color}}; 
                                   color: {{day.teacher.fg_color}};"
                     ondragover = "allowDrop(event)" 
-                    ondrop     = "drop_btnma(event, {{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, '{{days.0}}', {{gruppe.0.id}}, {{team.id}})"
+                    ondrop     = "drop_btnma(event, {{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}')"
                 >
                     {% if day == None %}
                         <p>Ungeplant</p>
                     {% else %}
                         <span>{{day.teacher.user.last_name}}</span>
+                        <i class="bi bi-trash" 
+                          style="background-color: {{day.teacher.bg_color}}; color: {{day.teacher.fg_color}};" 
+                          onclick="onclick_trash({{day.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
+                        ></i>
                         <br />
                         <input title="Zusatzinfo" style="background-color: {{day.teacher.bg_color}}; width: 80%;">
                         <br />
@@ -92,7 +96,7 @@
             ev.preventDefault();
         }
 
-        function drop_btnma(ev, daytime, days, date_monday, group, team) {
+        function drop_btnma(ev, daytime, days, group, team, date_monday) {
             // alert("Test");
             ev.preventDefault();
             var aubi = ev.dataTransfer.getData("id");
@@ -108,9 +112,28 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
+
                     window.location = `/plan/${team}/${date_monday}`;
                 }
             });
+        }
+        function onclick_trash(block_id, daytime, day, gruppe, team, date_monday, group_row) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'ausbildungsplan:rem_block' %}",
+                data: {
+                    block_id: block_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    // Block löschen
+                    $(`#block_${group_row}_${daytime}_${day}`).html(`<p>Ungeplant</p>`);
+                    $(`#block_${group_row}_${daytime}_${day}`).attr('style', '');
+                    
+                    // MA in freie Ausbilder hinzufügen
+                    
+                }
+            });            
         }
     </script>    
 {% endblock content_fluid %}
