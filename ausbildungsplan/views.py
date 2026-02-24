@@ -89,11 +89,7 @@ def start(request, team=None, date=None):
                 if element in freie_ma_lst[daytime][day]:
                     freie_ma_lst[daytime][day].remove(element)
     
-    # Mitarbeiter in Liste Abwesend suchen
-    # Datum
-    # Wochentag
 
-    print(freie_ma_lst)
     content = {
         'team': team,
         'days': days,
