@@ -27,7 +27,7 @@
                 </div>
                 {% comment %} Ausbildung 2. - 6. Spalte {% endcomment %}
                 {% for day in daytime %}
-                <div class="col-2 border border-1 border-black text-center me-3 shadow"
+                <div class="col-2 border border-1 border-black rounded-4 text-center me-3 shadow"
                     id    = "block_{{forloop.parentloop.counter0}}_{{forloop.counter0}}" 
                     style      = "background-color: {{day.teacher.bg_color}}; 
                                   color: {{day.teacher.fg_color}};"
@@ -53,21 +53,21 @@
         <hr class="my-3>"/>
         {% for daytime in freie_ma%}
             {% comment %} 1. Spalte  {% endcomment %}
-            <div class="col-1 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: #4CD8EB">
+            <div class="col-1 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: rgba(68, 238, 122, 0.73)">
                 Freie MA
                 {% if forloop.counter0 == 0 %} AM {% endif %}
                 {% if forloop.counter0 == 1 %} PM {% endif %}
             </div>
             {% comment %} Spalte 2 - 6 {% endcomment %}
             {% for day in  daytime %}
-            <div class="col-2 border border-2 border-black text-center me-3 shadow d-print-none" >
+            <div class="col-2 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: #4CD8EB" >
                 {% for ma in day %}
                     <button 
                         id = "ma_{{ma.id}}" 
                         draggable = "true" 
                         ondragstart = "drag_btnma(event)" 
                         typ="button" 
-                        class="shadow" 
+                        class="shadow rounded-3 m-1" 
                         style="background-color: {{ma.bg_color}}; color: {{ma.fg_color}}">
                     {{ma.user.last_name}}
                     </button>
