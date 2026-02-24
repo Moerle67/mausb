@@ -1,5 +1,7 @@
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+import json
 
 from .models import Daytime, Block
 from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder
@@ -98,5 +100,32 @@ def start(request, team=None, date=None):
         'daytimes': daytimes,
         'gruppen_plan': gruppen,
         'freie_ma': freie_ma_lst,
+        'date_html': date.strftime("%Y-%m-%d"), 
     }
     return render(request, "ausbildungsplan/plan.html", content)
+
+def ausw_pp(request):
+
+    # Ausbilder aus DB lesen
+    aubi_id = request.POST['ausbilder'].split('_')[1]
+    aubi_ds = get_object_or_404(Ausbilder, id = aubi_id, activ = True)
+
+    # Gruppe aus Datenbank lesen
+    group_ds = get_object_or_404(Gruppe, id = request.POST['group'], activ = True)
+
+    # Datum
+    date = datetime.datetime.strptime(request.POST['monday'], "%d.%m.%Y").date()+datetime.timedelta(days=int(request.POST['days']))
+
+    # Blockobjekt erstellen oder überschreiben
+    block_ds, create = Block.objects.get_or_create(
+        group = group_ds,
+        date = date,
+        daytime = Daytime.objects.get(short="vm") if request.POST['daytime'] == '0' else Daytime.objects.get(short="nm")
+    )
+    block_ds.teacher = aubi_ds
+    block_ds.save()
+    # Rückgabe
+    answer = {
+            'error': False,
+        }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
