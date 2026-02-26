@@ -191,7 +191,7 @@ class AbwesendMA(models.Model):
         ordering = ['-date']
 
     def __str__(self):
-        return f"{self.aubi} ({'' if self.date is None else self.date}{'' if self.day is None else self.day} - {self.daytime})"
+        return f"{self.aubi} ({'' if self.date is None else self.date}{'' if self.day is None else self.get_day_display()} - {self.get_daytime_display()}) - {self.comment}"
 
     def get_absolute_url(self):
         return reverse("AubiBlock_detail", kwargs={"pk": self.pk})

@@ -37,8 +37,8 @@
                     {% if day == None %}
                         <p>Ungeplant</p>
                     {% else %}
-                        <span>{{day.teacher.user.last_name}}</span>
-                        <i class="bi bi-trash" 
+                        <span >{{day.teacher.user.last_name}}</span>
+                        <i class="bi bi-trash " 
                           style="background-color: {{day.teacher.bg_color}}; color: {{day.teacher.fg_color}};" 
                           onclick="onclick_trash({{day.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
                         ></i>
@@ -82,7 +82,40 @@
                 {% endfor %}
             </div>
             {% endfor %}
-        {% endfor %}     
+        {% endfor %}
+        {% comment %} Liste Abwesenheit {% endcomment %}
+        <hr class="my-3>"/> 
+        {% comment %} 1. Spalte  {% endcomment %}
+        <div class="col-1 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: rgba(68, 238, 122, 0.73)">
+            Abwesende Mitarbeiter
+            <a href="/admin/stammdaten/abwesendma/" target="_blank"><i class="bi bi-plus-square"></i></a>
+        </div>
+        {% comment %} Spalte 2 - 6 {% endcomment %}
+        {% for day in  abw_ma %}
+        <div 
+            class = "col-2 border border-2 border-black text-center me-3 shadow d-print-none" 
+            style = "background-color: #4CD8EB" 
+            id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
+        >
+        
+            {% for ma_abw in day %}
+                <a href="/admin/stammdaten/abwesendma/{{ma_abw.id}}/change/" target="_blank">
+                    <button 
+                        id = "ma_{{ma_abw.id}}" 
+                        title = "{{ma_abw.comment}}" 
+                        draggable = "true" 
+                        ondragstart = "drag_btnma(event)" 
+                        typ="button" 
+                        class="shadow rounded-3 m-1" 
+                        style="background-color: {{ma_abw.aubi.bg_color}}; color: {{ma_abw.aubi.fg_color}}">
+                    {{ma_abw.aubi.user.last_name}}
+                    </button>
+                </a>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+
     </div>
     
     <script>

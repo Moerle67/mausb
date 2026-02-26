@@ -10,6 +10,17 @@ import datetime
 # Create your views here.
 
 def start(request, team=None, date=None):
+    """Hauptanzeige
+
+    Args:
+        request: Daten vom Browser
+        team (int optional): ID Team.Stammdaten
+        date (String, optional): Datum: "dd.mm.yyyy"
+
+    Returns:
+        HttpResponse_
+    """
+
     date_format_str = "%d.%m.%Y"
     if not team:                                            # Kein Team vorgegeben                                               
         team = Team.objects.filter(activ = True).first()    # Auswahl erstes Team in DB
@@ -35,17 +46,19 @@ def start(request, team=None, date=None):
     besch_ma = []
     # Montag bestimmen
     date_moday = date - datetime.timedelta(days=date.weekday())
-    days = []           # Wochentage als String
-    days_date = []      # Wochentage als Date Objekt
-    abwesend_lst =[[], [], [], [], []] # Abwesenheit Wochentage
+    days = []                           # Wochentage als String
+    days_date = []                      # Wochentage als Date Objekt
+    abwesend_lst =[[], [], [], [], []]  # Abwesenheit nach Wochentagen
     for day in range(5):
-        day = date_moday + datetime.timedelta(days=i)
-        days.append(day.strftime(date_format_str))
-        days_date.append(day)
-        aubi_anwesend_lst = AbwesendMA.objects.filter(date=day)
-        abwesend_lst[day].append(list(aubi_anwesend_lst))
-
-    print(abwesend_lst)
+        date = date_moday + datetime.timedelta(days=day)
+        days.append(date.strftime(date_format_str))
+        days_date.append(date)
+        aubi_anwesend_lst = AbwesendMA.objects.filter(date=date)    # Abwesenheit nach Datum
+        abwesend_lst[day] = list(aubi_anwesend_lst)
+        aubi_anwesend_lst = list(AbwesendMA.objects.filter(day=day))
+        for element in aubi_anwesend_lst:                           # Regelmäßige Abwesenheit
+            abwesend_lst[day].append(element)
+                          
     daten_plan = []
     gruppen = []
     # Gruppen der Teams aussuchen
@@ -92,7 +105,17 @@ def start(request, team=None, date=None):
             for element in ma_beschaeftigt[daytime][day]:
                 if element in freie_ma_lst[daytime][day]:
                     freie_ma_lst[daytime][day].remove(element)
-    
+            # Abwesende Mitarbeiter abziehen
+            print(day, abwesend_lst[day])
+            for element in abwesend_lst[day]:  
+                if element.aubi in freie_ma_lst[daytime][day]:               # MA noch frei?
+                    if element.daytime == "gt":                         # Ganztags
+                        freie_ma_lst[daytime][day].remove(element.aubi)
+                    if daytime == 0 and element.daytime == "am":        # Vormittag
+                        freie_ma_lst[daytime][day].remove(element.aubi)                    
+                    if daytime == 1 and element.daytime == "pm":        # Nachmittag
+                        freie_ma_lst[daytime][day].remove(element.aubi)
+                    
 
     content = {
         'team': team,
@@ -100,6 +123,7 @@ def start(request, team=None, date=None):
         'daytimes': daytimes,
         'gruppen_plan': gruppen,
         'freie_ma': freie_ma_lst,
+        'abw_ma': abwesend_lst,
         'date_html': date.strftime("%Y-%m-%d"), 
     }
     return render(request, "ausbildungsplan/plan.html", content)
@@ -138,7 +162,7 @@ def rem_block(request):
             'aubi_id': aubi.id,
             'aubi_name': aubi.user.last_name,
             'aubi_fg': aubi.fg_color,
-            'aubi_bg': aubi.bg_color, 
+            'aubi_bg': aubi.bg_color,
             'error': False,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")    
