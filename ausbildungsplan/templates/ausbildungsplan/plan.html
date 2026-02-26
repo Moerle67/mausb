@@ -102,7 +102,7 @@
                 <a href="/admin/stammdaten/abwesendma/{{ma_abw.id}}/change/" target="_blank">
                     <button 
                         id = "ma_{{ma_abw.id}}" 
-                        title = "{{ma_abw.comment}}" 
+                        title = "{{ma_abw.get_daytime_display}} - {{ma_abw.comment}}" 
                         draggable = "true" 
                         ondragstart = "drag_btnma(event)" 
                         typ="button" 
