@@ -165,7 +165,8 @@ def rem_block(request):
             'aubi_bg': aubi.bg_color,
             'error': False,
         }
-    return HttpResponse(json.dumps(answer), content_type="application/json")    
+    return HttpResponse(json.dumps(answer), content_type="application/json")  
+  
 def save_content(request):
     """Content Block speichern
 
