@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'anwesenheit.apps.AnwesenheitConfig',           # Anwesenheit der TN 
     'start.apps.StartConfig',                       # Startbildschirm
     'ausbildungsplan.apps.AusbildungsplanConfig',   # Ausbildungsplan
+    'lehrplan.apps.LehrplanConfig',                  # Lehrplan
 ]
 
 MIDDLEWARE = [

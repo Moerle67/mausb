@@ -37,11 +37,15 @@ def start(request, team=None, date=None):
     date_moday = date - datetime.timedelta(days=date.weekday())
     days = []           # Wochentage als String
     days_date = []      # Wochentage als Date Objekt
-    for i in range(5):
+    abwesend_lst =[[], [], [], [], []] # Abwesenheit Wochentage
+    for day in range(5):
         day = date_moday + datetime.timedelta(days=i)
         days.append(day.strftime(date_format_str))
         days_date.append(day)
+        aubi_anwesend_lst = AbwesendMA.objects.filter(date=day)
+        abwesend_lst[day].append(list(aubi_anwesend_lst))
 
+    print(abwesend_lst)
     daten_plan = []
     gruppen = []
     # Gruppen der Teams aussuchen
