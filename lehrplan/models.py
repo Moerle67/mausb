@@ -99,6 +99,7 @@ class Lerneinheit(models.Model):
     thema = models.ForeignKey(Thema, verbose_name=("Thema"), on_delete=models.CASCADE)
     inhalt = models.CharField("Inhalt", max_length=50)
     beschreibung = models.TextField("Beschreibung")
+    information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
     planung = models.ForeignKey(Ausbilder, verbose_name="verantwortlich", on_delete=models.CASCADE)
     time = models.IntegerField("Anzahl Unterrichtseinheiten", default=5)
     lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder", on_delete=models.CASCADE)
