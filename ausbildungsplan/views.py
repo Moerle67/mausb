@@ -166,3 +166,19 @@ def rem_block(request):
             'error': False,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")    
+def save_content(request):
+    """Content Block speichern
+
+    Daten Ajax
+    id, content
+
+    Args:
+        request (_type_): _description_
+    """
+    ds_block = get_object_or_404(Block, id = int(request.POST["id"]))
+    ds_block.content = request.POST["content"]
+    ds_block.save()
+    answer = {
+            'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")    

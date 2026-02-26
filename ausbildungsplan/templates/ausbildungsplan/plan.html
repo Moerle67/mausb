@@ -43,7 +43,12 @@
                           onclick="onclick_trash({{day.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
                         ></i>
                         <br />
-                        <input title="Zusatzinfo" style="background-color: {{day.teacher.bg_color}}; width: 80%;">
+                        <input 
+                            title    ="Zusatzinfo" 
+                            style    ="background-color: {{day.teacher.bg_color}}; width: 80%; color: {{day.teacher.fg_color}};" 
+                            onchange = "onchance_info({{day.id}}, event.currentTarget.value)" 
+                            value    = {% if day.content %} "{{day.content}}"{% else %} "" {% endif %}
+                        >
                         <br />
                         <select class="mb-3" title="Inhalt der Ausbildung" style="background-color: {{day.teacher.bg_color}}; width: 80%;">
                             <option>-------</option>
@@ -171,6 +176,20 @@
                     $(`#lfm_${daytime}_${day}`).append(`<button id="ma_${data['aubi_id']}" draggable="true" ondragstart="drag_btnma(event)" typ="button" class="shadow rounded-3 m-1" style="background-color: ${data['aubi_bg']}; color: ${data['aubi_fg']}">${data['aubi_name']}</button>`);
                 }
             });            
+        }
+        function onchance_info(id, text) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'ausbildungsplan:save_content' %}",
+                data: {
+                    id: id,
+                    content: text,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                }
+            });            
+            
         }
     </script>    
 {% endblock content_fluid %}
