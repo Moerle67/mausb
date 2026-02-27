@@ -10,4 +10,4 @@ urlpatterns = [
     path('ausw_pp', views.ausw_pp, name = "ausw_pp"),           # Plug & Play neuer Block'
     path('rem_block', views.rem_block, name = "rem_block"),     # Block löschen
     path('save_content', views.save_content, name = "save_content"),     # Content speichern
-]
+    path('add_abwpp', views.add_abwpp, name = "add_abwpp"),     # Abwesende Mitarbeiter P&P

@@ -181,4 +181,14 @@ def save_content(request):
     answer = {
             'error': False,
     }
-    return HttpResponse(json.dumps(answer), content_type="application/json")    
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def add_abwpp(request):
+    """Abwesende Mitarbeiter Plug & Play
+        Request Form
+        id      - Mitarbeiter ID
+        date    - Datum Montag
+        day     - Wochentag 0-4
+    Args:
+        request (_type_): _description_
+    """

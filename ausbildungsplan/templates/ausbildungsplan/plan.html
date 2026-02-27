@@ -197,7 +197,19 @@
             
         }
         function drop_ma_abw(event, day, team, date) {
-            alert(day);
+            // D&D Mitarbeiter auf Mitarbeiter abwesend
+            $.ajax({
+                type: "POST",
+                url: "{% url 'ausbildungsplan:add_abwpp' %}",
+                data: {
+                    id: id,
+                    content: text,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                }
+            });            
+            
         }
     </script>    
 {% endblock content_fluid %}
