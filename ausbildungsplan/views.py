@@ -106,7 +106,6 @@ def start(request, team=None, date=None):
                 if element in freie_ma_lst[daytime][day]:
                     freie_ma_lst[daytime][day].remove(element)
             # Abwesende Mitarbeiter abziehen
-            print(day, abwesend_lst[day])
             for element in abwesend_lst[day]:  
                 if element.aubi in freie_ma_lst[daytime][day]:               # MA noch frei?
                     if element.daytime == "gt":                         # Ganztags

@@ -43,6 +43,7 @@
                           onclick="onclick_trash({{day.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
                         ></i>
                         <br />
+                        {% comment %} Input Zusatzinfo Block {% endcomment %}
                         <input 
                             title    ="Zusatzinfo" 
                             style    ="background-color: {{day.teacher.bg_color}}; width: 80%; color: {{day.teacher.fg_color}};" 
@@ -75,6 +76,7 @@
                 id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
             >
                 {% for ma in day %}
+                {% comment %} Button freier Mitarbeiter {% endcomment %}
                     <button 
                         id = "ma_{{ma.id}}" 
                         draggable = "true" 
@@ -101,10 +103,13 @@
             class = "col-2 border border-2 border-black text-center me-3 shadow d-print-none" 
             style = "background-color: #4CD8EB" 
             id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
+            ondragover = "allowDrop(event)" 
+            ondrop     = "drop_ma_abw(event, {{forloop.counter0 }}, {{team.id}}, '{{days.0}}')"
         >
-        
+            {% if day|length == 0 %} <br />{% endif %}
             {% for ma_abw in day %}
                 <a href="/admin/stammdaten/abwesendma/{{ma_abw.id}}/change/" target="_blank">
+                    {% comment %} Button abwesender Mitarbeiter {% endcomment %}
                     <button 
                         id = "ma_{{ma_abw.id}}" 
                         title = "{{ma_abw.get_daytime_display}} - {{ma_abw.comment}}" 
@@ -190,6 +195,9 @@
                 }
             });            
             
+        }
+        function drop_ma_abw(event, day, team, date) {
+            alert(day);
         }
     </script>    
 {% endblock content_fluid %}

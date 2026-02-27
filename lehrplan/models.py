@@ -70,8 +70,8 @@ class Fachrichtung(models.Model):
     details = models.TextField(("Details"), null = True, blank = True)
     
     class Meta:
-        verbose_name = _("Fachrichtung")
-        verbose_name_plural = _("Fachrichtungen")
+        verbose_name = "Fachrichtung"
+        verbose_name_plural = "Fachrichtungen"
 
     def __str__(self):
         return self.fachrichtung
@@ -102,7 +102,7 @@ class Lerneinheit(models.Model):
     information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
     planung = models.ForeignKey(Ausbilder, verbose_name="verantwortlich", on_delete=models.CASCADE)
     time = models.IntegerField("Anzahl Unterrichtseinheiten", default=5)
-    lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder", on_delete=models.CASCADE)
+    lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder")
 
     class Meta:
         verbose_name = "Lerneinheit"
