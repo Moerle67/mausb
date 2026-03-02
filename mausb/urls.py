@@ -24,6 +24,8 @@ urlpatterns = [
     path('stammdaten/',include('stammdaten.urls')),
     path('anw/', include('anwesenheit.urls')),
     path('plan/', include('ausbildungsplan.urls')),
+    path('inh/', include('lehrplan.urls')),
+    
     path('admin/', admin.site.urls, name="admin"),
     path('', include('start.urls')),
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,41 @@
+{% extends "stammdaten/base.html" %}
+
+{% block content %}
+<div class="accordion" id="accordion01">
+{% for fachrichtung in lst_fachrichtungen %}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFr{{fachrichtung.0.id}}" aria-expanded="true" aria-controls="#collapseFr{{fachrichtung.0.id}}">
+                {{fachrichtung.0}}
+            </button>
+        </h2>  
+        <div id="collapseFr{{fachrichtung.0.id}}" class="accordion-collapse collapse " data-bs-parent="#accordion01">
+            <div class="accordion-body">
+                <div class="accordion" id="accordion_fr_{{fachrichtung.0.id}}">
+                {% for thema in fachrichtung.1 %}
+                        <div class="accordion-item">
+                            <h3 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTh{{thema.0.id}}" aria-expanded="true" aria-controls="#collapseTh{{thema.0.id}}">
+                                    {{thema.0}}
+                                </button>
+                            </h3>
+                            <div id="collapseTh{{thema.0.id}}" class="accordion-collapse collapse " data-bs-parent="#accordion_fr_{{fachrichtung.0.id}}">
+                                <div class="accordion-body">
+                                    <ul>
+                                        {% for lerneinheit in thema.1 %}
+                                        <li>
+                                            <a href="/admin/lehrplan/lerneinheit/{{lerneinheit.id}}/change/" target="__blank">{{lerneinheit}}</a>
+                                        </li>
+                                        {% endfor %}  
+                                    </ul>
+                                </div>    
+                            </div>
+                        </div>
+                     {% endfor %}
+                </div>
+            </div>
+        </div>   
+    </div> 
+{% endfor %}
+</div>
+{% endblock content %}
