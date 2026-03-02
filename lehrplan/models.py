@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from django.db.models import Sum
 
 from stammdaten.models import Beruf, Ausbilder
 
@@ -15,7 +16,7 @@ class Rahmenlehrplan(models.Model):
 
     class Meta:
         verbose_name = ("Rahmenlehrplan")
-        verbose_name_plural = ("Rahmenlehrpläne")
+        verbose_name_plural = ("RLP_01_Rahmenlehrpläne")
 
     def __str__(self):
         return f"{self.bereich} - {self.bundesland} vom {self.date}"
@@ -40,25 +41,19 @@ class Lernfeld(models.Model):
     
     @property
     def get_block_stunden(self):
-        lst_block = Block.objects.filter(lernfeld=self)
+        # lst_block = Block.objects.filter(lernfeld=self)
         stunden = 0
-        for block in lst_block:
-            stunden += block.laenge
+#        for block in lst_block:
+#            stunden += block.laenge
         return stunden
 
-    @property
-    def get_berufe(self):
-        berufe = ""
-        lst_berufe = self.berufe.all()
-        for beruf in lst_berufe:
-            berufe += beruf.kuerzel + " / "
-        return berufe[:-2]   
          
     class Meta:
         verbose_name = ("Lernfeld")
-        verbose_name_plural = ("Lernfelder")
+        verbose_name_plural = ("RLP_02_Lernfelder")
         ordering = ["rahmenlehrplan", "nummer"]
-        
+         
+
     def __str__(self):
         return f"{self.nummer} {self.inhalt} {self.get_berufe} ({self.get_block_stunden}/{self.get_stunden} Stunden)"
 
@@ -67,30 +62,69 @@ class Lernfeld(models.Model):
 
 class Fachrichtung(models.Model):
     fachrichtung = models.CharField("Fachrichtung", max_length=50)
+    short = models.CharField(("Kürzel"), max_length=5)
     details = models.TextField(("Details"), null = True, blank = True)
     
     class Meta:
         verbose_name = "Fachrichtung"
-        verbose_name_plural = "Fachrichtungen"
+        verbose_name_plural = "LE_01_Fachrichtungen"
+
+    @property
+    def get_aubi_set(self):
+        aubi_set = set([])
+        lst_themen = Thema.objects.filter(fachrichtung = self)
+        for thema in lst_themen:
+            aubi_set |= thema.get_aubi_set
+        return aubi_set
+
+    @property
+    def get_aubi(self):
+        return  ", ".join([i.user.last_name for i in self.get_aubi_set])
+
+    @property
+    def get_sum(self):
+        lst_themen = Thema.objects.filter(fachrichtung = self)
+        summe = 0
+        for thema in lst_themen:
+            summe += thema.get_sum
+        return summe
 
     def __str__(self):
-        return self.fachrichtung
+        return f"{self.fachrichtung} ({self.get_sum} UE) - {self.get_aubi}"
 
     def get_absolute_url(self):
         return reverse("Fachrichtung_detail", kwargs={"pk": self.pk})
 
 class Thema(models.Model):
     thema = models.CharField("Thema", max_length=50)
+    short = models.CharField(("Kürzel"), max_length=5)
     fachrichtung = models.ForeignKey(Fachrichtung, verbose_name="Fachrichtung", on_delete=models.CASCADE)
     berufe = models.ManyToManyField(Beruf, verbose_name = "")
     details = models.TextField(("Details"), null = True, blank = True)
 
     class Meta:
         verbose_name = "Thema"
-        verbose_name_plural = "Themen"
+        verbose_name_plural = "LE_02_Themen"
+
+    @property
+    def get_aubi_set(self):
+        lst_aubi = set([])
+        lst_le = Lerneinheit.objects.filter(thema = self)
+        for le in lst_le:
+            lst_aubi |= set(list(le.ausbilder.filter(activ=True)))
+        return lst_aubi
+
+    @property
+    def get_aubi(self):
+        menge = self.get_aubi_set
+        return  ", ".join([i.user.last_name for i in menge])
+
+    @property
+    def get_sum(self):
+        return Lerneinheit.objects.filter(thema = self).aggregate(Sum("time"))['time__sum']
 
     def __str__(self):
-        return f"{self.thema} ({self.fachrichtung})"
+        return f"{self.thema} ({self.fachrichtung.short} ({self.get_sum})) - {self.get_aubi}"
 
     def get_absolute_url(self):
         return reverse("Thema_detail", kwargs={"pk": self.pk})
@@ -100,16 +134,24 @@ class Lerneinheit(models.Model):
     inhalt = models.CharField("Inhalt", max_length=50)
     beschreibung = models.TextField("Beschreibung")
     information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
-    planung = models.ForeignKey(Ausbilder, verbose_name="verantwortlich", on_delete=models.CASCADE)
+    ausbilder = models.ManyToManyField(Ausbilder, verbose_name=("Ausbilder"))
     time = models.IntegerField("Anzahl Unterrichtseinheiten", default=5)
-    lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder")
+    lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder", blank = True)
 
     class Meta:
         verbose_name = "Lerneinheit"
-        verbose_name_plural = "Lerneinheiten"   
+        verbose_name_plural = "LE_03_Lerneinheiten"
+        ordering = ['thema', 'inhalt']  
+
+    @property
+    def get_aubi(self):
+        lst_aubi = list(self.ausbilder.filter(activ = True))
+        print(self.inhalt, lst_aubi)
+        antwort = ", ".join([i.user.last_name for i in lst_aubi])
+        return antwort   
 
     def __str__(self):
-        return self.name
+        return f"{self.inhalt} {self.time} UE/{self.get_aubi} ({self.thema.short})"
 
     def get_absolute_url(self):
         return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})
