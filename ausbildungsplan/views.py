@@ -192,3 +192,20 @@ def add_abwpp(request):
     Args:
         request (_type_): _description_
     """
+
+    ma_id       = request.POST['id'].split('_')[1]
+    date_monday = request.POST['date']
+    day         = int(request.POST['day'])
+
+    aubi_ds = Ausbilder.objects.get(id=ma_id)
+    date = datetime.datetime.strptime(date_monday, "%d.%m.%Y") + datetime.timedelta(days= day)
+
+    ds_besch = AbwesendMA(aubi=aubi_ds, date=date)
+    ds_besch.save()
+
+    answer = {
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+

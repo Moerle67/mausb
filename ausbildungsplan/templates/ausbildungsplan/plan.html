@@ -182,6 +182,7 @@
                 }
             });            
         }
+
         function onchance_info(id, text) {
             $.ajax({
                 type: "POST",
@@ -198,15 +199,19 @@
         }
         function drop_ma_abw(event, day, team, date) {
             // D&D Mitarbeiter auf Mitarbeiter abwesend
+            var aubi = event.dataTransfer.getData("id");
             $.ajax({
                 type: "POST",
                 url: "{% url 'ausbildungsplan:add_abwpp' %}",
                 data: {
-                    id: id,
-                    content: text,
+                    id: aubi,
+                    date: date,
+                    day: day,
+                    id: aubi,
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
+                    window.location = `/plan/${team}/${date}`;
                 }
             });            
             
