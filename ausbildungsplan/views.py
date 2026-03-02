@@ -5,6 +5,7 @@ import json
 
 from .models import Daytime, Block
 from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder
+from lehrplan.models import Lerneinheit
 
 import datetime
 # Create your views here.
@@ -79,9 +80,16 @@ def start(request, team=None, date=None):
             day_cnt = 0    
             for day in days_date:    
                 block = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
+                if len(block) != 0:
+                    teacher =  block[0].teacher
+                    ma_le_lst = Lerneinheit.objects.filter(ausbilder=teacher)
+                else:
+                    ma_le_lst = None
+
                 block = None if len(block) == 0 else block[0]
+                plan.append((block, ma_le_lst))
+
                 # Mitarbeiter in Liste "beschäftigt" eintragen
-                plan.append(block)
                 if block:
                     ma_beschaeftigt[daytime_cnt][day_cnt].append(block.teacher)
                 day_cnt += 1
@@ -168,7 +176,7 @@ def rem_block(request):
   
 def save_content(request):
     """Content Block speichern
-
+    
     Daten Ajax
     id, content
 

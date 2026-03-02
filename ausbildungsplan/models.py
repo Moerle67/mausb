@@ -1,6 +1,7 @@
 from django.db import models
 from stammdaten.models import Ausbilder, Teilnehmer, Raum, Gruppe
 from django.urls import reverse
+from lehrplan.models import Lerneinheit
 
 # Create your models here.
 class Daytime(models.Model):
@@ -24,8 +25,8 @@ class Block(models.Model):
     daytime = models.ForeignKey(Daytime, verbose_name="Tageszeit", on_delete=models.RESTRICT)
     teacher = models.ForeignKey(Ausbilder, verbose_name=("Ausbilder"), on_delete=models.CASCADE, null=True, blank=True)
     content = models.CharField(("Info"), max_length=50, null=True, blank=True)
-    # lehrblock = models.ForeignKey(Lehrblock, verbose_name=("Ausbildungseinheit"), on_delete=models.CASCADE, null=True, blank=True)
-
+    lerneinheit = models.ForeignKey(Lerneinheit, verbose_name="Lerneinheit", on_delete=models.SET_NULL, null=True, blank=True)
+ 
     class Meta:
         verbose_name = ("Block")
         verbose_name_plural = ("Blöcke")
