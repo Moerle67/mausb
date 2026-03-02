@@ -86,7 +86,7 @@ class Fachrichtung(models.Model):
         lst_themen = Thema.objects.filter(fachrichtung = self)
         summe = 0
         for thema in lst_themen:
-            if thema:
+            if thema.get_sum:
                 summe += thema.get_sum
         return summe
 
