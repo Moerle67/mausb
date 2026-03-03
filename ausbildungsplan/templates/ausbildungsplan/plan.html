@@ -51,13 +51,18 @@
                             value    = {% if day.0.content %} "{{day.0.content}}"{% else %} "" {% endif %}
                         >
                         <br />
-                        <select class="mb-3" title="Inhalt der Ausbildung" style="background-color: {{day.0.teacher.bg_color}}; width: 80%; color: {{day.0.teacher.fg_color}};">
+                        <select 
+                            class="mb-3" title="Inhalt der Ausbildung" 
+                            style="background-color: {{day.0.teacher.bg_color}}; width: 80%; color: {{day.0.teacher.fg_color}};"
+                            onchange = "onchange_le({{day.0.id}}, event.currentTarget.value)"
+                        >
                             <option value="-1">-------</option>
                             <option value="new">Neue Lerneinheit erstellen</option>
                             {% for lerneinheit in day.1 %}
                                 <option 
-                                    value="{{lerneinheit.id}}"
-                                    {% if day.0.lerneinheit  ==  lerneinheit.id %} selected {% endif %}       
+                                    value    = "{{lerneinheit.id}}" 
+                                    title    = "{{lerneinheit.beschreibung}}"
+                                    {% if day.0.lerneinheit.id  ==  lerneinheit.id %} selected {% endif %}       
                                 >
                                     {{lerneinheit}}
                                 </option>
@@ -224,6 +229,42 @@
                 }
             });            
             
+        }
+
+        function onchange_le(block, le) {
+            if (le == "new") {
+                // Auf Seite "Erfassen Lereinheit umschalten"
+                window.location = `/admin/lehrplan/lerneinheit/add/`;
+            } else {
+                if (le == -1) {
+                    // Lerneinheit im Block löschen
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'ausbildungsplan:del_le' %}",
+                        data: {
+                            id: block,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(data) {
+                            
+                        }
+                    });            
+                } else {
+                // Lerneinheit im Block einstellen
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'ausbildungsplan:save_le' %}",
+                        data: {
+                            id: block,
+                            le: le,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(data) {
+                            
+                        }
+                    });
+                }
+            }
         }
     </script>    
 {% endblock content_fluid %}

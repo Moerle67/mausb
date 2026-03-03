@@ -147,7 +147,6 @@ class Lerneinheit(models.Model):
     @property
     def get_aubi(self):
         lst_aubi = list(self.ausbilder.filter(activ = True))
-        print(self.inhalt, lst_aubi)
         antwort = ", ".join([i.user.last_name for i in lst_aubi])
         return antwort   
 

@@ -216,4 +216,23 @@ def add_abwpp(request):
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+def del_le(request):
+    block_ds = get_object_or_404(Block, id = int(request.POST['id']))
+    block_ds.lerneinheit = None
+    block_ds.save()
 
+    answer = {
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def save_le(request):
+    block_ds = get_object_or_404(Block, id = int(request.POST['id']))
+    lerneinheit_ds = get_object_or_404(Lerneinheit, id = int(request.POST['le']))
+    block_ds.lerneinheit = lerneinheit_ds 
+    block_ds.save()
+    print(block_ds.lerneinheit)
+    answer = {
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
