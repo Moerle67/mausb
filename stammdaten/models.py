@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+# from ausbildungsplan.models import Daytime
 
 # Create your models here
 
@@ -195,3 +196,23 @@ class AbwesendMA(models.Model):
 
     def get_absolute_url(self):
         return reverse("AubiBlock_detail", kwargs={"pk": self.pk})
+
+class Jourfixe(models.Model):
+    DAYTIME_CHOICES = (
+        ("vm", "Vormittag"),
+        ("nm", "Nachmittag"),
+    )
+    gruppe = models.ForeignKey(Gruppe, verbose_name="Gruppe", on_delete=models.CASCADE)
+    date = models.DateField("Datum", auto_now=False, auto_now_add=False)
+    daytime = models.CharField(("Tageszeit"), max_length=2, choices = DAYTIME_CHOICES)
+    comment = models.TextField("Info", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Termin Jour Fixe"
+        verbose_name_plural = "Termine Jour Fixe"
+
+    def __str__(self):
+        return f"{self.gruppe} - ({self.date}/{self.daytime})"
+
+    def get_absolute_url(self):
+        return reverse("Jourfixe_detail", kwargs={"pk": self.pk})

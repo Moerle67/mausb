@@ -27,7 +27,10 @@
                 </div>
                 {% comment %} Ausbildung 2. - 6. Spalte {% endcomment %}
                 {% for day in daytime %}
-                <div class="col-2 border border-1 border-black rounded-4 text-center me-3 shadow"
+                <div class="col-2 border  
+                    {% if day.2 %} border-danger border-3 {% else %} border-black border-1 {% endif %}
+                    
+                    rounded-4 text-center me-3 shadow"
                     id    = "block_{{forloop.parentloop.parentloop.counter0}}_{{forloop.parentloop.counter0}}_{{forloop.counter0}}" 
                     style      = "background-color: {{day.0.teacher.bg_color}}; 
                                   color: {{day.0.teacher.fg_color}};"
@@ -35,13 +38,14 @@
                     ondrop     = "drop_btnma(event, {{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}')"
                 >
                     {% if day.0 == None %}
-                        <p>Ungeplant</p>
+                        <p>Ungeplant {% if day.2 %}<br /> Jour Fixe {% endif %}</p>
                     {% else %}
                         <span >{{day.0.teacher.user.last_name}}</span>
                         <i class="bi bi-trash " 
                           style="background-color: {{day.0.teacher.bg_color}}; color: {{day.0.teacher.fg_color}};" 
                           onclick="onclick_trash({{day.0.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
                         ></i>
+                        {% if day.2 %} <br />Jour Fixe {% endif %}
                         <br />
                         {% comment %} Input Zusatzinfo Block {% endcomment %}
                         <input 

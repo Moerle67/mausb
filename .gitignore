@@ -21,3 +21,4 @@ media/stammdaten/tnimg/
 lehrplan/__pycache__/*
 lehrplan/migrations/__pycache__/*
 
+stammdaten/migrations/0014_jourfixe.py

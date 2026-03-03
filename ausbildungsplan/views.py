@@ -4,7 +4,7 @@ from django.urls import reverse
 import json
 
 from .models import Daytime, Block
-from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder
+from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder, Jourfixe
 from lehrplan.models import Lerneinheit
 
 import datetime
@@ -86,8 +86,18 @@ def start(request, team=None, date=None):
                 else:
                     ma_le_lst = None
 
+                # Jour Fixe
+                print(daytime.short)
+                jf_ds = Jourfixe.objects.filter(gruppe = gruppe, date = day, daytime = daytime.short)
+
+                if len(jf_ds) > 0:
+                    print(jf_ds)
+                    jf_bool = True
+                else:
+                    jf_bool = False
+
                 block = None if len(block) == 0 else block[0]
-                plan.append((block, ma_le_lst))
+                plan.append((block, ma_le_lst, jf_bool))
 
                 # Mitarbeiter in Liste "beschäftigt" eintragen
                 if block:
