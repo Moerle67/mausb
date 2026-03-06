@@ -87,11 +87,9 @@ def start(request, team=None, date=None):
                     ma_le_lst = None
 
                 # Jour Fixe
-                print(daytime.short)
                 jf_ds = Jourfixe.objects.filter(gruppe = gruppe, date = day, daytime = daytime.short)
 
                 if len(jf_ds) > 0:
-                    print(jf_ds)
                     jf_bool = True
                 else:
                     jf_bool = False
@@ -241,7 +239,6 @@ def save_le(request):
     lerneinheit_ds = get_object_or_404(Lerneinheit, id = int(request.POST['le']))
     block_ds.lerneinheit = lerneinheit_ds 
     block_ds.save()
-    print(block_ds.lerneinheit)
     answer = {
         'error': False,
     }
