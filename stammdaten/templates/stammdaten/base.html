@@ -38,15 +38,23 @@
                                 <li class="nav-item ">
                                     <a class="nav-link text-danger" aria-current="page" href="/admin" target="__blank">Admin</a>
                                 </li>
+                                {% if perms.ausbildungsplan %}
                                 <li class="nav-item">
                                     <a class="nav-link" aria-current="page" href="{% url 'ausbildungsplan:start' %}">Ausbildungsplan</a>
                                 </li>
+                                {% endif %} {% if perms.lehrplan %}
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'inh:start' %}">Inhalte</a>
                                 </li>
+                                {% endif %} {% if perms.anwesenheit %}                                
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'anw:start' %}">Anwesenheit</a>
                                 </li>
+                                {% endif %} {% if perms.klausur %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'anw:start' %}">Klausur</a>
+                                </li>
+                                {% endif %}
                             </ul>
                         </div>
                     </div>
