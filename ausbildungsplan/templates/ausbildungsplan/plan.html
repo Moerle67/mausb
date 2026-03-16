@@ -1,21 +1,24 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content_fluid %}
+    <span class="d-none d-print-block text-center mb-3"><h1>Ausbildungsplan {{team}}</h1></span> 
     <div class="row justify-content-center align-items-center g-2 ">
         {% comment %} Auswahl Datum 1. Spalte {% endcomment %}
         <div class="col-1 border border-2 border-black text-center me-3 shadow" style="background-color: #EB362C">
-            <button class="btn btn-danger m-0 p-0" style="color: black;" type="button"><span onclick="adddate('{{days.0}}', -7, {{team.id}})" title="Eine Woche zurück">&lt;</span></button> 
+            <button class="d-print-none btn btn-danger m-0 p-0" style="color: black;" type="button"><span onclick="adddate('{{days.0}}', -7, {{team.id}})" title="Eine Woche zurück">&lt;</span></button> 
             <input 
+                class = "d-print-none"
                 id="dateselect" 
                 type="date" 
                 style="background-color: #EB362C; width: 60%" 
                 value="{{date_html}}" 
                 onchange="dat_onchange({{team.id}})"/>
-            <button class="btn btn-danger m-0 p-0" style="color: black;" type="button"><span onclick="adddate('{{days.0}}', 7, {{team.id}})" title="Eine Woche vorwärts">&gt;</span></button>    
+            <button class="btn btn-danger m-0 p-0 d-print-none" style="color: black;" type="button"><span onclick="adddate('{{days.0}}', 7, {{team.id}})" title="Eine Woche vorwärts">&gt;</span></button>   
+            <span class="d-none d-print-block">KW {{kw}}</span> 
         </div>
         {% comment %} Datumsleiste 2. - 6. Spalte{% endcomment %}
         {% for day in days %}
-        <div class="col-2 border border-2 border-black text-center me-3 shadow display-6" style="background-color: #4CD8EB">
+        <div class=" col-2 border border-2 border-black text-center me-3 shadow display-6" style="background-color: #4CD8EB">
             {{day}}
         </div>    
         {% endfor %}
@@ -43,7 +46,10 @@
                         <p>Ungeplant {% if day.2 %}<br /> Jour Fixe {% endif %}</p>
                     {% else %}
                         <span >{{day.0.teacher.user.last_name}}</span>
-                        <i class="bi bi-trash " 
+                        {% if day.0.content %}<span class="d-none d-print-block" >{{day.0.content}}</span>{% endif %}
+                        {% if day.0.lerneinheit %}<span class="d-none d-print-block" >{{day.0.lerneinheit.inhalt}}</span>{% endif %}
+                        
+                        <i class="bi bi-trash d-print-none" 
                           style="background-color: {{day.0.teacher.bg_color}}; color: {{day.0.teacher.fg_color}};" 
                           onclick="onclick_trash({{day.0.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
                         ></i>
@@ -51,14 +57,15 @@
                         <br />
                         {% comment %} Input Zusatzinfo Block {% endcomment %}
                         <input 
-                            title    ="Zusatzinfo" 
-                            style    ="background-color: {{day.0.teacher.bg_color}}; width: 80%; color: {{day.0.teacher.fg_color}};" 
+                            class    = "d-print-none"
+                            title    = "Zusatzinfo" 
+                            style    = "background-color: {{day.0.teacher.bg_color}}; width: 80%; color: {{day.0.teacher.fg_color}};" 
                             onchange = "onchance_info({{day.0.id}}, event.currentTarget.value)" 
                             value    = {% if day.0.content %} "{{day.0.content}}"{% else %} "" {% endif %}
                         >
                         <br />
                         <select 
-                            class="mb-3" title="Inhalt der Ausbildung" 
+                            class="mb-3 d-print-none" title="Inhalt der Ausbildung" 
                             style="background-color: {{day.0.teacher.bg_color}}; width: 80%; color: {{day.0.teacher.fg_color}};"
                             onchange = "onchange_le({{day.0.id}}, event.currentTarget.value)"
                         >
@@ -111,16 +118,16 @@
             {% endfor %}
         {% endfor %}
         {% comment %} Liste Abwesenheit {% endcomment %}
-        <hr class="my-3>"/> 
+        <hr class="my-3 d-print-none"/> 
         {% comment %} 1. Spalte  {% endcomment %}
-        <div class="col-1 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: rgba(68, 238, 122, 0.73)">
+        <div class="col-1 border border-2 border-black text-center me-3 shadow " style="background-color: rgba(68, 238, 122, 0.73)">
             Abwesende Mitarbeiter
-            <a href="/admin/stammdaten/abwesendma/" target="_blank"><i class="bi bi-plus-square"></i></a>
+            <a class="d-print-none" href="/admin/stammdaten/abwesendma/" target="_blank"><i class="bi bi-plus-square"></i></a>
         </div>
         {% comment %} Spalte 2 - 6 {% endcomment %}
         {% for day in  abw_ma %}
         <div 
-            class = "col-2 border border-2 border-black text-center me-3 shadow d-print-none" 
+            class = "col-2 border border-2 border-black text-center me-3 shadow" 
             style = "background-color: #4CD8EB" 
             id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
             ondragover = "allowDrop(event)" 
@@ -138,15 +145,16 @@
                         typ="button" 
                         class="shadow rounded-3 m-1" 
                         style="background-color: {{ma_abw.aubi.bg_color}}; color: {{ma_abw.aubi.fg_color}}">
-                    {{ma_abw.aubi.user.last_name}}
+                    {{ma_abw.aubi.user.last_name}} ({{ma_abw.daytime}})
                     </button>
                 </a>
             {% endfor %}
         </div>
         {% endfor %}
 
-
+        
     </div>
+    <div class="d-none d-print-block mt-3 float-end">Version von {{aktuell}}</div> 
     
     <script>
         function dat_onchange(team) {

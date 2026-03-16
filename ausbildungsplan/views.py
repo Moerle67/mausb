@@ -46,12 +46,13 @@ def start(request, team=None, date=None):
     # Listen bschäfftigter Mitarbeiter
     besch_ma = []
     # Montag bestimmen
-    date_moday = date - datetime.timedelta(days=date.weekday())
+    date_monday = date - datetime.timedelta(days=date.weekday())
+    kw = f"{date_monday.isocalendar()[1]}/{date_monday.strftime("%y")}"
     days = []                           # Wochentage als String
     days_date = []                      # Wochentage als Date Objekt
     abwesend_lst =[[], [], [], [], []]  # Abwesenheit nach Wochentagen
     for day in range(5):
-        date = date_moday + datetime.timedelta(days=day)
+        date = date_monday + datetime.timedelta(days=day)
         days.append(date.strftime(date_format_str))
         days_date.append(date)
         aubi_anwesend_lst = AbwesendMA.objects.filter(date=date)    # Abwesenheit nach Datum
@@ -133,13 +134,15 @@ def start(request, team=None, date=None):
                     
 
     content = {
-        'team': team,
-        'days': days,
-        'daytimes': daytimes,
-        'gruppen_plan': gruppen,
-        'freie_ma': freie_ma_lst,
-        'abw_ma': abwesend_lst,
-        'date_html': date.strftime("%Y-%m-%d"), 
+        'team'          : team,
+        'days'          : days,
+        'daytimes'      : daytimes,
+        'gruppen_plan'  : gruppen,
+        'freie_ma'      : freie_ma_lst,
+        'abw_ma'        : abwesend_lst,
+        'date_html'     : date.strftime("%Y-%m-%d"),
+        'kw'            : kw,
+        'aktuell'       : datetime.datetime.now().strftime("%d.%m.%Y %H:%M"),
     }
     return render(request, "ausbildungsplan/plan.html", content)
 
