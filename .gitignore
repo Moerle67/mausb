@@ -26,3 +26,4 @@ start/migrations/__pycache__/__init__.cpython-314.pyc
 
 klausur/migrations/__pycache__/*
 klausur/__pycache__/*
+.vscode/*
