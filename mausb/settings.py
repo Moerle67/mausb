@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'ausbildungsplan.apps.AusbildungsplanConfig',   # Ausbildungsplan
     'lehrplan.apps.LehrplanConfig',                 # Lehrplan
     'klausur.apps.KlausurConfig',                   # Klausur
+    'task.apps.TaskConfig',                         # Aufgaben
 ]
 
 MIDDLEWARE = [
