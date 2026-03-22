@@ -26,7 +26,7 @@
         <!-- place navbar here -->
         <div class="container-fluid bg-dark-subtle fixed-top shadow opacity-75 d-print-none">
             <div class="row g-2 border bg-dark-subtle">
-                <nav class="navbar navbar-expand-lg col">
+                <nav class="navbar navbar-expand-lg col-8">
                     <div class="container-fluid">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -54,6 +54,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link" href="{% url 'anw:start' %}">Klausur</a>
                                 </li>
+                                {% endif %}{% if perms.task %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{% url 'task:start' %}">Aufgaben <span class="badge text-bg-danger">{{tasks}}</span></a>
+                                </li>
                                 {% endif %}
                             </ul>
                         </div>
@@ -63,7 +67,7 @@
                     {% block zusatzmenue %}{% endblock zusatzmenue %}    
                 </div> 
                 {% comment %} Anmeldebereich {% endcomment %}
-                <div class="col">
+                <div class="col-4">
                     {% if user.is_authenticated %}
                     <form action="{% url 'stammdaten:logout' %}" method="POST">
                         {% csrf_token %}
