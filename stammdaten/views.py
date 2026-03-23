@@ -33,7 +33,6 @@ def user_logout(request):
 def task(request):
     user = request.user
     task = Aufgabe.objects.filter(aktiv=True, verantwortlich=user).count()
-    print(task)
     answer = {
         'error': False,
         'task': task,

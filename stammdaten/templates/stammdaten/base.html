@@ -114,22 +114,23 @@
     <script>
         // Dokument geladen, Task abfragen
         $( document ).ready(function() {
-            $.ajax({
-                type: "POST",
-                url: "{% url 'stammdaten:task' %}",
-                data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
-                },
-                success: function(data) {
-                    var task = data['task'];
-                    console.log(task);
-                    if (task > 0) {
-                        $('#task').text(task); 
-                    } else {
-                        $('#task').text();
+            var timerId = setInterval(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'stammdaten:task' %}",
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        var task = data['task'];
+                        if (task > 0) {
+                            $('#task').text(task); 
+                        } else {
+                            $('#task').text();
+                        }
                     }
-                }
-            });
+                });
+            }, 30000);  // aller 30 Sekunden
         });
     </script>    
 </body>

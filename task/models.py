@@ -32,6 +32,7 @@ class Aufgabe(models.Model):
     created = models.DateTimeField("Erstellt", auto_now=False, auto_now_add=True)
     changed = models.DateTimeField("Geändert", auto_now=True, auto_now_add=False)
     aktuell = models.BooleanField(("wird aktuell bearbeitet"), default=False)
+    zyklisch = models.BooleanField("wiederholt sich die Aufgabe?", default=False)
     aktiv = models.BooleanField(("Aktiv (offen)"), default=True)
 
     class Meta:
