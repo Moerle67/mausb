@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 
+from task.models import Aufgabe
 
+import json
 # Create your views here.
 
 def start(request):
@@ -26,3 +28,14 @@ def user_logout(request):
     cont = request.POST['cont']
     logout(request)
     return redirect(cont)
+
+# Abfrage laufender Tasks
+def task(request):
+    user = request.user
+    task = Aufgabe.objects.filter(aktiv=True, verantwortlich=user).count()
+    print(task)
+    answer = {
+        'error': False,
+        'task': task,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")

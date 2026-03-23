@@ -26,7 +26,7 @@
         <!-- place navbar here -->
         <div class="container-fluid bg-dark-subtle fixed-top shadow opacity-75 d-print-none">
             <div class="row g-2 border bg-dark-subtle">
-                <nav class="navbar navbar-expand-lg col-8">
+                <nav class="navbar navbar-expand-lg col-5">
                     <div class="container-fluid">
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -56,14 +56,14 @@
                                 </li>
                                 {% endif %}{% if perms.task %}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{% url 'task:start' %}">Aufgaben <span class="badge text-bg-danger">{{tasks}}</span></a>
+                                    <a class="nav-link" href="{% url 'task:start' %}">Aufgaben <span id="task" class="badge text-bg-danger"></span></a>
                                 </li>
                                 {% endif %}
                             </ul>
                         </div>
                     </div>
                 </nav>
-                <div class="col row">
+                <div class="col-3 row">
                     {% block zusatzmenue %}{% endblock zusatzmenue %}    
                 </div> 
                 {% comment %} Anmeldebereich {% endcomment %}
@@ -111,6 +111,27 @@
         crossorigin="anonymous"></script>
     {% block js %}
     {% endblock js %}
+    <script>
+        // Dokument geladen, Task abfragen
+        $( document ).ready(function() {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'stammdaten:task' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    var task = data['task'];
+                    console.log(task);
+                    if (task > 0) {
+                        $('#task').text(task); 
+                    } else {
+                        $('#task').text();
+                    }
+                }
+            });
+        });
+    </script>    
 </body>
 
 </html>
