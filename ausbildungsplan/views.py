@@ -243,6 +243,7 @@ def save_le(request):
     block_ds.lerneinheit = lerneinheit_ds 
     block_ds.save()
     answer = {
-        'error': False,
+        'error'     : False,
+        'le_inh'    : lerneinheit_ds.inhalt,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
