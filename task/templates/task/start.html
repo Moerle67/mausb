@@ -9,7 +9,7 @@
         <div class="bg-primary text-center">To Do</div>
         {% for element in todo %}
             <div>
-                <a class="btn btn-outline-dark m-2" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <a class="btn btn-outline-dark m-2 shadow" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                     {{element.ueber}}
                 </a>
             </div>
@@ -22,10 +22,10 @@
     </div>
     {% comment %} Liste progress {% endcomment %}
     <div class = "col-4 border shadow bg-info-subtle">
-        <div class="bg-info text-center">Progress</div>
+        <div class="bg-info text-center ">Progress</div>
         {% for element in progress %}
             <div>
-                <a class="btn btn-outline-dark m-2" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                     {{element.ueber}}
                 </a>
             </div>
@@ -38,7 +38,7 @@
     </div>
     {% comment %} Liste done {% endcomment %}
     <div class = "col-4 border shadow bg-success-subtle">
-        <div class="bg-success text-center">Done</div>
+        <div class="bg-success text-center shadow">Done</div>
         {% for element in done %}
             <div>
                 <a class="btn btn-outline-dark m-2" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
