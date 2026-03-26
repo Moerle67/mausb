@@ -115,10 +115,10 @@
         {% comment %} // Funktion Task abfragen {% endcomment %}
         function get_task() {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "{% url 'stammdaten:task' %}",
                 data: {
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
+//                    csrfmiddlewaretoken: '{{ csrf_token }}',
                 },
                 success: function(data) {
                     var task = data['task'];
@@ -135,8 +135,7 @@
             {% comment %} Task Abfrage aller 30 Sekunden {% endcomment %}
         $( document ).ready(function() {
             var timerId = setInterval(get_task, 30000);  // aller 30 Sekunden
-    });
-
+        });
     </script>    
 </body>
 
