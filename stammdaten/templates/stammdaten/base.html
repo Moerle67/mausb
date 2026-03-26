@@ -79,9 +79,9 @@
                     <form action="{% url 'stammdaten:login' %}" method="POST">
                         {% csrf_token %}
                         <input type="hidden" value="{{cont}}" name="cont">
-                        <button class="float-end">Anmelden</button>
-                        <input class="float-end" type="password" placeholder="Passwort" name="password" tabindex="1">
-                        <input class="float-end" type="text" placeholder="Benutzername" name="name" tabindex="2">
+                        <button class="float-end" tabindex='3'>Anmelden</button>
+                        <input class="float-end" tabindex='2' type="password" placeholder="Passwort" name="password" tabindex="1">
+                        <input class="float-end" tabindex='1' type="text" placeholder="Benutzername" name="name" tabindex="2">
                     </form>
                     {% endif %}
                 </div>
@@ -135,7 +135,8 @@
             {% comment %} Task Abfrage aller 30 Sekunden {% endcomment %}
         $( document ).ready(function() {
             var timerId = setInterval(get_task, 30000);  // aller 30 Sekunden
-        });
+    });
+
     </script>    
 </body>
 

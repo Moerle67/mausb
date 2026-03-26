@@ -18,4 +18,4 @@ def start(request):
         'done'      : done_lst,
     }
 
-    return render(request, 'task/start.html', content)
+    return render(request, 'task/task_start.html', content)

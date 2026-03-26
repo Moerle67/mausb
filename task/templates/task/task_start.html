@@ -1,7 +1,13 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content %}
-<h1>Aufgaben <i class="bi bi-plus text-secondary" title="Aufgabe hinzufügen"></i></h1>
+<h1>Aufgaben 
+    <i 
+        class="bi bi-plus text-secondary" 
+        title="Aufgabe hinzufügen"
+        id = "btn_task_add" 
+        ></i>
+</h1>
 <div class="row shadow border " >
     {% comment %} To Do Liste {% endcomment %}
     <div class = "col-4 border shadow bg-primary-subtle">
@@ -46,5 +52,38 @@
             </div>
         {% endfor %}
     </div>
+        <div id="grp_detail" class="modal fade hide" role="dialog" tabindex='-1'>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content form_content  bg-primary-subtle">
+                {% include './task_modal.html' %}
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#btn_task_add').click(function(e) {
+            console.log("Test");
+        //    $.ajax({
+        //        method: 'GET',
+        //        url: $(this).attr('url-endpoint'),
+        //        data: {
+        //            comp_slug: $(this).attr('comp-slug'),
+        //            grp_id: $(this).attr('grp-id')
+        //        },
+        //        success: handleSuccess,
+        //        error: handleError,
+        //    });
+            $('#grp_detail').modal('show');
+        })
+        
+        function handleSuccess(data) {
+            $(".form_content").html(data.group_form);
+        };
+
+        function handleError(error_data) {
+            console.log("error");
+            console.log(error_data);
+        };
+
+    </script>
 {% endblock content %}
 

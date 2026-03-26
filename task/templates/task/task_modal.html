@@ -1,0 +1,46 @@
+
+<div class="row m-2">
+    <form>
+        <h1>Neue Aufgabe</h1>
+        <div class="mb-3">
+            <label for="task_aufgabe" class="form-label">Aufgabe</label>
+            <input type="text" class="form-control" id="task_aufgabe">
+        </div>
+        <div class="mb-3">
+            <label for="task_bereich" class="form-label">Bereich</label>
+            <select class="form-select" id="task-bereich">
+                <option value="0">PC-Klinik</option>
+                <option value="1">Ausbildung</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="task_info" class="form-label">Informationen</label>
+            <textarea required class="form-control" placeholder="Geben Sie zusätzliche Informtionen ein" id="task_info" rows="5"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="task_verant" class="form-label">Verantwortlich</label>
+            <select class="form-select" aria-label="Default select example" id="task-verant">
+                <option value ="0">Thomas K</option>
+                <option value="1">Hr. Kaltenbach</option>
+                <option value="2">T. Kaltenbach</option>
+                <option value="3">der von CISCO</option>
+                <option value="3">IT-Wikinger</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="task_termin" class="form-label">Termin (optional)</label>
+            <input type="datetime-local" class="form-control" value="1" id="task_termin">
+        </div>
+
+        <div class="mb-3">
+            <label for="task_prio" class="form-label">Priorität</label>
+            <input type="number" class="form-control" value="1" id="task_prio">
+        </div>
+        <div class="mb-3">
+            <input class="form-check-input" type="checkbox" value="" id="task_zykl" />
+            <label for="task_zykl" class="form-label">Aufgabe wiederholend?</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Aufgabe erstellen</button>
+    </form>
+</div>
