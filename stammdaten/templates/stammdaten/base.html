@@ -115,10 +115,11 @@
         {% comment %} // Funktion Task abfragen {% endcomment %}
         function get_task() {
             $.ajax({
-                type: "GET",
+                type: "POST",
                 url: "{% url 'stammdaten:task' %}",
                 data: {
-//                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    test: 'test',
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
                 },
                 success: function(data) {
                     var task = data['task'];

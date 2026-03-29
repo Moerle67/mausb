@@ -1,6 +1,10 @@
 from django.shortcuts import render
+from django.contrib.auth.models import User
+import json
+from django.http import HttpResponse
 
-from .models import Aufgabe
+
+from .models import Aufgabe, Bereich
 
 # Create your views here.
 
@@ -19,3 +23,15 @@ def start(request):
     }
 
     return render(request, 'task/task_start.html', content)
+
+def get_task_form(request):
+    lst_bereich = Bereich.objects.all()
+    str_bereich = '<select class="form-select" id="task-bereich">'
+    for zeile in lst_bereich:
+        str_bereich += f'<option value = "{zeile.id}">{zeile.name}</option>'
+    str_bereich += '</select>'
+    lst_verant = User.objects.filter(is_active = True)
+    answer = {
+        'bereich': str_bereich,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")

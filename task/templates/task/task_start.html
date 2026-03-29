@@ -61,17 +61,19 @@
     </div>
     <script>
         $('#btn_task_add').click(function(e) {
-            console.log("Test");
-        //    $.ajax({
-        //        method: 'GET',
-        //        url: $(this).attr('url-endpoint'),
-        //        data: {
-        //            comp_slug: $(this).attr('comp-slug'),
-        //            grp_id: $(this).attr('grp-id')
-        //        },
-        //        success: handleSuccess,
-        //        error: handleError,
-        //    });
+            $.ajax({
+                type: "POST",
+                url: "{% url 'task:get_task_form' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    bereich = data['bereich'];
+                    console.log(bereich);
+                    $('#task-bereich').html(bereich);
+                },
+                error: handleError,
+            });
             $('#grp_detail').modal('show');
         })
         
