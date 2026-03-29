@@ -69,11 +69,15 @@
                 },
                 success: function(data) {
                     bereich = data['bereich'];
-                    console.log(bereich);
-                    $('#task-bereich').html(bereich);
+                    $('#task_bereich').html(bereich);
+                    console.log(data['verant']);
+                    $('#task_verant').html(data['verant']);
+                    
                 },
                 error: handleError,
             });
+            $('#btn_task').text('Aufgabe speichern');
+            $('#frm_task').attr('onsubmit', 'frm_mod_submit()');
             $('#grp_detail').modal('show');
         })
         
@@ -86,6 +90,32 @@
             console.log(error_data);
         };
 
+        function frm_mod_submit()  {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'task:save_task_form' %}",
+                data: {
+                    aufgabe             : $('#task_aufgabe').val(),
+                    bereich             : $('#task_bereich').val(),
+                    info                : $('#task_info').val(),
+                    verant              : $('#task_verant').val(),
+                    termin              : $('#task_termin').val(),
+                    prio                : $('#task_prio').val(),
+                    zykl                : $('#task_zykl').is(':checked'),
+                    csrfmiddlewaretoken : '{{ csrf_token }}',
+                },
+                success: function(data) {
+                    bereich = data['bereich'];
+                    $('#task_bereich').html(bereich);
+                    console.log(data['verant']);
+                    $('#task_verant').html(data['verant']);
+                    
+                },
+                error: handleError,
+            });
+ 
+            alert(zykl);
+        }     
     </script>
 {% endblock content %}
 
