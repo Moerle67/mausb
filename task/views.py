@@ -44,8 +44,13 @@ def get_task_form(request):
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 def save_task_form(request):
-    zykl = False if request.POST['zykl'] == "false" else True
-    aufgabe = request.POST['aufgabe']
+    zykl        = False if request.POST['zykl'] == "false" else True
+    aufgabe     = request.POST['aufgabe']
+    bereich     = request.POST['bereich']
+    info        = request.POST['info']
+    verant      = request.POST['verant']
+    termin      = request.POST['termin']
+    prio        = request.POST['prio']
     print(zykl, aufgabe)
     answer = {
         'error'   : False,
