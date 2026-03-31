@@ -10,14 +10,14 @@
 </h1>
 <div class="row shadow border " >
     {% comment %} To Do Liste {% endcomment %}
-    <div class = "col-4 border shadow bg-primary-subtle droppable" id="lst_todo">
+    <div class = "col border shadow bg-primary-subtle droppable" id="lst_todo">
         <div class="bg-primary text-center col-12">To Do</div>
         {% for element in todo %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark m-2 shadow col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
             </a>
 
-            <div class="collapse col-12" id="ce_{{element.id}}">
+            <div class="collapse col-12 mb-2" id="ce_{{element.id}}">
                 <div class="card card-body">
                     <pre>{{element.inhalt}}</pre>
                 </div>
@@ -25,29 +25,30 @@
         {% endfor %}
     </div>
     {% comment %} Liste progress {% endcomment %}
-    <div class = "col-4 border shadow bg-info-subtle droppable" id="lst_progr">
+    <div class = "col border shadow bg-info-subtle droppable" id="lst_progr">
         <div class = "bg-info text-center col-12 ">Progress</div>
         {% for element in progress %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark m-2 shadow col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
             </a>
-            <div class="collapse col-12" id="ce_{{element.id}}">
+            <div class="collapse col-12 mb-2" id="ce_{{element.id}}">
                 <div class="card card-body">
                     <pre>{{element.inhalt}}</pre>
                 </div>
             </div>
         {% endfor %}
     </div>
+    
     {% comment %} Liste done {% endcomment %}
-    <div class = "col-4 border shadow bg-success-subtle droppable" id="lst_done">
+    <div class = "col border shadow bg-success-subtle droppable" id="lst_done">
         <div class="bg-success text-center col-12">Done</div>
         {% for element in done %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
             </a>
-            <div class="collapse col-12" id="ce_{{element.id}}">
+            <div class="collapse col-12 mb-2" id="ce_{{element.id}}">
                 <div class = "card card-body">
-                    {{element.inhalt}}
+                   <pre>{{element.inhalt}}</pre>
                 </div>
             </div>
         {% endfor %}
@@ -59,6 +60,31 @@
             </div>
         </div>
     </div>
+
+    {% comment %} Liste own {% endcomment %}
+    {% if own %}
+        <div class = "col border shadow bg-success-subtle" id="lst_own">
+            <div class="bg-success text-center col-12">Eigene</div>
+            {% for element in own %}
+                <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    {{element.ueber}}
+                </a>
+                <div class="collapse col-12 mb-2" id="ce_{{element.id}}">
+                    <div class = "card card-body">
+                    {{element.verantwortlich.last_name}}, {{element.verantwortlich.first_name}}<hr />
+                    <pre>{{element.inhalt}}</pre>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+            <div id="grp_detail" class="modal fade hide" role="dialog" tabindex='-1'>
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content form_content  bg-primary-subtle shadow">
+                    {% include './task_modal.html' %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
     <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
     <script>       
         $( function() {
@@ -104,6 +130,7 @@
             $('#btn_task').text('Aufgabe speichern');
             $('#btn_task').attr('onClick', 'frm_mod_submit()');
             $('#grp_detail').modal('show');
+
         })
         
         function handleSuccess(data) {
@@ -132,7 +159,7 @@
                 },
                 success: function(data) {
                     $('#lst_todo').append(data['element']);
-                    
+                    window.location.reload(true);                    
                 },
                 error: handleError,
             });

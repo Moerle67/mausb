@@ -11,16 +11,19 @@ from .models import Aufgabe, Bereich
 
 def start(request):
     user = request.user
-    todo_lst = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = False)
-    progress_lst = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = True)
-    zykl_lst = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = True )
-    done_lst = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = False)
+    lst_todo = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = False)
+    lst_progress = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = True)
+    lst_zykl = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = True )
+    lst_done = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = False)
+    lst_own = Aufgabe.objects.filter(ersteller = user, aktiv = True).exclude(verantwortlich=user)
+
 
     content = {
-        'todo'      : todo_lst,
-        'progress'  : progress_lst,
-        'zykl'      : zykl_lst,
-        'done'      : done_lst,
+        'todo'      : lst_todo,
+        'progress'  : lst_progress,
+        'zykl'      : lst_zykl,
+        'done'      : lst_done,
+        'own'       : lst_own if len(lst_own) > 0 else None,
     }
 
     return render(request, 'task/task_start.html', content)
