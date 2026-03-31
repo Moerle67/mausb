@@ -51,8 +51,33 @@ def save_task_form(request):
     verant      = request.POST['verant']
     termin      = request.POST['termin']
     prio        = request.POST['prio']
-    print(zykl, aufgabe)
+    
+    ds_task = Aufgabe()
+
+    ds_task.ueber = aufgabe
+    ds_task.bereich = Bereich.objects.get(id=bereich)
+    ds_task.inhalt = info
+    ds_task.verantwortlich = User.objects.get(id=verant)
+    ds_task.termin = None if termin == "" else termin
+    ds_task.prio = prio
+    ds_task.ersteller = request.user
+
+    ds_task.save()
+    element = f"""  <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{ds_task.id}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        {ds_task.ueber}
+                    </a>
+
+                    <div class="collapse col-12" id="ce_{ds_task.id}">
+                        <div class="card card-body">
+                            {ds_task.inhalt}
+                        </div>
+                    </div>
+    """
+    ds_id = ds_task.id
+
     answer = {
-        'error'   : False,
+        'id'        : ds_id, 
+        'error'     : False,
+        'element'   : element,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")

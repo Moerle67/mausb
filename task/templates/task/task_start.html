@@ -10,12 +10,12 @@
 </h1>
 <div class="row shadow border " >
     {% comment %} To Do Liste {% endcomment %}
-    <div class = "col-4 border shadow bg-primary-subtle">
+    <div class = "col-4 border shadow bg-primary-subtle" id="lst_todo">
         <div class="bg-primary text-center col-12">To Do</div>
         {% for element in todo %}
-                <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
-                    {{element.ueber}}
-                </a>
+            <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                {{element.ueber}}
+            </a>
 
             <div class="collapse col-12" id="ce_{{element.id}}">
                 <div class="card card-body">
@@ -70,14 +70,13 @@
                 success: function(data) {
                     bereich = data['bereich'];
                     $('#task_bereich').html(bereich);
-                    console.log(data['verant']);
                     $('#task_verant').html(data['verant']);
                     
                 },
                 error: handleError,
             });
             $('#btn_task').text('Aufgabe speichern');
-            $('#frm_task').attr('onsubmit', 'frm_mod_submit()');
+            $('#btn_task').attr('onClick', 'frm_mod_submit()');
             $('#grp_detail').modal('show');
         })
         
@@ -91,6 +90,7 @@
         };
 
         function frm_mod_submit()  {
+            $('#grp_detail').modal('hide');
             $.ajax({
                 type: "POST",
                 url: "{% url 'task:save_task_form' %}",
@@ -105,16 +105,12 @@
                     csrfmiddlewaretoken : '{{ csrf_token }}',
                 },
                 success: function(data) {
-                    bereich = data['bereich'];
-                    $('#task_bereich').html(bereich);
-                    console.log(data['verant']);
-                    $('#task_verant').html(data['verant']);
+                    $('#lst_todo').append(data['element']);
                     
                 },
                 error: handleError,
             });
  
-            alert(zykl);
         }     
     </script>
 {% endblock content %}
