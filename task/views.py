@@ -1,8 +1,9 @@
 from django.shortcuts import get_object_or_404, render
-from django.contrib.auth.models import User
-import json
 from django.http import HttpResponse
+from django.contrib.auth.models import User
 
+import json
+from datetime import datetime
 
 from .models import Aufgabe, Bereich
 
@@ -101,6 +102,9 @@ def task_dnd(request):
             ds_task.aktiv   = False
             ds_task.aktuell = False
             print("done")
+
+    if len(request.POST['comment']) > 1:
+        ds_task.inhalt += "\n" +  datetime.now().strftime("%d.%m.%Y %H:%M:%S: ")+ request.POST['comment']              
     ds_task.save()
 
     answer = {

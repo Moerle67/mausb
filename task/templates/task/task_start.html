@@ -19,7 +19,7 @@
 
             <div class="collapse col-12" id="ce_{{element.id}}">
                 <div class="card card-body">
-                    {{element.inhalt}}
+                    <pre>{{element.inhalt}}</pre>
                 </div>
             </div>
         {% endfor %}
@@ -33,7 +33,7 @@
             </a>
             <div class="collapse col-12" id="ce_{{element.id}}">
                 <div class="card card-body">
-                    {{element.inhalt}}
+                    <pre>{{element.inhalt}}</pre>
                 </div>
             </div>
         {% endfor %}
@@ -68,6 +68,7 @@
                     var s_id = $(ui.draggable).attr("id");
                         s_id = s_id.split("_")[1];
                     var t_id = $(this).attr("id");
+                    let text = prompt("Geben Sie einen Kommentar ein", "");
                     $(`#ce_${s_id}`).remove();
                     $.ajax({
                         type: "POST",
@@ -75,6 +76,7 @@
                         data: {
                             id      : s_id,
                             target  : t_id,
+                            comment : text,
                             csrfmiddlewaretoken: '{{ csrf_token }}',
                         },
                         success: function(data) {
