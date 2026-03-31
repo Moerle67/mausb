@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth.models import User
 import json
 from django.http import HttpResponse
@@ -61,6 +61,7 @@ def save_task_form(request):
     ds_task.termin = None if termin == "" else termin
     ds_task.prio = prio
     ds_task.ersteller = request.user
+    ds_task.zyklisch = zykl
 
     ds_task.save()
     element = f"""  <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{ds_task.id}" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -79,5 +80,30 @@ def save_task_form(request):
         'id'        : ds_id, 
         'error'     : False,
         'element'   : element,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def task_dnd(request):
+    id      = int(request.POST['id'])
+    target  = request.POST['target']
+    ds_task = get_object_or_404(Aufgabe, id = id)
+
+    match target:
+        case "lst_todo":
+            ds_task.aktiv   = True
+            ds_task.aktuell = False
+            print("todo")
+        case "lst_progr":
+            ds_task.aktiv   = True
+            ds_task.aktuell = True
+            print("progr")
+        case "lst_done":
+            ds_task.aktiv   = False
+            ds_task.aktuell = False
+            print("done")
+    ds_task.save()
+
+    answer = {
+        'error'     : False,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")

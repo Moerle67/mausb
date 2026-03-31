@@ -10,10 +10,10 @@
 </h1>
 <div class="row shadow border " >
     {% comment %} To Do Liste {% endcomment %}
-    <div class = "col-4 border shadow bg-primary-subtle" id="lst_todo">
+    <div class = "col-4 border shadow bg-primary-subtle droppable" id="lst_todo">
         <div class="bg-primary text-center col-12">To Do</div>
         {% for element in todo %}
-            <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark m-2 shadow col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
             </a>
 
@@ -25,10 +25,10 @@
         {% endfor %}
     </div>
     {% comment %} Liste progress {% endcomment %}
-    <div class = "col-4 border shadow bg-info-subtle">
+    <div class = "col-4 border shadow bg-info-subtle droppable" id="lst_progr">
         <div class = "bg-info text-center col-12 ">Progress</div>
         {% for element in progress %}
-            <a class="btn btn-outline-dark m-2 shadow col" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark m-2 shadow col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
             </a>
             <div class="collapse col-12" id="ce_{{element.id}}">
@@ -39,10 +39,10 @@
         {% endfor %}
     </div>
     {% comment %} Liste done {% endcomment %}
-    <div class = "col-4 border shadow bg-success-subtle">
+    <div class = "col-4 border shadow bg-success-subtle droppable" id="lst_done">
         <div class="bg-success text-center col-12">Done</div>
         {% for element in done %}
-            <a class="btn btn-outline-dark shadow m-2 col" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+            <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
             </a>
             <div class="collapse col-12" id="ce_{{element.id}}">
@@ -59,7 +59,32 @@
             </div>
         </div>
     </div>
-    <script>
+    <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
+    <script>       
+        $( function() {
+            $( ".draggable" ).draggable();
+            $( ".droppable" ).droppable({
+                drop: function( event, ui ) {
+                    var s_id = $(ui.draggable).attr("id");
+                        s_id = s_id.split("_")[1];
+                    var t_id = $(this).attr("id");
+                    $(`#ce_${s_id}`).remove();
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'task:task_dnd' %}",
+                        data: {
+                            id      : s_id,
+                            target  : t_id,
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                        },
+                        success: function(data) {
+                            window.location.reload(true);
+                        },
+                        error: handleError,
+                    });
+                }
+            });
+        } );
         $('#btn_task_add').click(function(e) {
             $.ajax({
                 type: "POST",
@@ -71,7 +96,6 @@
                     bereich = data['bereich'];
                     $('#task_bereich').html(bereich);
                     $('#task_verant').html(data['verant']);
-                    
                 },
                 error: handleError,
             });

@@ -32,7 +32,7 @@ def user_logout(request):
 # Abfrage laufender Tasks
 def task(request):
     user = request.user
-    task = Aufgabe.objects.filter(aktiv=True, verantwortlich=user).count()
+    task = Aufgabe.objects.filter(aktiv = True, verantwortlich=user, aktuell = False).count()
     answer = {
         'error': False,
         'task': task,
