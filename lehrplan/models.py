@@ -47,6 +47,13 @@ class Lernfeld(models.Model):
 #            stunden += block.laenge
         return stunden
 
+    @property
+    def get_berufe(self):
+        berufe = ""
+        lst_berufe = self.berufe.all()
+        for beruf in lst_berufe:
+            berufe += beruf.kuerzel + " / "
+        return berufe[:-2]   
          
     class Meta:
         verbose_name = ("Lernfeld")
