@@ -11,7 +11,7 @@
 <div class="row shadow border " >
     {% comment %} To Do Liste {% endcomment %}
     <div class = "col border shadow bg-primary-subtle droppable" id="lst_todo">
-        <div class="bg-primary text-center col-12">To Do</div>
+        <div class="bg-primary text-center col-12 text-light">To Do</div>
         {% for element in todo %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark m-2 shadow col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
@@ -43,7 +43,7 @@
     
     {% comment %} Liste done {% endcomment %}
     <div class = "col border shadow bg-success-subtle droppable" id="lst_done">
-        <div class="bg-success text-center col-12">Done</div>
+        <div class="bg-success text-center col-12 text-light">Done</div>
         {% for element in done %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                 {{element.ueber}}
@@ -67,7 +67,7 @@
     {% comment %} Liste own {% endcomment %}
     {% if own %}
         <div class = "col border shadow bg-success-subtle" id="lst_own">
-            <div class="bg-success text-center col-12">Eigene</div>
+            <div class="bg-success text-center col-12 text-light">Eigene</div>
             {% for element in own %}
                 <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
                     {{element.ueber}}
