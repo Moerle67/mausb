@@ -52,7 +52,7 @@ class Lernfeld(models.Model):
         berufe = ""
         lst_berufe = self.berufe.all()
         for beruf in lst_berufe:
-            berufe += beruf.kuerzel + " / "
+            berufe += beruf.short + " / "
         return berufe[:-2]   
          
     class Meta:
