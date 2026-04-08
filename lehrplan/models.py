@@ -26,7 +26,7 @@ class Rahmenlehrplan(models.Model):
     
 class Lernfeld(models.Model):
     rahmenlehrplan = models.ForeignKey(Rahmenlehrplan, verbose_name=("Rahmenlehrplan"), on_delete=models.RESTRICT)
-    nummer = models.CharField(("Nummer"), max_length=5)
+    nummer = models.CharField(("Nummer"), max_length=50)
     inhalt = models.CharField(("Inhalt"), max_length=200)
     stunden1 = models.IntegerField(("Zeitrichtwerte 1. Jahr"), default = 0)
     stunden2 = models.IntegerField(("Zeitrichtwerte 2. Jahr"), default = 0)
