@@ -42,7 +42,7 @@
     </div>
     
     {% comment %} Liste done {% endcomment %}
-    <div class = "col border shadow bg-success-subtle droppable" id="lst_done">
+    <div class = "col border shadow bg-success-subtle " id="lst_done">
         <div class="bg-success text-center col-12 text-light">Done</div>
         {% for element in done %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -52,11 +52,17 @@
                 <div class = "card card-body">
                     <p>{{element.bereich}}</p>
                     <pre>{{element.inhalt}}</pre>
+                    <hr />
+                    <div>
+                    <i id ="trash" class="bi bi-trash3 float-end" ></i>
+                    </div>
                 </div>
             </div>
         {% endfor %}
     </div>
-        <div id="grp_detail" class="modal fade hide" role="dialog" tabindex='-1'>
+
+    {% comment %} Dialog Modal {% endcomment %}
+    <div id="grp_detail" class="modal fade hide" role="dialog" tabindex='-1'>
         <div class="modal-dialog modal-lg">
             <div class="modal-content form_content  bg-primary-subtle shadow">
                 {% include './task_modal.html' %}
@@ -87,7 +93,8 @@
                 </div>
             </div>
         </div>
-    {% endif %}
+        {% endif %}
+
     <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.js"></script>
     <script>       
         $( function() {
@@ -95,6 +102,7 @@
             $( ".droppable" ).droppable({
                 drop: function( event, ui ) {
                     var s_id = $(ui.draggable).attr("id");
+                    console.log(s_id);
                         s_id = s_id.split("_")[1];
                     var t_id = $(this).attr("id");
                     let text = prompt("Geben Sie einen Kommentar ein", "");
