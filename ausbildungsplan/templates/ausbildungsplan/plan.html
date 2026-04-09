@@ -48,7 +48,7 @@
                         <p>Ungeplant {% if day.2 %}<br /> Jour Fixe {% endif %}</p>
                     {% else %}
                         {% comment %} Inhaltsblockn nur für die Druckausgabe {% endcomment %}
-                        <span >{{day.0.teacher.user.last_name}}</span>
+                        <span class="fs-3">{{day.0.teacher.user.last_name}}</span>
                         <span id="inh_{{day.0.id}}" class="d-none d-print-block" >{% if day.0.content %}{{day.0.content}}{% else %} - {% endif %}</span>
                         <span id="le_{{day.0.id}}" class="d-none d-print-block" >{% if day.0.lerneinheit %}{{day.0.lerneinheit.inhalt}}{% else %} - {% endif %}</span>
                         
