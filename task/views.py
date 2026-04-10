@@ -11,10 +11,10 @@ from .models import Aufgabe, Bereich
 
 def start(request):
     user = request.user
-    lst_todo = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = False)
-    lst_progress = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = True)
-    lst_zykl = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = True )
-    lst_done = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = False)
+    lst_todo = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = False, arch = False)
+    lst_progress = Aufgabe.objects.filter(verantwortlich = user, aktiv = True, aktuell = True, arch = False)
+    lst_zykl = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, zyklisch = True, arch = False )
+    lst_done = Aufgabe.objects.filter(verantwortlich = user, aktiv = False, arch = False)
     lst_own = Aufgabe.objects.filter(ersteller = user, aktiv = True).exclude(verantwortlich=user)
 
 
@@ -110,6 +110,26 @@ def task_dnd(request):
         ds_task.inhalt += "\n" +  datetime.now().strftime("%d.%m.%Y %H:%M:%S: ")+ request.POST['comment']              
     ds_task.save()
 
+    answer = {
+        'error'     : False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def get_task(request):
+    id = request.POST['id']
+    ds_task = get_object_or_404(Aufgabe, id=id)
+    answer = {
+        'ds'        : str(ds_task),
+        'error'     : False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def del_task(request):
+    id = request.POST['id']
+    ds_task = get_object_or_404(Aufgabe, id=id)
+    ds_task.arch = True
+    ds_task.save()
+    
     answer = {
         'error'     : False,
     }

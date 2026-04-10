@@ -42,7 +42,7 @@
     </div>
     
     {% comment %} Liste done {% endcomment %}
-    <div class = "col border shadow bg-success-subtle " id="lst_done">
+    <div class = "col border shadow bg-success-subtle droppable" id="lst_done">
         <div class="bg-success text-center col-12 text-light">Done</div>
         {% for element in done %}
             <a id = "ebtn_{{element.id}}" class="btn btn-outline-dark shadow m-2 col draggable" data-bs-toggle="collapse" href="#ce_{{element.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
@@ -54,7 +54,7 @@
                     <pre>{{element.inhalt}}</pre>
                     <hr />
                     <div>
-                    <i id ="trash" class="bi bi-trash3 float-end" ></i>
+                    <i id ="trash" class="bi bi-trash3 float-end" onclick="trash_onclick({{element.id}})"></i>
                     </div>
                 </div>
             </div>
@@ -174,8 +174,38 @@
                 },
                 error: handleError,
             });
- 
-        }     
+        }
+
+        function trash_onclick(id) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'task:get_task' %}",
+                data: {
+                    id: id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function(data) {
+                    if (window.confirm("Wollen Sie die Aufgabe wirklich löschen?\n"+data['ds'])) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'task:del_task' %}",
+                            data: {
+                            id: id,
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            },
+                            success: function(data) {
+                                $(`#ebtn_${id}`).remove();
+                                $(`#ce_${id}`).remove();
+                                alert("Datensatz gelöscht");
+                            }
+                        }); 
+                    } else {
+                        alert("Löschen abgebrochen.");
+                    }
+                },
+                error: handleError,
+            });
+        }
     </script>
 {% endblock content %}
 

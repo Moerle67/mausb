@@ -34,6 +34,7 @@ class Aufgabe(models.Model):
     aktuell = models.BooleanField(("wird aktuell bearbeitet"), default=False)
     zyklisch = models.BooleanField("wiederholt sich die Aufgabe?", default=False)
     aktiv = models.BooleanField(("Aktiv (offen)"), default=True)
+    arch = models.BooleanField(("Aufgabe archiviert?"), default=False)
 
     class Meta:
         verbose_name = "Aufgabe"
