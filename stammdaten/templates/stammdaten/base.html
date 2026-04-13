@@ -76,13 +76,9 @@
                         <p class="float-end">{{user.username}}</p>
                     </form>
                     {% else %}
-                    <form action="{% url 'stammdaten:login' %}" method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" value="{{cont}}" name="cont">
-                        <button class="float-end" tabindex='3'>Anmelden</button>
-                        <input class="float-end" tabindex='2' type="password" placeholder="Passwort" name="password" tabindex="1">
-                        <input class="float-end" tabindex='1' type="text" placeholder="Benutzername" name="name" tabindex="2">
-                    </form>
+                        <button class="float-end" tabindex='3' onclick="ajax_login()">Anmelden</button>
+                        <input class="float-end" tabindex='2' type="password" placeholder="Passwort" id="password" tabindex="1">
+                        <input class="float-end" tabindex='1' type="text" placeholder="Benutzername" id="name" tabindex="2">
                     {% endif %}
                 </div>
             </div>
@@ -112,7 +108,7 @@
     {% block js %}
     {% endblock js %}
     <script>
-        {% comment %} // Funktion Task abfragen {% endcomment %}
+        // Funktion Task abfragen 
         function get_task() {
             $.ajax({
                 type: "POST",
@@ -122,9 +118,13 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                 },
                 success: function(data) {
-                    var task = data['task'];
-                    if (task > 0) {
-                        $('#task').text(task); 
+                    if (data['error'] == false) {
+                        var task = data['task'];
+                        if (task > 0) {
+                            $('#task').text(task); 
+                        } else {
+                            $('#task').text();
+                        }
                     } else {
                         $('#task').text();
                     }
@@ -137,6 +137,28 @@
         $( document ).ready(function() {
             var timerId = setInterval(get_task, 30000);  // aller 30 Sekunden
         });
+
+        function ajax_login(){
+            var name = $('#name').val();
+            var password = $('#password').val();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'stammdaten:ajax_login' %}",
+                data: {
+                    name: name,
+                    password: password,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                },
+                success: function(data) {
+                    if (data['error'] == false) {
+                        // erfolgreich angemeldet
+                        window.location.reload(true);
+                    } else {
+                        alert("Anmeldung gescheitert");
+                    }
+                }
+            });
+        }
     </script>    
 </body>
 
