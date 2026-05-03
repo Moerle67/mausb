@@ -54,13 +54,13 @@ def get_details_ae(ae):
     
     # gibt es Children?
     if len(lst_ae) > 0:
-        antwort += "<details>"
-        antwort += f"<summary>{ae.inhalt}</summary>"
+        antwort += "<div><details class='p-2 border shadow'>"
+        antwort += f"<summary>{ae}</summary>"
         for child_ae in lst_ae:
             antwort += get_details_ae(child_ae)
-        antwort += "</details>"
+        antwort += "</details><div>"
     else:
-        antwort += f"<p>{ae.inhalt}</p>"
+        antwort += f"<p>{ae}</p>"
 
     return antwort
 
