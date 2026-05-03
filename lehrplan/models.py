@@ -162,3 +162,40 @@ class Lerneinheit(models.Model):
 
     def get_absolute_url(self):
         return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})
+
+class Ausbildungseinheit(models.Model):
+    thema = models.ForeignKey("Ausbildungseinheit", verbose_name=("Thema"), on_delete=models.CASCADE, blank = True, null = True)
+    inhalt = models.CharField("Inhalt", max_length=50)
+    beschreibung = models.TextField("Beschreibung")
+    information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
+    ausbilder = models.ManyToManyField(Ausbilder, verbose_name=("Ausbilder"), blank=True)
+    time = models.IntegerField("Anzahl Unterrichtseinheiten", default=5)
+    lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder", blank = True)
+
+    class Meta:
+        verbose_name = "Lerneinheit"
+        verbose_name_plural = "LE_03_AE"
+        ordering = ['inhalt']  
+
+    @property
+    def get_aubi(self):
+        lst_aubi = list(self.ausbilder.filter(activ = True))
+        antwort = ", ".join([i.user.last_name for i in lst_aubi])
+        return antwort   
+
+    @property
+    def get_time(self):
+        sum_direkt = Ausbildungseinheit.objects.filter(thema=self).aggregate(Sum("time"))['time__sum']
+        sum_direkt = sum_direkt if sum_direkt else 0
+        sum_rekursiv = 0
+        lst_children = Ausbildungseinheit.objects.filter(thema=self)
+        for element in lst_children:
+            sum_rekursiv += element.get_time if element.get_time else 0
+        return sum_direkt + sum_rekursiv
+    
+    def __str__(self):
+        thema = self.thema.inhalt if self.thema != None else ""
+        return f"{self.inhalt} {self.time}/{self.get_time} UE/{self.get_aubi} ({thema})"
+
+    def get_absolute_url(self):
+        return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})

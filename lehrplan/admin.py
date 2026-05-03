@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Rahmenlehrplan, Lernfeld, Fachrichtung, Thema, Lerneinheit
+from .models import Rahmenlehrplan, Lernfeld, Fachrichtung, Thema, Lerneinheit, Ausbildungseinheit
 
 # Register your models here.
 
@@ -9,6 +9,14 @@ admin.site.register(Rahmenlehrplan)
 admin.site.register(Fachrichtung)
 admin.site.register(Thema)
 # admin.site.register(Lerneinheit)
+
+
+@admin.register(Ausbildungseinheit)
+class AEAdmin(admin.ModelAdmin):
+    filter_horizontal   = ['ausbilder', 'lernfeld']
+    list_filter         = ['thema']
+    search_fields       = ['inhalt', 'beschreibung']
+
 
 @admin.register(Lerneinheit)
 class TeamAdmin(admin.ModelAdmin):

@@ -51,7 +51,6 @@ def ajax_login(request):
 def task(request):
     if request.user.id != None:
         user = request.user
-        print(user)
         task = Aufgabe.objects.filter(aktiv = True, verantwortlich=user, aktuell = False).count()
         answer = {
             'error': False,
