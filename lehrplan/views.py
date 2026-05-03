@@ -22,13 +22,19 @@ def start(request):
 def start2(request):
     lst_top_themen = Ausbildungseinheit.objects.filter(thema = None)
     liste = []
+    lst_ae = ""
     for top_thema in lst_top_themen:
         liste.append((top_thema, get_lst_ae(top_thema)))
-    print(liste)
+    # print(liste)
+    for element in lst_top_themen:
+        test = get_details_ae(element)
+        print(test)
+        lst_ae += test
     content = {
-        'lst_fachrichtungen': None
-    }
-    return render(request, "lehrplan/start.html", content)
+        'lst_fachrichtungen'  : None,
+        'lst_ae'              : lst_ae             
+    }   
+    return render(request, "lehrplan/start2.html", content)
 
 def get_lst_ae(ae):
     # alle Child-Elemente finden
@@ -42,10 +48,20 @@ def get_lst_ae(ae):
         return lst_ae_child
     
 def get_details_ae(ae):
+    antwort = ""
     # Children laden
     lst_ae = Ausbildungseinheit.objects.filter(thema=ae)
+    
     # gibt es Children?
     if len(lst_ae) > 0:
-        
+        antwort += "<details>"
+        antwort += f"<summary>{ae.inhalt}</summary>"
+        for child_ae in lst_ae:
+            antwort += get_details_ae(child_ae)
+        antwort += "</details>"
+    else:
+        antwort += f"<p>{ae.inhalt}</p>"
+
+    return antwort
 
 

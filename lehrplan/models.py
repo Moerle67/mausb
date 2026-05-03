@@ -173,8 +173,8 @@ class Ausbildungseinheit(models.Model):
     lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder", blank = True)
 
     class Meta:
-        verbose_name = "Lerneinheit"
-        verbose_name_plural = "LE_03_AE"
+        verbose_name = "Ausbildungseinheit"
+        verbose_name_plural = "Ausbildungseinheiten"
         ordering = ['inhalt']  
 
     @property
