@@ -60,7 +60,7 @@ def get_details_ae(ae):
             antwort += get_details_ae(child_ae)
         antwort += "</details><div>"
     else:
-        antwort += f"<p>{ae}</p>"
+        antwort += f"<p >{ae}</p>"
 
     return antwort
 

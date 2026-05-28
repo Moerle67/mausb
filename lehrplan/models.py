@@ -164,12 +164,13 @@ class Lerneinheit(models.Model):
         return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})
 
 class Ausbildungseinheit(models.Model):
-    thema = models.ForeignKey("Ausbildungseinheit", verbose_name=("Thema"), on_delete=models.CASCADE, blank = True, null = True)
+    thema = models.ForeignKey("Ausbildungseinheit", verbose_name=("Thema"), on_delete=models.CASCADE, related_name="ab_thema" ,blank = True, null = True)
     inhalt = models.CharField("Inhalt", max_length=50)
-    beschreibung = models.TextField("Beschreibung")
+    beschreibung = models.TextField("Beschreibung", blank = True, null = True)
+    voraussetzung = models.ForeignKey("Ausbildungseinheit", verbose_name="Voraussetzung", on_delete=models.SET_NULL, related_name="ab_req", blank = True, null = True) 
     information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
     ausbilder = models.ManyToManyField(Ausbilder, verbose_name=("Ausbilder"), blank=True)
-    time = models.IntegerField("Anzahl Unterrichtseinheiten", default=5)
+    time = models.IntegerField("Anzahl Unterrichtseinheiten", default=0)
     lernfeld = models.ManyToManyField(Lernfeld, verbose_name="entsprechende Lernfelder", blank = True)
 
     class Meta:
