@@ -25,10 +25,9 @@ urlpatterns = [
     path('anw/', include('anwesenheit.urls')),
     path('plan/', include('ausbildungsplan.urls')),
     path('inh/', include('lehrplan.urls')),
-    path('klausur/', include('klausur.urls')),
+    path('klausur/', include('kklausur.urls')),
     path('task/', include('task.urls')),
     path('fa/', include('frageantwort.urls')),
-    
     path('admin/', admin.site.urls, name="admin"),
     path('', include('start.urls')),
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

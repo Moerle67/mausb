@@ -43,9 +43,9 @@ INSTALLED_APPS = [
     'start.apps.StartConfig',                       # Startbildschirm
     'ausbildungsplan.apps.AusbildungsplanConfig',   # Ausbildungsplan
     'lehrplan.apps.LehrplanConfig',                 # Lehrplan
-    'klausur.apps.KlausurConfig',                   # Klausur
     'task.apps.TaskConfig',                         # Aufgaben
-    'frageantwort.apps.FrageantwortConfig',          # Befragung Teilnehmer
+    'frageantwort.apps.FrageantwortConfig',         # Befragung Teilnehmer
+    'kklausur.apps.KklausurConfig',                  # Kurzklausuren
 ]
 
 MIDDLEWARE = [
