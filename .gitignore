@@ -31,4 +31,4 @@ task/migrations/__pycache__/*
 task/__pycache__/*
 
 .vscode/*
-Mörl Server.session.sql
+mausb/settings.py

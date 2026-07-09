@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'lehrplan.apps.LehrplanConfig',                 # Lehrplan
     'klausur.apps.KlausurConfig',                   # Klausur
     'task.apps.TaskConfig',                         # Aufgaben
+    'frageantwort.apps.FrageantwortConfig',          # Befragung Teilnehmer
 ]
 
 MIDDLEWARE = [

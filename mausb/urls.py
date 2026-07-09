@@ -27,6 +27,7 @@ urlpatterns = [
     path('inh/', include('lehrplan.urls')),
     path('klausur/', include('klausur.urls')),
     path('task/', include('task.urls')),
+    path('fa/', include('frageantwort.urls')),
     
     path('admin/', admin.site.urls, name="admin"),
     path('', include('start.urls')),
