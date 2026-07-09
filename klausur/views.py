@@ -1,7 +1,7 @@
 import datetime, math
 from django.http import Http404, HttpResponse
 from django.shortcuts import redirect, render
-from .models import Klausur, Klausurthema, Frage, Teilnehmer, Answer, IHK_key
+from .models import Klausur, Frage, Teilnehmer, Answer, IHK_key, Klausurthema
 from django.db.models import Sum, Avg
 import locale, random
 from django.contrib.auth.decorators import permission_required

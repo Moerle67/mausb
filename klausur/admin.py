@@ -5,11 +5,8 @@ from .models import *
 
 # Register your models here.
 # admin.site.register(Frage)
-admin.site.register(Thema)
 #admin.site.register(Klausur)
 #admin.site.register(Klausurthema)
-admin.site.register(Teilnehmer)
-admin.site.register(Gruppe)
 admin.site.register(Answer)
 admin.site.register(IHK_key)
 admin.site.register(Bewertung)
@@ -34,9 +31,6 @@ def klaus_einst(modeladmin, request, queryset):
 class FrageAdmin(admin.ModelAdmin):
     list_filter = ['thema']
 
-@admin.register(Klausurthema)
-class KlausurthemaAdmin(admin.ModelAdmin):
-    list_filter = ['klausur']
 
 @admin.register(Klausur)
 class KlausurAdmin(admin.ModelAdmin):

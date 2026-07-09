@@ -4,37 +4,23 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 import math
 
+from lehrplan.models import Ausbildungseinheit
+from stammdaten.models import Gruppe, Teilnehmer
+
 # Create your models here.
-class Thema(models.Model):
-    titel = models.CharField(("Titel"), max_length=250, primary_key=True)
-    kommentar = models.TextField(("Kommentar"), blank=True, null=True)
-    
-
-    class Meta:
-        verbose_name = ("Thema")
-        verbose_name_plural = ("Themen")
-        ordering = ['titel']
-    
-    def __str__(self):
-        return self.titel
-
-    #def get_absolute_url(self):
-    #    return reverse("Thema_detail", kwargs={"pk": self.pk})
-
 
 class Frage(models.Model):
-    titel = models.CharField(("Thema"), max_length=250)
+    titel = models.CharField(("Thema intern"), max_length=250)
     inhalt = models.CharField("Überschrift", max_length=50, default="?")
     frage = models.TextField(("Frage"))
     musterantwort = models.TextField(("Musterantwort"), default ="")
     bild = models.ImageField(("Bild"), blank=True, null=True)
     bildmuster = models.ImageField(("Bild Muster"), blank=True, null=True)
     bildbreite = models.IntegerField(("Bildbreite in %"), default=80)
-    thema = models.ForeignKey(Thema, verbose_name=("Thema"), on_delete=models.RESTRICT)
+    thema = models.ForeignKey(Ausbildungseinheit, verbose_name=("Thema"), on_delete=models.RESTRICT)
     punkte = models.IntegerField(("Erreichbare Punkte"), default=1)
-#    platz = models.IntegerField(("Platz"), default=2)
-    schwierigkeit = models.IntegerField(("Schwierigkeit") , default=2)
     author = models.ForeignKey(User, verbose_name="Autor", on_delete=models.RESTRICT)
+
     class Meta:
         verbose_name = ("Frage")
         verbose_name_plural = ("Fragen")
@@ -45,41 +31,11 @@ class Frage(models.Model):
 
     #def get_absolute_url(self):
     #    return reverse("Fragen_detail", kwargs={"pk": self.pk})
-class Teilnehmer(models.Model):
-    name = models.CharField(("Name"), max_length=250)
-    info = models.TextField("Infos", blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Teilnehmer"
-        verbose_name_plural = "Teilnehmer"
-        ordering = ["name"]
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_url(self):
-        return reverse("Teilnehmer_detail", kwargs={"pk": self.pk})
-
-class Gruppe(models.Model):
-    name = models.CharField("Bezeichnung", max_length=50)
-    teilnehmer = models.ManyToManyField(Teilnehmer, verbose_name="Teilnehmer")
-
-    class Meta:
-        verbose_name = ("Gruppe")
-        verbose_name_plural = ("Gruppen")
-        ordering = ['name']
-        
-    def __str__(self):
-        return self.name
-
-    #def get_absolute_url(self):
-    #    return reverse("Gruppe_detail", kwargs={"pk": self.pk})
     
 class Klausur(models.Model):
     titel = models.CharField(("Überschrift"), max_length=50)
     thema = models.CharField(("Thema"), max_length=50)
     termin = models.DateTimeField(("termin"), auto_now=False, auto_now_add=False)
-    # gruppe = models.CharField(("Gruppe"), max_length=50)
     gruppe = models.ForeignKey(Gruppe, verbose_name=("Gruppe"), on_delete=models.CASCADE, null=True)
     fragen = models.ManyToManyField(Frage, verbose_name=("Fragen"))
     author = models.ForeignKey(User, verbose_name="Autor", on_delete=models.RESTRICT)
@@ -108,8 +64,6 @@ class Klausur(models.Model):
     #def get_absolute_url(self):
     #    return reverse("klausur_design", kwargs={"pk": self.pk})
     
-
-
 class Klausurthema(models.Model):
     klausur = models.ForeignKey(Klausur, verbose_name=("Klausur"), on_delete=models.CASCADE)
     frage = models.ForeignKey(Frage, verbose_name=("Frage"), on_delete=models.RESTRICT)

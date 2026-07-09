@@ -31,4 +31,5 @@ task/migrations/__pycache__/*
 task/__pycache__/*
 
 .vscode/*
+
 mausb/settings.py
