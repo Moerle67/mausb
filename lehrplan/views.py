@@ -55,12 +55,12 @@ def get_details_ae(ae):
     # gibt es Children?
     if len(lst_ae) > 0:
         antwort += "<div><details class='p-2 border shadow'>"
-        antwort += f"<summary>{ae}</summary>"
+        antwort += f"<summary>{ae} <a href='kklausur/{ae.id}' target='__empty' title='Neues untergeordnetes Element'><i class='bi bi-plus-circle'></i></a></summary>"
         for child_ae in lst_ae:
             antwort += get_details_ae(child_ae)
         antwort += "</details><div>"
     else:
-        antwort += f"<p >{ae}</p>"
+        antwort += f"<p >{ae} <a href='kklausur/{ae.id}' target='__empty'><i class='bi bi-plus-circle'></i></a></p>"
 
     return antwort
 
