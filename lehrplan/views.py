@@ -56,18 +56,30 @@ def get_details_ae(ae):
     # gibt es Children?
     if len(lst_ae) > 0:
         antwort += "<div><details class='p-2 border'>"
-        antwort += f"<summary>{ae} <a href='/inh/add/{ae.id}' title='Neues untergeordnetes Element'><i class='bi bi-plus-circle text-bg-secondary'></i></a></summary>"
+        antwort += f"<summary><a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{ae}</a> <a href='/inh/add/{ae.id}' title='Neues untergeordnetes Element'><i class='bi bi-plus-circle text-bg-secondary'></i></a></summary>"
         for child_ae in lst_ae:
-            antwort += get_details_ae(child_ae)
+            antwort += f"<a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{get_details_ae(child_ae)}</a>"
         antwort += "</details><div>"
     else:
-        antwort += f"<p >{ae} <a href='/inh/add/{ae.id}'><i class='bi bi-plus-circle text-bg-secondary'></i></a></p>"
+        antwort += f"<p ><a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{ae}</a> <a href='/inh/add/{ae.id}'><i class='bi bi-plus-circle text-bg-secondary'></i></a></p>"
 
     return antwort
 
 def add(request, id):
     if request.method == "POST":
-        
+        if id == 0:
+            ds_ausbildungseinheit = None
+        else:
+            ds_ausbildungseinheit= get_list_or_404(Ausbildungseinheit, id = id)[0]
+        ds_ae = Ausbildungseinheit()
+        ds_ae.thema         = ds_ausbildungseinheit
+        ds_ae.inhalt        = request.POST['Inhalt']
+        ds_ae.beschreibung  = request.POST['Beschreibung']
+        ds_ae.time          = request.POST['Zeit in AE']
+#        ds_ae.ausbilder     = request.user
+
+        ds_ae.save()
+
         return redirect("/inh/start2")
     else:
         # Neues Formular
@@ -81,9 +93,9 @@ def add(request, id):
         frm_parent = FormInput("ÜbergeordneteLE", str(ds_ausbildungseinheit[0]), readonly=True)
         frm_inhalt = FormInput("Inhalt")
         frm_beschreibung = FormTextArea("Beschreibung")
-        frm_zeit = FormInput("Zeit in AE:", type="number")
+        frm_zeit = FormInput("Zeit in AE", type="number", value = "0")
 
-        forms = (frm_parent, frm_inhalt, frm_beschreibung, frm_zeit, formLinie, FormBtnOk, FormBtnCancel)
+        forms = (frm_parent, frm_inhalt, frm_beschreibung, frm_zeit, formLinie, FormBtnOk)
 
         content = {
             'ueber': "Neue Ausbildungseinheit",
