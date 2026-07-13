@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_list_or_404, redirect
 
 from .models import Fachrichtung, Thema, Lerneinheit, Ausbildungseinheit
+
+from stammdaten.classForm import *
 # Create your views here.
 
 def start(request):
@@ -28,7 +30,6 @@ def start2(request):
     # print(liste)
     for element in lst_top_themen:
         test = get_details_ae(element)
-        print(test)
         lst_ae += test
     content = {
         'lst_fachrichtungen'  : None,
@@ -54,14 +55,39 @@ def get_details_ae(ae):
     
     # gibt es Children?
     if len(lst_ae) > 0:
-        antwort += "<div><details class='p-2 border shadow'>"
-        antwort += f"<summary>{ae} <a href='kklausur/{ae.id}' target='__empty' title='Neues untergeordnetes Element'><i class='bi bi-plus-circle'></i></a></summary>"
+        antwort += "<div><details class='p-2 border'>"
+        antwort += f"<summary>{ae} <a href='/inh/add/{ae.id}' title='Neues untergeordnetes Element'><i class='bi bi-plus-circle text-bg-secondary'></i></a></summary>"
         for child_ae in lst_ae:
             antwort += get_details_ae(child_ae)
         antwort += "</details><div>"
     else:
-        antwort += f"<p >{ae} <a href='kklausur/{ae.id}' target='__empty'><i class='bi bi-plus-circle'></i></a></p>"
+        antwort += f"<p >{ae} <a href='/inh/add/{ae.id}'><i class='bi bi-plus-circle text-bg-secondary'></i></a></p>"
 
     return antwort
 
+def add(request, id):
+    if request.method == "POST":
+        
+        return redirect("/inh/start2")
+    else:
+        # Neues Formular
+        print(id)
+        if id == 0:
+            ds_ausbildungseinheit = ("Neues Thema",)
+        else:
+            ds_ausbildungseinheit= get_list_or_404(Ausbildungseinheit, id = id)
+
+        print(ds_ausbildungseinheit)
+        frm_parent = FormInput("ÜbergeordneteLE", str(ds_ausbildungseinheit[0]), readonly=True)
+        frm_inhalt = FormInput("Inhalt")
+        frm_beschreibung = FormTextArea("Beschreibung")
+        frm_zeit = FormInput("Zeit in AE:", type="number")
+
+        forms = (frm_parent, frm_inhalt, frm_beschreibung, frm_zeit, formLinie, FormBtnOk, FormBtnCancel)
+
+        content = {
+            'ueber': "Neue Ausbildungseinheit",
+            'forms' : forms,
+        }
+        return render(request, "stammdaten/form.html", content) 
 

@@ -1,0 +1,11 @@
+{% extends "stammdaten/base.html" %}
+
+{% block content %}
+<h1>{{ueber}}</h1>
+ <form method="POST">
+    {% csrf_token %}
+    {% for form in forms %}
+        {{ form | safe }}
+    {% endfor %}
+</form>
+{% endblock content %}
