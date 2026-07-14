@@ -5,7 +5,7 @@ import json
 
 from .models import Daytime, Block
 from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder, Jourfixe
-from lehrplan.models import Lerneinheit
+from lehrplan.models import Lerneinheit, Ausbildungseinheit
 
 import datetime
 # Create your views here.
@@ -81,9 +81,11 @@ def start(request, team=None, date=None):
             day_cnt = 0    
             for day in days_date:    
                 block = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
+                # Gibt es für diesen Zeitpunkt schon einen Block?
                 if len(block) != 0:
                     teacher =  block[0].teacher
-                    ma_le_lst = Lerneinheit.objects.filter(ausbilder=teacher)
+#                    ma_le_lst = Lerneinheit.objects.filter(ausbilder=teacher)
+                    ma_le_lst = get_lerneinheit(teacher)                # Alternative Lerneinheit
                 else:
                     ma_le_lst = None
 
@@ -145,6 +147,12 @@ def start(request, team=None, date=None):
         'aktuell'       : datetime.datetime.now().strftime("%d.%m.%Y %H:%M"),
     }
     return render(request, "ausbildungsplan/plan.html", content)
+
+def get_lerneinheit(teacher):
+    # Alle dem Ausbilder zugeordneten Lerneinheiten rausfiltern
+    ds_liste = Ausbildungseinheit.objects.filter(ausbilder__id = teacher.id, time__gt = 0)
+    print(ds_liste)
+    return ds_liste
 
 def ausw_pp(request):
 
@@ -239,7 +247,7 @@ def del_le(request):
 
 def save_le(request):
     block_ds = get_object_or_404(Block, id = int(request.POST['id']))
-    lerneinheit_ds = get_object_or_404(Lerneinheit, id = int(request.POST['le']))
+    lerneinheit_ds = get_object_or_404(Ausbildungseinheit, id = int(request.POST['le']))
     block_ds.lerneinheit = lerneinheit_ds 
     block_ds.save()
     answer = {
