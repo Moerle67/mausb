@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_list_or_404, redirect
 
 from .models import Fachrichtung, Thema, Lerneinheit, Ausbildungseinheit
+from stammdaten.models import Ausbilder 
 
 from stammdaten.classForm import *
 # Create your views here.
@@ -76,10 +77,11 @@ def add(request, id):
         ds_ae.inhalt        = request.POST['Inhalt']
         ds_ae.beschreibung  = request.POST['Beschreibung']
         ds_ae.time          = request.POST['Zeit in AE']
-#        ds_ae.ausbilder     = request.user
+        ausbilder = Ausbilder.objects.get(user = request.user)
 
         ds_ae.save()
 
+        ds_ae.ausbilder.add(ausbilder)
         return redirect("/inh/")
     else:
         # Neues Formular
