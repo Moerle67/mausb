@@ -151,7 +151,6 @@ def start(request, team=None, date=None):
 def get_lerneinheit(teacher):
     # Alle dem Ausbilder zugeordneten Lerneinheiten rausfiltern
     ds_liste = Ausbildungseinheit.objects.filter(ausbilder__id = teacher.id, time__gt = 0)
-    print(ds_liste)
     return ds_liste
 
 def ausw_pp(request):

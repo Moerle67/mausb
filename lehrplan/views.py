@@ -80,7 +80,7 @@ def add(request, id):
 
         ds_ae.save()
 
-        return redirect("/inh/start2")
+        return redirect("/inh/")
     else:
         # Neues Formular
         print(id)
