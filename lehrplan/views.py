@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_list_or_404, redirect
+from django.contrib.auth.decorators import permission_required
 
 from .models import Fachrichtung, Thema, Lerneinheit, Ausbildungseinheit
 from stammdaten.models import Ausbilder 
@@ -6,6 +7,8 @@ from stammdaten.models import Ausbilder
 from stammdaten.classForm import *
 # Create your views here.
 
+
+@permission_required("lehrplan.view_ausbildungseinheit")
 def start(request):
     lst_fachrichtungen_db = Fachrichtung.objects.all()
     lst_fachrichtungen = []
@@ -22,6 +25,7 @@ def start(request):
     }
     return render(request, "lehrplan/start.html", content)
 
+@permission_required("lehrplan.view_ausbildungseinheit")
 def start2(request):
     lst_top_themen = Ausbildungseinheit.objects.filter(thema = None)
     liste = []
@@ -66,6 +70,7 @@ def get_details_ae(ae):
 
     return antwort
 
+@permission_required("lehrplan.add_ausbildungseinheit")
 def add(request, id):
     if request.method == "POST":
         if id == 0:
