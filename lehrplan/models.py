@@ -185,6 +185,13 @@ class Ausbildungseinheit(models.Model):
         return antwort   
 
     @property
+    def get_thema(self):
+        ae = self
+        while ae.thema is not None:
+            ae = ae.thema
+        return ae
+    
+    @property
     def get_time(self):
         sum_direkt = Ausbildungseinheit.objects.filter(thema=self).aggregate(Sum("time"))['time__sum']
         sum_direkt = sum_direkt if sum_direkt else 0

@@ -1,15 +1,19 @@
+from django.http import HttpResponse
 from django.shortcuts import render, get_list_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 
+import json
+
 from .models import Fachrichtung, Thema, Lerneinheit, Ausbildungseinheit
-from stammdaten.models import Ausbilder 
+from stammdaten.models import Ausbilder, Gruppe
+from ausbildungsplan.models import Block
 
 from stammdaten.classForm import *
 # Create your views here.
 
 
 @permission_required("lehrplan.view_ausbildungseinheit")
-def start(request):
+def start(request): # veraltet
     lst_fachrichtungen_db = Fachrichtung.objects.all()
     lst_fachrichtungen = []
     for fachrichtung in lst_fachrichtungen_db:
@@ -36,10 +40,15 @@ def start2(request):
     for element in lst_top_themen:
         test = get_details_ae(element)
         lst_ae += test
+
+    lst_gruppen = Gruppe.objects.all()
+
     content = {
         'lst_fachrichtungen'  : None,
-        'lst_ae'              : lst_ae             
-    }   
+        'lst_ae'              : lst_ae,
+        'gruppen'              : lst_gruppen,             
+    }  
+
     return render(request, "lehrplan/start2.html", content)
 
 def get_lst_ae(ae):
@@ -110,3 +119,41 @@ def add(request, id):
         }
         return render(request, "stammdaten/form.html", content) 
 
+@permission_required("lehrplan.view_ausbildungseinheit")
+def auswertung(request):
+    id = request.POST['id']
+    if id.isdigit():
+        id = int(id)
+    else:
+        return
+    
+    ds_gruppe = Gruppe.objects.get(id = id)
+    ds_ae = Block.objects.filter(group=ds_gruppe)
+    lst_auswertung = {}
+    for block in ds_ae:
+        ae = block.lerneinheit
+        if ae is not None:
+            thema = str(ae.get_thema.id)
+            anzahl_h = 5                            # Pauschal 5h je Block
+            if thema in lst_auswertung:
+                lst_auswertung[thema] += anzahl_h   # Aufaddieren 
+            else:
+                lst_auswertung[thema]  = anzahl_h   # Thema neu anlegen
+
+    lst_ausw_lang = []
+    for key, value in lst_auswertung.items():
+        ds_thema = Ausbildungseinheit.objects.get(id=int(key))
+        lst_ausw_lang.append((ds_thema, value))
+
+    lst_string = "<ul>"
+    for zeile in lst_ausw_lang:
+        lst_string += f"<li>{zeile[0]}: {zeile[1]} Ausbildungseinheiten.</li>"
+    lst_string += "</ul>"
+    
+    answer = {
+        'error': False,
+        'gruppe': str(ds_gruppe),
+        'liste': lst_string,
+    }
+
+    return HttpResponse(json.dumps(answer), content_type="application/json")

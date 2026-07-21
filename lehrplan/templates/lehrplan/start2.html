@@ -1,8 +1,52 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content %}
-<h1>Lehrplan Vorplanung <a href='/inh/add/0' ><i class='bi bi-plus-circle '></i></a></h1>
-    <div class="opacity-85 text-bg-secondary position-absolute">
+<h1>Lehrplan Vorplanung <a href='/inh/add/0'><i class='bi bi-plus-circle '></i></a></h1>
+<div class="opacity-85 text-bg-secondary position-absolute row">
     {{lst_ae|safe}}
+</div>
+<h2>Auswertung</h2>
+<div>
+    <select class="form-select opacity-85 text-bg-secondary " aria-label="Gruppe zur Auswahl" onchange="on_gruppe(this)">
+        <option selected>Bitte wählen Sie eine Gruppe aus</option>
+        {% for gruppe in gruppen %}
+        <option value="{{gruppe.id}}">{{gruppe}}</option>
+        {% endfor %}
+    </select>
+</div>
+
+<!-- Modal -->
+
+    <div id="modAuswertung" class="modal fade hide text-dark" role="dialog" tabindex='-1'>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content form_content  bg-primary-subtle shadow">
+                <div class="row">
+                    <h1 class="text-center">Auswertung</h1>
+                    <h2 id="UberAusw" class="text-center"></h2>
+                    <hr />
+                    <p id="InhAusw"></p>
+                </div>
+            </div>
+        </div>
     </div>
+
+<script>
+    function on_gruppe(object) {
+        var gruppe = object.value;
+        $.ajax({
+            type: "POST",
+            url: "{% url 'inh:auswertung' %}",
+            data: {
+                id: gruppe,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function (data) {
+                $('#InhAusw').html(data['liste']);
+                $('#UberAusw').html(data['gruppe']);
+                $('#modAuswertung').modal('show');
+            }
+        });
+    }
+</script>
 {% endblock content %}
