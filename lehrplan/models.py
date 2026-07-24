@@ -28,9 +28,9 @@ class Lernfeld(models.Model):
     rahmenlehrplan = models.ForeignKey(Rahmenlehrplan, verbose_name=("Rahmenlehrplan"), on_delete=models.RESTRICT)
     nummer = models.CharField(("Nummer"), max_length=50)
     inhalt = models.CharField(("Inhalt"), max_length=200)
-    stunden1 = models.IntegerField(("Zeitrichtwerte 1. Jahr"), default = 0)
-    stunden2 = models.IntegerField(("Zeitrichtwerte 2. Jahr"), default = 0)
-    stunden3 = models.IntegerField(("Zeitrichtwerte 3. Jahr"), default = 0)
+    stunden1 = models.IntegerField(("Zeitrichtwerte 1. Jahr / Reha"), default = 0)
+    stunden2 = models.IntegerField(("Zeitrichtwerte 2. Jahr / FbW"), default = 0)
+    stunden3 = models.IntegerField(("Zeitrichtwerte 3. Jahr / Digital"), default = 0)
     berufe = models.ManyToManyField(Beruf, verbose_name=("Berufe"))
     beschreibung = models.TextField(("Beschreibung"))
 
@@ -137,7 +137,7 @@ class Thema(models.Model):
     def get_absolute_url(self):
         return reverse("Thema_detail", kwargs={"pk": self.pk})
 
-class Lerneinheit(models.Model):
+class Lerneinheit(models.Model): # veraltet
     thema = models.ForeignKey(Thema, verbose_name=("Thema"), on_delete=models.CASCADE)
     inhalt = models.CharField("Inhalt", max_length=50)
     beschreibung = models.TextField("Beschreibung")
@@ -163,9 +163,10 @@ class Lerneinheit(models.Model):
     def get_absolute_url(self):
         return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})
 
-class Ausbildungseinheit(models.Model):
+class Ausbildungseinheit(models.Model): # Lerneinheit neu / aktuell
     thema = models.ForeignKey("Ausbildungseinheit", verbose_name=("Thema"), on_delete=models.CASCADE, related_name="ab_thema" ,blank = True, null = True)
     inhalt = models.CharField("Inhalt", max_length=50)
+    kuerzel = models.CharField("Kürzel", max_length=5, blank = True, null = True, default = "")
     beschreibung = models.TextField("Beschreibung", blank = True, null = True)
     voraussetzung = models.ForeignKey("Ausbildungseinheit", verbose_name="Voraussetzung", on_delete=models.SET_NULL, related_name="ab_req", blank = True, null = True) 
     information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
@@ -190,7 +191,18 @@ class Ausbildungseinheit(models.Model):
         while ae.thema is not None:
             ae = ae.thema
         return ae
-    
+
+    @property 
+    def get_kuerzel(self):
+        kuerzel = ""
+        ae = self
+        while ae.thema is not None:
+            kuerzel = ae.kuerzel + " " + kuerzel + " "
+            ae = ae.thema
+
+        kuerzel = ae.kuerzel + " " + kuerzel + " "
+        return kuerzel
+
     @property
     def get_time(self):
         sum_direkt = Ausbildungseinheit.objects.filter(thema=self).aggregate(Sum("time"))['time__sum']
@@ -203,7 +215,8 @@ class Ausbildungseinheit(models.Model):
     
     def __str__(self):
         thema = self.thema.inhalt if self.thema != None else ""
-        return f"{self.inhalt} {self.time}/{self.get_time} UE/{self.get_aubi} ({thema})"
+        return f"{self.get_kuerzel}{self.inhalt} {self.time}/{self.get_time} UE/{self.get_aubi} ({thema})"
 
     def get_absolute_url(self):
         return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})
+
