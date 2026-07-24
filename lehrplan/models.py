@@ -197,10 +197,11 @@ class Ausbildungseinheit(models.Model): # Lerneinheit neu / aktuell
         kuerzel = ""
         ae = self
         while ae.thema is not None:
-            kuerzel = str(ae.kuerzel) + " " + kuerzel + " "
+            if ae.kuerzel is not None:
+                kuerzel = ae.kuerzel + " " + kuerzel + " "
             ae = ae.thema
-
-        kuerzel = str(ae.kuerzel) + " " + kuerzel + " "
+        if ae.kuerzel is not None:
+            kuerzel = str(ae.kuerzel) + " " + kuerzel + " "
         return kuerzel
 
     @property
