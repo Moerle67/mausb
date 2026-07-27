@@ -78,16 +78,17 @@ def start(request, team=None, date=None):
         for daytime in daytimes:
             plan = []
             besch_ma_day = []
-            day_cnt = 0    
-            for day in days_date:    
-                block = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
+            day_cnt = 0  
+            for day in days_date:
+                bloecke = Block.objects.filter(group = gruppe, date = day, daytime = daytime)
+                lst_block = []  
                 # Gibt es für diesen Zeitpunkt schon einen Block?
-                if len(block) != 0:
-                    teacher =  block[0].teacher
-#                    ma_le_lst = Lerneinheit.objects.filter(ausbilder=teacher)
-                    ma_le_lst = get_lerneinheit(teacher)                # Alternative Lerneinheit
-                else:
-                    ma_le_lst = None
+                for block in bloecke:
+                    teacher =  block.teacher
+                    ma_le_lst = get_lerneinheit(teacher)                # Mögliche Lerneinheiten
+                    lst_block.append((block, ma_le_lst))
+                # Mitarbeiter in Liste "beschäftigt" eintragen
+                    ma_beschaeftigt[daytime_cnt][day_cnt].append(block.teacher)
 
                 # Jour Fixe
                 jf_ds = Jourfixe.objects.filter(gruppe = gruppe, date = day, daytime = daytime.short)
@@ -95,14 +96,9 @@ def start(request, team=None, date=None):
                 if len(jf_ds) > 0:
                     jf_bool = True
                 else:
-                    jf_bool = False
-
-                block = None if len(block) == 0 else block[0]
-                plan.append((block, ma_le_lst, jf_bool))
-
-                # Mitarbeiter in Liste "beschäftigt" eintragen
-                if block:
-                    ma_beschaeftigt[daytime_cnt][day_cnt].append(block.teacher)
+                    jf_bool = False    
+                plan.append((lst_block, jf_bool))
+                    
                 day_cnt += 1
             besch_ma.append(besch_ma_day)        # Mitarbeiter beschäftigt((vm: Tag1 - Tag5),(nm: Tag1 - Tag5))               
             eine_gruppe_days.append(plan)

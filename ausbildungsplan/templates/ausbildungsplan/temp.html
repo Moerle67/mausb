@@ -1,0 +1,72 @@
+
+
+                        <div class="col-2 border row
+                            {% comment %} Jour Fixe {% endcomment %}
+                                             
+                            rounded-4 text-center me-3 shadow"
+                            id    = "block_{{forloop.parentloop.parentloop.counter0}}_{{forloop.parentloop.counter0}}_{{forloop.counter0}}" 
+                            ondragover = "allowDrop(event)" 
+                            ondrop     = "drop_btnma(event, {{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}')"
+                            style      = "height: 4em;" 
+                        >
+                            {% for block  in day.0 %}
+                                <div 
+                                class   ="col" 
+                                style   = "background-color: {{day.0.teacher.bg_color}}; 
+                                            color: {{day.0.teacher.fg_color}};" 
+                                >
+                                {% comment %} Inhaltsblock nur für die Druckausgabe {% endcomment %}
+                                <span class="fs-3">
+                                    <a
+                                        class   = "text-decoration-none"
+                                        style   = "color: {{block.0.teacher.fg_color}};"
+                                        href    = "/admin/stammdaten/ausbilder/{{block.0.teacher.id}}/change/" 
+                                        target  ="_blank">
+                                        {{block.0.teacher.user.last_name}}
+                                    </a>
+                                </span>
+                                <span id="inh_{{block.0.id}}" class="d-none d-print-block" >{% if block.0.content %}{{block.0.content}}{% else %} - {% endif %}</span>
+                                <span id="le_{{block.0.id}}" class="d-none d-print-block" >{% if block.lerneinheit %}{{block.0.lerneinheit.inhalt}}{% else %} - {% endif %}</span>
+                                {% if user.is_authenticated %}
+                                    <i class="bi bi-trash d-print-none" 
+                                    style="background-color: {{block.0.teacher.bg_color}}; color: {{block.0.teacher.fg_color}};" 
+                                    onclick="onclick_trash({{block.0.id}},{{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}', {{ forloop.parentloop.parentloop.counter0 }})" 
+                                    ></i>
+                                {% endif %}
+                                {% if day.2 %} <br />Jour Fixe {% endif %}
+                                <br />
+                                {% comment %} Input Zusatzinfo Block {% endcomment %}
+                                <input 
+                                    class    = "d-print-none"
+                                    title    = "Zusatzinfo" 
+                                    style    = "background-color: {{block.0.teacher.bg_color}}; width: 80%; color: {{block.0.teacher.fg_color}};"
+                                    {% if user.is_authenticated %} 
+                                        onchange = "onchance_info({{block.0.id}}, event.currentTarget.value)" 
+                                    {% endif %}
+                                    value    = {% if block.0.content %} "{{block.0.content}}"{% else %} "" {% endif %}
+                                >
+                                {% comment %} Lerneinheit {% endcomment %}
+                                {% if user.is_authenticated %}
+                                <select 
+                                    class="mb-3 d-print-none" title="Inhalt der Ausbildung" 
+                                    style="background-color: {{block.teacher.bg_color}}; width: 80%; color: {{block.teacher.fg_color}};"
+                                    onchange = "onchange_le({{block.id}}, event.currentTarget.value)"
+                                >
+                                    <option value="-1">-------</option>
+                                    {% for lerneinheit in block.1 %}
+                                        <option 
+                                            value    = "{{lerneinheit.id}}" 
+                                            title    = "{{lerneinheit.beschreibung}}"
+                                            {% if block.lerneinheit.id  ==  lerneinheit.id %} selected {% endif %}       
+                                        >
+                                            {{lerneinheit}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                    {{lerneinheit.beschreibung}}
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                        </div>

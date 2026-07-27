@@ -1,0 +1,8 @@
+<div class="row">
+    {% comment %} Mehrere Ausbildungsblöcke pro Zeiteinheit möglich {% endcomment %}
+    {% for block in day.0 %}           {% comment %} einzelne Ausbildungsblöcke {% endcomment %}
+        <div class="col">
+            {{block.0.teacher.short}}
+        </div>    
+    {% endfor %}                        {% comment %} ende einzelne Ausbildungsblöcke {% endcomment %}
+</div>
