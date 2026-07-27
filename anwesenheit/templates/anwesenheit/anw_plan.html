@@ -46,7 +46,7 @@
                             {{spalte.0.teilnehmer}} 
                         </span>
                         {% if spalte.0.teilnehmer.picture %}
-                            <img class="d-none d-print-block " src="{{ spalte.0.teilnehmer.picture.url }}"/>
+                            <img class="d-none d-print-block " src="{{ spalte.0.teilnehmer.picture.url }}" style="height: {{hoehe}}vh;"/>
                         {% endif %}
                     {% else %}
                          - 

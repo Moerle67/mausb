@@ -182,6 +182,7 @@ def anw_raum(request, group, date):
         'raum': raum,
         'elements': elements,
         'teilnehmer': lst_teilnehmer,
+        'hoehe': str(80/raum.row),
     }
     return render(request, "anwesenheit/anw_plan.html", content)
 
