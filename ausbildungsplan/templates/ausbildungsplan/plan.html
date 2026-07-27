@@ -69,7 +69,8 @@
                         {% comment %} Inhaltsblockn nur für die Druckausgabe {% endcomment %}
                         <span class="fs-3">
                             <a
-                                class   = "text-dark text-decoration-none" 
+                                class   = "text-decoration-none"
+                                style   = "color: {{day.0.teacher.fg_color}};"
                                 href    = "/admin/stammdaten/ausbilder/{{day.0.teacher.id}}/change/" 
                                 target  ="_blank">
                                 {{day.0.teacher.user.last_name}}
