@@ -1,8 +1,37 @@
 <div class="row">
     {% comment %} Mehrere Ausbildungsblöcke pro Zeiteinheit möglich {% endcomment %}
     {% for block in day.0 %}           {% comment %} einzelne Ausbildungsblöcke {% endcomment %}
-        <div class="col">
+        <div 
+            class   = "col" 
+            id      = "block_{{block.0.id}}" 
+            style   = "background-color: {{block.0.teacher.bg_color}}; 
+                       color: {{block.0.teacher.fg_color}};" 
+        >
             {{block.0.teacher.short}}
+            {% comment %} Löschicon {% endcomment %}
+            {% if user.is_authenticated %}
+                <i class="bi bi-trash d-print-none" 
+                style="background-color: {{block.0.teacher.bg_color}}; color: {{block.0.teacher.fg_color}};" 
+                onclick="onclick_trash({{block.0.id}})" 
+                ></i>
+            {% endif %}
         </div>    
-    {% endfor %}                        {% comment %} ende einzelne Ausbildungsblöcke {% endcomment %}
+    {% endfor %} {% comment %} ende einzelne Ausbildungsblöcke {% endcomment %}
+    <script>
+        // Ausbildungsblock löschen
+        function onclick_trash(block_id) {
+            $.ajax({
+                type: "POST",
+                url: "{% url 'ausbildungsplan:rem_block' %}",
+                data: {
+                    block_id: block_id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    // Fenster neu laden
+                    window.location.reload();
+                }
+            });            
+        }
+    </script>                        
 </div>

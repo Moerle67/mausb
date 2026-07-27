@@ -162,13 +162,21 @@ def ausw_pp(request):
     date = datetime.datetime.strptime(request.POST['monday'], "%d.%m.%Y").date()+datetime.timedelta(days=int(request.POST['days']))
 
     # Blockobjekt erstellen oder überschreiben
-    block_ds, create = Block.objects.get_or_create(
-        group = group_ds,
-        date = date,
-        daytime = Daytime.objects.get(short="vm") if request.POST['daytime'] == '0' else Daytime.objects.get(short="nm")
-    )
-    block_ds.teacher = aubi_ds
-    block_ds.save()
+    #block_ds, create = Block.objects.get_or_create(
+    #    group = group_ds,
+    #    date = date,
+    #    daytime = Daytime.objects.get(short="vm") if request.POST['daytime'] == '0' else Daytime.objects.get(short="nm")
+    #)
+
+    # Block neu erstellen
+    ds_block = Block()
+    ds_block.group = group_ds
+    ds_block.date = date
+    ds_block.daytime = Daytime.objects.get(short="vm") if request.POST['daytime'] == '0' else Daytime.objects.get(short="nm")
+    ds_block.teacher = aubi_ds
+    
+    ds_block.save()
+
     # Rückgabe
     answer = {
             'error': False,
