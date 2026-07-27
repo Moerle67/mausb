@@ -7,10 +7,10 @@
     {% comment %} Sitzplan {% endcomment %}
     <div class="col-9 row">
         <div class="col">
-            <h1>Sitzplan Raum {{raum.bezeichnung}}</h1>
+            <h1>Sitzplan Raum {{raum.bezeichnung}} / {{gruppe}}</h1>
         </div>
         {% comment %} Button Raum {% endcomment %}
-        <div class="col">
+        <div class="col d-print-none">
             <a href="{% url 'anw:anw_detail' id=gruppe.id %}"><button type="button" class="btn btn-outline-dark float-end">Anwesenheit</button></a>
         </div>
         {% for reihe in elements %}
@@ -21,7 +21,8 @@
                     <div class="col shadow rounded-pill "></div>
                 {% endif %}
                 {% comment %} Sitzplatz für Sitzplatz {% endcomment %}
-                <div id="sitz{{forloop.parentloop.counter0}}_{{forloop.counter0}}" class="{{spalte.1}} col border shadow m-3 text-center rounded-pill bg-opacity-75"
+                {% comment %} Show Brower {% endcomment %}
+                <div id="sitz{{forloop.parentloop.counter0}}_{{forloop.counter0}}" class="{{spalte.1}} d-print-none col border shadow m-3 text-center rounded-pill bg-opacity-75"
                  ondrop="dropHandler(event, {{forloop.counter0}}, {{forloop.parentloop.counter0}}, {{raum.id}})" ondragover="dragoverHandler(event)">
                     {% if spalte %}
                         <span class="hover-title" onclick="onclick_plan({{spalte.0.teilnehmer.id}})">
@@ -30,12 +31,27 @@
                         {% if spalte.0.teilnehmer.picture %}
                         <div class="hover-image bg-opacity-100 shadow">
                             <img src="{{ spalte.0.teilnehmer.picture.url }}"/>
-                        </div>{% endif %}
+                        </div>
+                        <img class="d-none d-print-block " src="{{ spalte.0.teilnehmer.picture.url }}"/>
+                        {% endif %}
                         <i class="bi bi-trash" onclick="del_sitz({{spalte.0.id}})"></i>                       
                     {% else %}
                          - 
                     {% endif %}
                 </div>
+                {% comment %} Printer {% endcomment %}
+                <div class="d-none d-print-block col text-center">
+                    {% if spalte %}
+                        <span >
+                            {{spalte.0.teilnehmer}} 
+                        </span>
+                        {% if spalte.0.teilnehmer.picture %}
+                            <img class="d-none d-print-block " src="{{ spalte.0.teilnehmer.picture.url }}"/>
+                        {% endif %}
+                    {% else %}
+                         - 
+                    {% endif %}
+                </div>            
             {% endfor %}    
             </div>   
         {% endfor %}
