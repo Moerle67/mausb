@@ -1,4 +1,4 @@
-<div class="row">
+
     {% comment %} Mehrere Ausbildungsblöcke pro Zeiteinheit möglich {% endcomment %}
     {% for block in day.0 %}           {% comment %} einzelne Ausbildungsblöcke {% endcomment %}
         <div 
@@ -15,6 +15,29 @@
                 onclick="onclick_trash({{block.0.id}})" 
                 ></i>
             {% endif %}
+            {% comment %} Inhalte Druckversion {% endcomment %}
+                <span id="inh_{{block.0.id}}" class="d-none d-print-block" >{% if block.0.content %}{{block.0.content}}{% else %} - {% endif %}</span>
+                <span id="le_{{block.0.id}}" class="d-none d-print-block" >{% if block.lerneinheit %}{{block.0.lerneinheit.inhalt}}{% else %} - {% endif %}</span>
+                {% if user.is_authenticated %}
+                <select 
+                    class="mb-3 d-print-none" title="Inhalt der Ausbildung" 
+                    style="background-color: {{block.0.teacher.bg_color}}; width: 80%; color: {{block.0.teacher.fg_color}};"
+                    onchange = "onchange_le({{block.id}}, event.currentTarget.value)"
+                >
+                    <option value="-1">-------</option>
+                    {% for lerneinheit in block.1 %}
+                        <option 
+                            value    = "{{lerneinheit.id}}" 
+                            title    = "{{lerneinheit.beschreibung}}"
+                            {% if block.lerneinheit.id  ==  lerneinheit.id %} selected {% endif %}       
+                        >
+                            {{lerneinheit}}
+                        </option>
+                    {% endfor %}
+                </select>
+                {% else %}
+                    {{lerneinheit.beschreibung}}
+                {% endif %}
         </div>    
     {% endfor %} {% comment %} ende einzelne Ausbildungsblöcke {% endcomment %}
     <script>
@@ -34,4 +57,3 @@
             });            
         }
     </script>                        
-</div>

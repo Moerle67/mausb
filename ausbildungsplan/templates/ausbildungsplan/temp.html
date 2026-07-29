@@ -25,6 +25,7 @@
                                         {{block.0.teacher.user.last_name}}
                                     </a>
                                 </span>
+                                {% comment %} Inhalte  {% endcomment %}
                                 <span id="inh_{{block.0.id}}" class="d-none d-print-block" >{% if block.0.content %}{{block.0.content}}{% else %} - {% endif %}</span>
                                 <span id="le_{{block.0.id}}" class="d-none d-print-block" >{% if block.lerneinheit %}{{block.0.lerneinheit.inhalt}}{% else %} - {% endif %}</span>
                                 {% if user.is_authenticated %}

@@ -19,7 +19,7 @@
         </div>
         {% comment %} Datumsleiste 2. - 6. Spalte{% endcomment %}
         {% for day in days %}
-        <div class=" col-2 border border-2 border-black text-center me-3 shadow display-6" style="background-color: #4CD8EB">
+        <div class=" col-2 border border-2 border-black text-center m-1 shadow display-6" style="background-color: #4CD8EB">
             {{day}}
         </div>    
         {% endfor %}
@@ -50,14 +50,14 @@
                 </div>
                 {% comment %} Ausbildung 2. - 6. Spalte {% endcomment %}
                 {% for day in daytime %}
-                <div class="col-2 border row
+                <div class="col-2 border row px-0
                 {% if day.1 %} border-danger border-3 {% else %} border-black border-1 {% endif %}  
-                     rounded-4 text-center me-3 shadow"
+                     text-center m-1 shadow" 
                     id    = "block_{{forloop.parentloop.parentloop.counter0}}_{{forloop.parentloop.counter0}}_{{forloop.counter0}}" 
                     ondragover = "allowDrop(event)" 
                     ondrop     = "drop_btnma(event, {{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}')"
-                    style      = "height: 4em;"  
-                ">
+                    style      = "min-height: 4em;"  
+                >
                     {% comment %} Ausbildungsblöcke {% endcomment %}
                     {% if day.0|length == 0 %}
                         <p>Ungeplant {% if day.1 %}<br /> Jour Fixe {% endif %}</p>
@@ -70,10 +70,10 @@
         {% endfor %}
         {% if user.is_authenticated %}
             {% comment %} Freie Mitarbeiter {% endcomment %}
-            <hr class="my-3>"/>
+            <hr class="my-3"></hr>
             {% for daytime in freie_ma%}
                 {% comment %} 1. Spalte  {% endcomment %}
-                <div class="col-1 border border-2 border-black text-center me-3 shadow d-print-none" style="background-color: rgba(68, 238, 122, 0.73)">
+                <div class="col-1 border border-2 border-black text-center m-1 shadow d-print-none" style="background-color: rgba(68, 238, 122, 0.73)">
                     Freie MA
                     {% if forloop.counter0 == 0 %} AM {% endif %}
                     {% if forloop.counter0 == 1 %} PM {% endif %}
@@ -81,7 +81,7 @@
                 {% comment %} Spalte 2 - 6 {% endcomment %}
                 {% for day in  daytime %}
                 <div 
-                    class = "col-2 border border-2 border-black text-center me-3 shadow d-print-none" 
+                    class = "col-2 border border-2 border-black text-center m-1 shadow d-print-none" 
                     style = "background-color: #4CD8EB" 
                     id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
                 >
@@ -103,14 +103,14 @@
             {% comment %} Liste Abwesenheit {% endcomment %}
             <hr class="my-3 d-print-none"/> 
             {% comment %} 1. Spalte  {% endcomment %}
-            <div class="col-1 border border-2 border-black text-center me-3 shadow " style="background-color: rgba(68, 238, 122, 0.73)">
+            <div class="col-1 border border-2 border-black text-center m-1 shadow " style="background-color: rgba(68, 238, 122, 0.73)">
                 Abwesende Mitarbeiter
                 <a class="d-print-none" href="/admin/stammdaten/abwesendma/" target="_blank"><i class="bi bi-plus-square"></i></a>
             </div>
             {% comment %} Spalte 2 - 6 {% endcomment %}
             {% for day in  abw_ma %}
             <div 
-                class = "col-2 border border-2 border-black text-center me-3 shadow" 
+                class = "col-2 border border-2 border-black text-center m-1 shadow" 
                 style = "background-color: #4CD8EB" 
                 id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
                 ondragover = "allowDrop(event)" 
