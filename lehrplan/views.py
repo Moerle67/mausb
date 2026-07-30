@@ -48,7 +48,7 @@ def start2(request):
         'lst_fachrichtungen'  : None,
         'lst_ae'              : lst_ae,
         'gruppen'             : lst_gruppen, 
-        'lst_abkuerzungen'    : lst_abkuerzungen          
+        'lst_abkuerzungen'    : lst_abkuerzungen          ,
     }  
 
     return render(request, "lehrplan/start2.html", content)

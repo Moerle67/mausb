@@ -6,7 +6,7 @@
     <div class="row justify-content-center align-items-center g-2 ">
         {% comment %} Auswahl Datum 1. Spalte {% endcomment %}
         <div class="col-1 border border-2 border-black text-center me-3 shadow" style="background-color: #EB362C">
-            <button class="d-print-none btn btn-danger m-0 p-0" style="color: black;" type="button"><span onclick="adddate('{{days.0}}', -7, {{team.id}})" title="Eine Woche zurück">&lt;</span></button> 
+            <button class="d-print-none btn btn-danger m-0 p-0" style="color: black;" type="button"><span onclick="adddate('{{days.0.0}}', -7, {{team.id}})" title="Eine Woche zurück">&lt;</span></button> 
             <input 
                 class = "d-print-none"
                 id="dateselect" 
@@ -14,7 +14,7 @@
                 style="background-color: #EB362C; width: 60%" 
                 value="{{date_html}}" 
                 onchange="dat_onchange({{team.id}})"/>
-            <button class="btn btn-danger m-0 p-0 d-print-none" style="color: black;" type="button"><span onclick="adddate('{{days.0}}', 7, {{team.id}})" title="Eine Woche vorwärts">&gt;</span></button>   
+            <button class="btn btn-danger m-0 p-0 d-print-none" style="color: black;" type="button"><span onclick="adddate('{{days.0.0}}', 7, {{team.id}})" title="Eine Woche vorwärts">&gt;</span></button>   
             <span class="d-none d-print-block">KW {{kw}}</span> 
         </div>
         {% comment %} Datumsleiste 2. - 6. Spalte{% endcomment %}
