@@ -51,9 +51,10 @@ def start(request, team=None, date=None):
     days = []                           # Wochentage als String
     days_date = []                      # Wochentage als Date Objekt
     abwesend_lst =[[], [], [], [], []]  # Abwesenheit nach Wochentagen
+    wochentage = ("Mo", "Di", "Mi", "Do", "Fr")
     for day in range(5):
         date = date_monday + datetime.timedelta(days=day)
-        days.append(date.strftime(date_format_str))
+        days.append((date.strftime(date_format_str), wochentage[day]))
         days_date.append(date)
         aubi_anwesend_lst = AbwesendMA.objects.filter(date=date)    # Abwesenheit nach Datum
         abwesend_lst[day] = list(aubi_anwesend_lst)
@@ -130,10 +131,10 @@ def start(request, team=None, date=None):
                     if daytime == 1 and element.daytime == "pm":        # Nachmittag
                         freie_ma_lst[daytime][day].remove(element.aubi)
                     
-
     content = {
         'team'          : team,
         'days'          : days,
+        'wochentage'    : wochentage,
         'daytimes'      : daytimes,
         'gruppen_plan'  : gruppen,
         'freie_ma'      : freie_ma_lst,

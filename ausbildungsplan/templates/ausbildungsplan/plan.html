@@ -19,8 +19,8 @@
         </div>
         {% comment %} Datumsleiste 2. - 6. Spalte{% endcomment %}
         {% for day in days %}
-        <div class=" col-2 border border-2 border-black text-center m-1 shadow display-6" style="background-color: #4CD8EB">
-            {{day}}
+        <div class=" col-2 border border-2 border-black text-center m-1 shadow " style="background-color: #4CD8EB">
+            {{day.1}} - {{day.0}}
         </div>    
         {% endfor %}
         {% for gruppe in gruppen_plan %}
@@ -57,6 +57,7 @@
                     ondragover = "allowDrop(event)" 
                     ondrop     = "drop_btnma(event, {{ forloop.parentloop.counter0 }}, {{forloop.counter0 }}, {{gruppe.0.id}}, {{team.id}}, '{{days.0}}')"
                     style      = "min-height: 4em;"  
+                    title      = "{% if day.1 %}Jour Fixe{% endif %}"
                 >
                     {% comment %} Ausbildungsblöcke {% endcomment %}
                     {% if day.0|length == 0 %}

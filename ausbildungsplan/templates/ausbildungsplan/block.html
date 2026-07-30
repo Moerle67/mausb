@@ -15,21 +15,33 @@
                 onclick="onclick_trash({{block.0.id}})" 
                 ></i>
             {% endif %}
+            {% comment %} Input Zusatzinfo Block {% endcomment %}
+            <br />
+            <input 
+                class    = "d-print-none"
+                title    = "Zusatzinfo" 
+                style    = "background-color: {{block.0.teacher.bg_color}}; width: 80%; color: {{block.0.teacher.fg_color}};"
+                {% if user.is_authenticated %} 
+                    onchange = "onchance_info({{block.0.id}}, event.currentTarget.value)" 
+                {% endif %}
+                value    = {% if block.0.content %} "{{block.0.content}}"{% else %} "" {% endif %}
+            >
             {% comment %} Inhalte Druckversion {% endcomment %}
                 <span id="inh_{{block.0.id}}" class="d-none d-print-block" >{% if block.0.content %}{{block.0.content}}{% else %} - {% endif %}</span>
-                <span id="le_{{block.0.id}}" class="d-none d-print-block" >{% if block.lerneinheit %}{{block.0.lerneinheit.inhalt}}{% else %} - {% endif %}</span>
+                <span id="le_{{block.0.id}}" class="d-none d-print-block" >{% if block.0.lerneinheit%}{{block.0.lerneinheit.get_kuerzel}}{% else %} - {% endif %}</span>
                 {% if user.is_authenticated %}
+                {% comment %} Auswahl Ausbildungseinheit {% endcomment %}
                 <select 
                     class="mb-3 d-print-none" title="Inhalt der Ausbildung" 
                     style="background-color: {{block.0.teacher.bg_color}}; width: 80%; color: {{block.0.teacher.fg_color}};"
-                    onchange = "onchange_le({{block.id}}, event.currentTarget.value)"
+                    onchange = "onchange_le({{block.0.id}}, event.currentTarget.value)"
                 >
                     <option value="-1">-------</option>
                     {% for lerneinheit in block.1 %}
                         <option 
                             value    = "{{lerneinheit.id}}" 
                             title    = "{{lerneinheit.beschreibung}}"
-                            {% if block.lerneinheit.id  ==  lerneinheit.id %} selected {% endif %}       
+                            {% if block.0.lerneinheit.id  ==  lerneinheit.id %} selected {% endif %}       
                         >
                             {{lerneinheit}}
                         </option>
