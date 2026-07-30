@@ -33,6 +33,7 @@ def start(request): # veraltet
 def start2(request):
     lst_top_themen = Ausbildungseinheit.objects.filter(thema = None)
     liste = []
+    lst_abkuerzungen = Ausbildungseinheit.objects.filter(kuerzel__gte = 0).order_by("kuerzel")
     lst_ae = ""
     for top_thema in lst_top_themen:
         liste.append((top_thema, get_lst_ae(top_thema)))
@@ -46,7 +47,8 @@ def start2(request):
     content = {
         'lst_fachrichtungen'  : None,
         'lst_ae'              : lst_ae,
-        'gruppen'              : lst_gruppen,             
+        'gruppen'             : lst_gruppen, 
+        'lst_abkuerzungen'    : lst_abkuerzungen          
     }  
 
     return render(request, "lehrplan/start2.html", content)

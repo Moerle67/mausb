@@ -166,7 +166,7 @@ class Lerneinheit(models.Model): # veraltet
 class Ausbildungseinheit(models.Model): # Lerneinheit neu / aktuell
     thema = models.ForeignKey("Ausbildungseinheit", verbose_name=("Thema"), on_delete=models.CASCADE, related_name="ab_thema" ,blank = True, null = True)
     inhalt = models.CharField("Inhalt", max_length=50)
-    kuerzel = models.CharField("Kürzel", max_length=5, blank = True, null = True, default = "")
+    kuerzel = models.CharField("Kürzel", max_length=10, blank = True, null = True)
     beschreibung = models.TextField("Beschreibung", blank = True, null = True)
     voraussetzung = models.ForeignKey("Ausbildungseinheit", verbose_name="Voraussetzung", on_delete=models.SET_NULL, related_name="ab_req", blank = True, null = True) 
     information = models.URLField(("Wiki-Link"), max_length=200, blank = True, null = True)
