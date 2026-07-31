@@ -1,10 +1,13 @@
 from django.shortcuts import render, get_list_or_404
+from django.http import HttpResponse
 
+# Datenbanken
 from .models import Tn_fa
 from anwesenheit.models import TNAnwesend
 from stammdaten.models import Gruppe, Teilnehmer
 
-import datetime
+import datetime, json
+
 # from stammdaten.models import Teilnehmer
 # Create your views here.
 
@@ -35,6 +38,22 @@ def start(request, gruppe):
         else:
             status = 0
         lst_tn_fa.append((tn, status))
+    print(lst_tn_fa)
+    lst_ueb = ("Offen", "2.Chance", "Gut")
     content = {
         'liste'          : lst_tn_fa, 
-    }    
+        'lst_ueb'          : lst_ueb,
+    }
+    return render(request, "frageantwort/start.html", content) 
+
+def savetn(request):
+    ds_fa = Tn_fa()
+    ds_tn = get_list_or_404(Teilnehmer, id=int(request.POST['tn']))
+    ds_fa.teilnehmer = ds_tn
+    ds_fa.status =  request.POST['code']
+    ds_fa.save()
+
+    answer = {
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")

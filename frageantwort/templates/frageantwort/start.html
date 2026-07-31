@@ -1,0 +1,48 @@
+{% extends "stammdaten/base.html" %}
+
+{% block content%}
+    <div class = "row text-center">            
+        <h1>Beteiligung</h1>
+        {% for ueb in lst_ueb %}
+        <div class = "col-md-3 ">
+            <h2>{{ueb}}</h2>
+            <div class="d-grid gap-2 mx-auto" id = "lst_fa_{{forloop.counter0}}">
+                {% for tn in  liste %}
+                    {% if tn.1 == forloop.parentloop.counter0 %}
+                    <button
+                        id      = "btnfa-{{tn.0.id}}"
+                        type    = "button" 
+                        class   = "btn btn-outline-success"
+                        onclick = "btn_fa_onclick('{{tn.0.id}}', '{{tn.0.name}}', '{{tn.1}}')">
+                        
+                    {{tn.0.name}}
+                    </button> 
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        function btn_fa_onclick(tn, name, status) {
+            $("#btnfa-"+tn).remove();
+            if (confirm("Hat "+name+" die Frage beantwort?")) {
+                var code = 2;
+            } else {
+                var code = 1;
+            };
+                $.ajax({
+                type: "POST",
+                url: "{% url 'fa:savetn' %}",
+                data: {
+                    tn: tn.id,
+                    code: code,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                }
+            });
+
+        }
+    </script>    
+{% endblock content %}
