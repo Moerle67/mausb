@@ -3,6 +3,18 @@
 {% block content%}
     <div class = "row text-center">            
         <h1>Beteiligung</h1>
+        <div class="input-group col-md-6 me-3">
+            <button
+                id      = "btnfa-{{tn.0.id}}"
+                type    = "button" 
+                class   = "btn btn-outline-danger"
+                onclick = "btn_fa_zufall({{lst_zufall}}, {{gruppe}})" 
+                title   = "Zufällig Auswahl" 
+            >    
+            Zufall
+            </button> 
+            <input id="inp_thema" type="text" class="form-control" name="inp_thema" placeholder="Thema">
+        </div>
         {% for ueb in lst_ueb %}
         <div class = "col-md-3 ">
             <h2>{{ueb}}</h2>
@@ -13,36 +25,85 @@
                         id      = "btnfa-{{tn.0.id}}"
                         type    = "button" 
                         class   = "btn btn-outline-success"
-                        onclick = "btn_fa_onclick('{{tn.0.id}}', '{{tn.0.name}}', '{{tn.1}}')">
-                        
+                        onclick = "btn_fa_onclick('{{tn.0.id}}', '{{tn.0.name}}')"
+                        title   = "{{tn.2}}" 
+                    >    
                     {{tn.0.name}}
                     </button> 
                     {% endif %}
+                    {% comment %} Erste Spalte {% endcomment %}
                 {% endfor %}
+                {% if forloop.counter0 == 0 %}
+                    <button
+                        id      = "btn_new"
+                        type    = "button" 
+                        class   = "btn btn-outline-danger"
+                        onclick = "btn_fa_new({{gruppe}})"
+                        title   = "Liste neu starten" 
+                    >    
+                    Neu
+                {% endif %}
             </div>
         </div>
         {% endfor %}
     </div>
     <script>
-        function btn_fa_onclick(tn, name, status) {
+        function btn_fa_onclick(tn, name) {
+            {% comment %} Antwort speichern {% endcomment %}
+            var thema = $('#inp_thema').val()
             $("#btnfa-"+tn).remove();
             if (confirm("Hat "+name+" die Frage beantwort?")) {
                 var code = 2;
             } else {
                 var code = 1;
             };
-                $.ajax({
+            $.ajax({
                 type: "POST",
                 url: "{% url 'fa:savetn' %}",
                 data: {
-                    tn: tn.id,
+                    tn: tn,
+                    thema: thema,
                     code: code,
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
+                    window.location.reload();
                 }
             });
 
+        }
+
+        function btn_fa_new(gruppe) {
+            var thema = $('#inp_thema').val()
+            $.ajax({
+                type: "POST",
+                url: "{% url 'fa:newlst' %}",
+                data: {
+                    gruppe: gruppe,
+                    thema: thema,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    window.location.reload();
+                }
+            });
+
+        }
+
+        function btn_fa_zufall(lst_zufall, gruppe) {
+            const tn = lst_zufall[Math.floor(Math.random() * lst_zufall.length)];
+            $.ajax({
+                type: "POST",
+                url: "{% url 'fa:get_tn' %}",
+                data: {
+                    id: tn,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    btn_fa_onclick(tn, data['name'])
+                }
+            });
+            
         }
     </script>    
 {% endblock content %}

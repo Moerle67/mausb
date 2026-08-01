@@ -16,8 +16,8 @@ class Tn_fa(models.Model):
         ordering = ['-datum']
 
     def __str__(self):
-        return self.name
-
+        return f"{self.teilnehmer} - {self.datum} ({self.status})"
+ 
     def get_absolute_url(self):
         return reverse("tn_fa_detail", kwargs={"pk": self.pk})
 
