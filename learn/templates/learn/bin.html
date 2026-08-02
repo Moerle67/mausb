@@ -1,0 +1,44 @@
+{% extends "stammdaten/base.html" %}
+
+{% block content %}
+    <h1>Binär Übungen</h1>
+    <div class = "row text-center">
+        {% for digit in number %}
+            {% if digit.1 == 8 %} &nbsp; &nbsp; {% endif %}
+            <button 
+                type="button" 
+                class   = "col btn btn{% if digit.0 == 0 %}-outline{% endif %}-secondary me-1"
+                id      = "btn_bin_{{forloop.counter0}}"
+                onclick = "oc_digit({{forloop.counter0}}, {{wert}})"
+                >
+                {{digit.0}}/{{digit.1}}
+            </button>
+        {% endfor %}
+        <div class="col">
+            <button 
+                type="button" 
+                class   = "col btn btn-outline-success ms-4"
+                id      = "btn_bin_erg"               
+            >
+            {{wert}}                
+            </button>
+        <div>
+    </div>
+    <script>
+        function oc_digit(number, wert) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'learn:set_bit' %}",
+            data: {
+                number  : number,
+                wert    : wert,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+                window.open('/lrn/bin/'+data['wert']);
+            }
+        });                        
+        }
+    </script>
+{% endblock content %}
+ 
