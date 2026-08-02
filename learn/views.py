@@ -37,8 +37,9 @@ def set_bit(request):
         wert -= 2**(7-digit)
 
     answer = {
-        'wert'  : wert,
-        'error' : False,
+        'wert'      : wert,
+        'potenz'    : 2**(7-digit),
+        'error'     : False,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 

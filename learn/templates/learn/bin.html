@@ -9,7 +9,7 @@
                 type="button" 
                 class   = "col btn btn{% if digit.0 == 0 %}-outline{% endif %}-secondary me-1"
                 id      = "btn_bin_{{forloop.counter0}}"
-                onclick = "oc_digit({{forloop.counter0}}, {{wert}})"
+                onclick = "oc_digit({{forloop.counter0}})"
                 >
                 {{digit.0}}/{{digit.1}}
             </button>
@@ -25,7 +25,8 @@
         <div>
     </div>
     <script>
-        function oc_digit(number, wert) {
+        function oc_digit(number) {
+        var wert = $('#btn_bin_erg').text();
         $.ajax({
             type: "POST",
             url: "{% url 'learn:set_bit' %}",
@@ -35,7 +36,18 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
             success: function(data) {
-                window.open('/lrn/bin/'+data['wert']);
+                // Wert neu setzen
+                $('#btn_bin_erg').text(data['wert']);
+                // Button anpassen
+                if ($('#btn_bin_'+number).hasClass('btn-secondary')) {
+                    $('#btn_bin_'+number).removeClass('btn-secondary');
+                    $('#btn_bin_'+number).addClass('btn-outline-secondary');
+                    $('#btn_bin_'+number).text('0'+"/"+data['potenz']);
+                } else {
+                    $('#btn_bin_'+number).removeClass('btn-outline-secondary');
+                    $('#btn_bin_'+number).addClass('btn-secondary');
+                    $('#btn_bin_'+number).text('1'+"/"+data['potenz']);
+                }
             }
         });                        
         }
