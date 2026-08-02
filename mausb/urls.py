@@ -21,13 +21,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('stammdaten/',include('stammdaten.urls')),
-    path('anw/', include('anwesenheit.urls')),
-    path('plan/', include('ausbildungsplan.urls')),
-    path('inh/', include('lehrplan.urls')),
-    path('klausur/', include('kklausur.urls')),
-    path('task/', include('task.urls')),
-    path('fa/', include('frageantwort.urls')),
+    path('stammdaten/',include('stammdaten.urls')),                     # Stammdaten
+    path('anw/', include('anwesenheit.urls')),                          # Anwesenheit
+    path('plan/', include('ausbildungsplan.urls')),                     # Lehrplan
+    path('inh/', include('lehrplan.urls')),                             # Inhalte
+    path('klausur/', include('kklausur.urls')),                         # Klausuren
+    path('task/', include('task.urls')),                                # Aufgaben
+    path('fa/', include('frageantwort.urls')),                          # Mitarbeit
+    path('lrn/', include('learn.urls')),                                # Übungen
     path('admin/', admin.site.urls, name="admin"),
     path('', include('start.urls')),
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

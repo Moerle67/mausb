@@ -38,3 +38,6 @@ frageantwort/migrations/__pycache__/
 
 kklausur/__pycache__/
 kklausur/migrations/__pycache__/
+
+learn/__pycache__/
+learn/migrations/__pycache__

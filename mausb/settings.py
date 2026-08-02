@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'task.apps.TaskConfig',                         # Aufgaben
     'frageantwort.apps.FrageantwortConfig',         # Befragung Teilnehmer
     'kklausur.apps.KklausurConfig',                 # Kurzklausuren
+    'learn.apps.LearnConfig',                       # Übungen
 ]
 
 MIDDLEWARE = [
