@@ -28,6 +28,19 @@
                 $('#lst_erfolg').append("<li>"+wert+"</li>");
                 ziel = Math.floor(Math.random() * 255);
                 $('#txt_str_ziel').text(ziel);
+                // Buttons zurücksetzen
+                $('#btn_bin_erg').text('0');
+                var wertigkeit = 128
+                for (let i = 0; i < 8; i++) {
+                    if ($('#btn_bin_'+i).hasClass('btn-secondary')) {
+                        $('#btn_bin_'+i).removeClass('btn-secondary');
+                        $('#btn_bin_'+i).addClass('btn-outline-secondary');
+                        $('#btn_bin_'+i).text('0'+"/"+wertigkeit);
+                    }
+                    wertigkeit /= 2
+                }                
+            } else {
+                alert("Leider falsch...");
             }
         }
     </script>
