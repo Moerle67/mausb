@@ -37,8 +37,10 @@
                         $('#btn_bin_'+i).addClass('btn-outline-secondary');
                         $('#btn_bin_'+i).text('0'+"/"+wertigkeit);
                     }
+                    $('#btn_bin_'+i).text('0'+"/"+wertigkeit);
                     wertigkeit /= 2
-                }                
+                }
+                $('#txt_str_bin').text('0000 0000')                
             } else {
                 alert("Leider falsch...");
             }
