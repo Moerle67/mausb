@@ -33,11 +33,14 @@ task/__pycache__/*
 .vscode/*
 
 mausb/settings.py
-frageantwort/__pycache__/
-frageantwort/migrations/__pycache__/
+frageantwort/__pycache__/*
+frageantwort/migrations/__pycache__/*
 
 kklausur/__pycache__/
 kklausur/migrations/__pycache__/
 
-learn/__pycache__/
-learn/migrations/__pycache__
+learn/__pycache__/*
+learn/migrations/__pycache__/*
+frageantwort/__pycache__/*
+
+

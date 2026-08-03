@@ -18,7 +18,7 @@
         {% for ueb in lst_ueb %}
         <div class = "col-md-3 ">
             <h2>{{ueb}}</h2>
-            <div class="d-grid gap-2 mx-auto" id = "lst_fa_{{forloop.counter0}}">
+            <div class="d-grid gap-2 mx-auto" id = "lst_fa_{{forloop.counter0}}  ">
                 {% for tn in  liste %}
                     {% if tn.1 == forloop.parentloop.counter0 %}
                     <button

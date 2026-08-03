@@ -1,13 +1,13 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content %}
-    <h1>Binär Übungen</h1>
+    <h1>Binär Übungen (<span id="txt_str_bin">{{str_bin}}</span>)</h1>
     <div class = "row text-center">
         {% for digit in number %}
             {% if digit.1 == 8 %} &nbsp; &nbsp; {% endif %}
             <button 
                 type="button" 
-                class   = "col btn btn{% if digit.0 == 0 %}-outline{% endif %}-secondary me-1"
+                class   = "col btn shadow btn{% if digit.0 == 0 %}-outline{% endif %}-secondary me-1"
                 id      = "btn_bin_{{forloop.counter0}}"
                 onclick = "oc_digit({{forloop.counter0}})"
                 >
@@ -17,10 +17,10 @@
         <div class="col">
             <button 
                 type="button" 
-                class   = "col btn btn-outline-success ms-4"
+                class   = "col btn btn-outline-success ms-4 shadow"
                 id      = "btn_bin_erg"               
             >
-            {{wert}}                
+            {{wert}}        
             </button>
         <div>
     </div>
@@ -48,6 +48,7 @@
                     $('#btn_bin_'+number).addClass('btn-secondary');
                     $('#btn_bin_'+number).text('1'+"/"+data['potenz']);
                 }
+                $('#txt_str_bin').text(data['str_bin'])
             }
         });                        
         }
