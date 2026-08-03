@@ -11,20 +11,26 @@
         Abgabe
     </button>
     </h1>
+    <h2 class="mb-4"><span id="txt_anzahl">0</span> richtige Antworten</h2>
 {% endblock ueber %}y
 
 {% block lst_erfolg %}
     <div>
-        <h2>Erfolge</h2>
+        <h2 class="mt-4">Erfolge</h2>
         <ol class="col-1" id="lst_erfolg">
 
         </ol>
     </div>
     <script>
         function btn_abgabe() {
-            var wert = parseInt($('#btn_bin_erg').text());
-            var ziel = parseInt($('#txt_str_ziel').text());
+            const stufe1    = 10;
+            const stufe2    = 20; 
+            var wert        = parseInt($('#btn_bin_erg').text());
+            var ziel        = parseInt($('#txt_str_ziel').text());
+            var richtig     = parseInt($('#txt_anzahl').text());
+
             if (ziel == wert) {
+                richtig++;
                 $('#lst_erfolg').append("<li>"+wert+"</li>");
                 ziel = Math.floor(Math.random() * 255);
                 $('#txt_str_ziel').text(ziel);
@@ -35,12 +41,21 @@
                     if ($('#btn_bin_'+i).hasClass('btn-secondary')) {
                         $('#btn_bin_'+i).removeClass('btn-secondary');
                         $('#btn_bin_'+i).addClass('btn-outline-secondary');
-                        $('#btn_bin_'+i).text('0'+"/"+wertigkeit);
+                        $('#btn_bin_digit_'+i).text('0');
                     }
-                    $('#btn_bin_'+i).text('0'+"/"+wertigkeit);
+                    $('#btn_bin_digit_'+i).text('0');
                     wertigkeit /= 2
                 }
-                $('#txt_str_bin').text('0000 0000')                
+                if (richtig == stufe1) { // Bei zehn richtigen Antworten Wertigkeiten ausblenden
+                    for (let i = 0; i < 8; i++) {
+                        $('#btn_bin_faktor_'+i).text('');
+                    }
+                }
+                if (richtig == stufe2) { // Ergebnis Button entfernen
+                    $('#btn_bin_erg').hide();
+                }
+                $('#txt_str_bin').text('0000 0000');
+                $('#txt_anzahl').text(richtig);       
             } else {
                 alert("Leider falsch...");
             }

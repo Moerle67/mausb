@@ -1,7 +1,9 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content %}
-    {% block ueber %}<h1>Binär Übungen (<span id="txt_str_bin">{{str_bin}}</span>)</h1>{% endblock ueber %}
+    {% block ueber %}
+        <h1>Binär Übungen (<span id="txt_str_bin">{{str_bin}}</span>)</h1>
+    {% endblock ueber %}
     <div class = "row text-center">
         {% for digit in number %}
             {% if digit.1 == 8 %} &nbsp; &nbsp; {% endif %}
@@ -11,7 +13,8 @@
                 id      = "btn_bin_{{forloop.counter0}}"
                 onclick = "oc_digit({{forloop.counter0}})"
                 >
-                {{digit.0}}/{{digit.1}}
+                <span id="btn_bin_digit_{{forloop.counter0}}">{{digit.0}}</span>
+                <span id="btn_bin_faktor_{{forloop.counter0}}">/{{digit.1}}</span>
             </button>
         {% endfor %}
         <div class="col">
@@ -44,11 +47,11 @@
                 if ($('#btn_bin_'+number).hasClass('btn-secondary')) {
                     $('#btn_bin_'+number).removeClass('btn-secondary');
                     $('#btn_bin_'+number).addClass('btn-outline-secondary');
-                    $('#btn_bin_'+number).text('0'+"/"+data['potenz']);
+                    $('#btn_bin_digit_'+number).text('0');
                 } else {
                     $('#btn_bin_'+number).removeClass('btn-outline-secondary');
                     $('#btn_bin_'+number).addClass('btn-secondary');
-                    $('#btn_bin_'+number).text('1'+"/"+data['potenz']);
+                    $('#btn_bin_digit_'+number).text('1');
                 }
                 $('#txt_str_bin').text(data['str_bin'])
             }
