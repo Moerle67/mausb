@@ -1,0 +1,34 @@
+{% extends "learn/bin.html" %}
+
+{% block ueber %}
+    <h1>Binär Training Ziel (<span id="txt_str_ziel">{{ziel}}</span>) (<span id="txt_str_bin">{{str_bin}}</span>)
+    <button 
+        type="button" 
+        class   = "col btn shadow btn-outline-success me-1"
+        id      = "btn_abgabe"
+        onclick = "btn_abgabe()"
+    >
+        Abgabe
+    </button>
+    </h1>
+{% endblock ueber %}y
+
+{% block lst_erfolg %}
+    <div>
+        <h2>Erfolge</h2>
+        <ol class="col-1" id="lst_erfolg">
+
+        </ol>
+    </div>
+    <script>
+        function btn_abgabe() {
+            var wert = parseInt($('#btn_bin_erg').text());
+            var ziel = parseInt($('#txt_str_ziel').text());
+            if (ziel == wert) {
+                $('#lst_erfolg').append("<li>"+wert+"</li>");
+                ziel = Math.floor(Math.random() * 255);
+                $('#txt_str_ziel').text(ziel);
+            }
+        }
+    </script>
+{% endblock lst_erfolg %}

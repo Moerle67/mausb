@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-import json
+import json, random
 
 # Create your views here.
 
@@ -15,6 +15,23 @@ def bin(request, wert = 0):
     }
     return render(request, "learn/bin.html", content) 
 
+def bin_ueb(request, wert = None, ziel = None):
+    if not wert:
+        wert = 0
+    if not ziel:
+        ziel = random.randint(1, 255)
+
+    number, str_bin     = get_number(wert)
+
+    content = {
+        'ziel'      : ziel,
+        'str_bin'   : str_bin,
+        'number'    : number,
+        'wert'      : wert,
+    }
+    return render(request, "learn/bin_ueb.html", content)
+
+# Ajax
 def set_bit(request):
     digit               = int(request.POST['number'])
     wert                = int(request.POST['wert'])

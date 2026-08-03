@@ -1,7 +1,7 @@
 {% extends "stammdaten/base.html" %}
 
 {% block content %}
-    <h1>Binär Übungen (<span id="txt_str_bin">{{str_bin}}</span>)</h1>
+    {% block ueber %}<h1>Binär Übungen (<span id="txt_str_bin">{{str_bin}}</span>)</h1>{% endblock ueber %}
     <div class = "row text-center">
         {% for digit in number %}
             {% if digit.1 == 8 %} &nbsp; &nbsp; {% endif %}
@@ -22,8 +22,10 @@
             >
             {{wert}}        
             </button>
-        <div>
+        </div>
     </div>
+    {% block lst_erfolg %}
+    {% endblock lst_erfolg %}
     <script>
         function oc_digit(number) {
         var wert = $('#btn_bin_erg').text();
