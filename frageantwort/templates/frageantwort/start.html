@@ -13,7 +13,14 @@
             >    
             Zufall
             </button> 
-            <input id="inp_thema" type="text" class="form-control" name="inp_thema" placeholder="Thema">
+            <input 
+                id              = "inp_thema" 
+                type            = "text" 
+                class           = "form-control" 
+                name            = "inp_thema" 
+                placeholder     = "Thema" 
+                value           = "{{thema}}"
+            >
         </div>
         {% for ueb in lst_ueb %}
         <div class = "col-md-3 ">
@@ -49,6 +56,7 @@
     </div>
     <script>
         function btn_fa_onclick(tn, name) {
+            // Teilnehmer direkt angeklickt
             {% comment %} Antwort speichern {% endcomment %}
             var thema = $('#inp_thema').val()
             $("#btnfa-"+tn).remove();
@@ -68,12 +76,14 @@
                 },
                 success: function(data) {
                     window.location.reload();
+                    $('#inp_thema').val("Test");
                 }
             });
 
         }
 
         function btn_fa_new(gruppe) {
+            // Leiste Teilnehmer zurücksetzen
             var thema = $('#inp_thema').val()
             $.ajax({
                 type: "POST",
@@ -91,6 +101,7 @@
         }
 
         function btn_fa_zufall(lst_zufall, gruppe) {
+            // Einen Teilnehmer zufällig auswählen
             const tn = lst_zufall[Math.floor(Math.random() * lst_zufall.length)];
             $.ajax({
                 type: "POST",

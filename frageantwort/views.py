@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import permission_required
 # Create your views here
 
 @permission_required('frageantwort.view_tnanwesend', raise_exception=True)
-def start(request, gruppe):
+def start(request, gruppe, thema = ""):
     ##
     # Status Teinehmer
     # 0 - neu
@@ -55,6 +55,7 @@ def start(request, gruppe):
         'liste'         : lst_tn_fa, 
         'lst_ueb'       : lst_ueb,
         'lst_zufall'    : lst_zufall,
+        'thema'         : thema,
     }
     return render(request, "frageantwort/start.html", content) 
 
