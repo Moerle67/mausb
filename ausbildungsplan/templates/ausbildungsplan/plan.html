@@ -115,7 +115,7 @@
                 style = "background-color: #4CD8EB" 
                 id    = "lfm_{{forloop.parentloop.counter0}}_{{forloop.counter0}}"
                 ondragover = "allowDrop(event)" 
-                ondrop     = "drop_ma_abw(event, {{forloop.counter0 }}, {{team.id}}, '{{days.0}}')"
+                ondrop     = "drop_ma_abw(event, {{forloop.counter0 }}, {{team.id}}, '{{days.0.0}}')"
             >
                 {% if day|length == 0 %} <br />{% endif %}
                 {% for ma_abw in day %}
