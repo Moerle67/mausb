@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 import json
+from django.contrib.auth.decorators import permission_required
 
 from .models import Daytime, Block
 from stammdaten.models import Team, Gruppe, AbwesendMA, Ausbilder, Jourfixe

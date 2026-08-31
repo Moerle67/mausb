@@ -44,6 +44,11 @@ class Klausur(models.Model):
 
     def __str__(self):
         return f"{self.gruppe} / {self.title}"
+
+    @property
+    def get_gesamtpunkte(self):
+        kfragen = KlausurFrage.objects.filter(klausur = self)
+        return sum(frage.frage.punkte for frage in kfragen)
     
     #    def get_absolute_url(self):
     #        return reverse("Klausur_detail", kwargs={"pk": self.pk})
