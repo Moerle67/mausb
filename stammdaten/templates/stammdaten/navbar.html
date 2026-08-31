@@ -1,0 +1,59 @@
+<div class="container-fluid bg-dark-subtle fixed-top shadow opacity-75 d-print-none">
+    <div class="row g-2 border bg-dark-subtle">
+        <nav class="navbar navbar-expand-lg col-5">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item ">
+                            <a class="nav-link text-danger" aria-current="page" href="/admin" target="__blank">Admin</a>
+                        </li>
+                        {% if perms.ausbildungsplan %}
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{% url 'ausbildungsplan:start' %}">Ausbildungsplan</a>
+                        </li>
+                        {% endif %} {% if perms.lehrplan %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'inh:start' %}">Inhalte</a>
+                        </li>
+                        {% endif %} {% if perms.anwesenheit %}                                
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'anw:start' %}">Anwesenheit</a>
+                        </li>
+                        {% endif %} {% if perms.klausur %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'start:start' %}">Klausur</a>
+                        </li>
+                        {% endif %}{% if perms.task %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'task:start' %}">Aufgaben <span id="task" class="badge text-bg-danger"></span></a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="col-3 row">
+            {% block zusatzmenue %}{% endblock zusatzmenue %}    
+        </div> 
+        {% comment %} Anmeldebereich {% endcomment %}
+        <div class="col-4">
+            {% if user.is_authenticated %}
+            <form action="{% url 'stammdaten:logout' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" value="{{cont}}" name="cont">
+                <button class="float-end btn btn-outline-secondary">Abmelden</button>
+                <p class="float-end">{{user.username}}</p>
+            </form>
+            {% else %}
+                <button class="float-end" tabindex='3' onclick="ajax_login()">Anmelden</button>
+                <input class="float-end" tabindex='2' type="password" placeholder="Passwort" id="password" tabindex="1">
+                <input class="float-end" tabindex='1' type="text" placeholder="Benutzername" id="name" tabindex="2">
+            {% endif %}
+        </div>
+    </div>
+</div>
