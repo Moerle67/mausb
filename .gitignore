@@ -1,6 +1,9 @@
 db.sqlite3
 *.sqlite3
-
 __pycache__/
 media/
-
+kklausur/__pycache__/
+kklausur/__pycache__/models.cpython-314.pyc
+kklausur/__pycache__/urls.cpython-314.pyc
+kklausur/__pycache__/views.cpython-314.pyc
+kklausur/__pycache__/models.cpython-314.pyc
