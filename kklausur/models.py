@@ -39,11 +39,11 @@ class Klausur(models.Model):
 
     class Meta:
         verbose_name            = "Klausur"
-        verbose_name_plural     = "Klausuren"
+        verbose_name_plural     = "Klausuren" 
         ordering                = ["gruppe", "-datum"]
 
     def __str__(self):
-        return f"{self.gruppe} / {self.title}"
+        return f"{self.gruppe} / {self.title} ({self.datum.date()})"
 
     @property
     def get_gesamtpunkte(self):

@@ -1,0 +1,34 @@
+{% extends "kklausur/start.html" %}
+
+{% block ausw_klausur %}
+    <div class="col">
+        <label for="sct_group" class="form-label">Klausur</label>
+        <select
+            class="form-select form-select-lg"
+            name=""
+            id="sct_klausur"
+            onchange = "kl_grp_sct(this)" 
+        >
+            {% for klausur in klausuren %}
+                <option 
+                    value="{{klausur.id}}"
+                    {% if klausur_aktiv == klasur.id %}selected {% endif %}
+                >{{klausur}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-1">
+        <button 
+            type="button" 
+            class="btn btn-outline-success" 
+            onclick = "oncl_btn_klausur_new({{gruppe_aktiv}})" 
+        >
+        Neue Klausur erstellen
+        </button>
+    </div>
+    <script>
+        function oncl_btn_klausur_new(gruppe) {
+            window.location = `/klausur/new_klausur/${gruppe}`;
+        }
+    </script>
+{% endblock ausw_klausur %}
