@@ -1,0 +1,39 @@
+{% extends "stammdaten/base.html" %}
+
+{% block content %}
+<div class="row-cols-4 justify-content-center align-items-center g-2"
+>
+    <div class="col-9 row">
+        <h1>Klausur</h1>
+        <div class="col-3">
+            <label for="sct_group" class="form-label">Gruppe</label>
+            <select
+                class="form-select form-select-lg"
+                name=""
+                id="sct_group"
+                onchange = "kl_grp_sct(this)" 
+            >
+                <option selected>Auswahl</option>
+                {% for gruppe in gruppen %}
+                    <option 
+                        value="{{gruppe.id}}"
+                        {% if gruppe_aktiv == gruppe.id %}selected {% endif %}
+                    >{{gruppe}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% block ausw_klausur %}{% endblock ausw_klausur %}       
+    </div>
+</div>
+<script>
+    function kl_grp_sct(element) {
+        if (element.value != "Auswahl")
+            window.location = `/klausur/ausw_klausur/${element.value}`;
+    }
+</script>
+ 
+    
+
+{% endblock content %}
+
+
