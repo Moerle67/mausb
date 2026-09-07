@@ -1,5 +1,7 @@
 {% extends "stammdaten/base.html" %}
 
+{% comment %} Auswahl Gruppe {% endcomment %}
+
 {% block content %}
 <div class="row-cols-4 justify-content-center align-items-center g-2"
 >
@@ -13,7 +15,7 @@
                 id="sct_group"
                 onchange = "kl_grp_sct(this)" 
             >
-                <option selected>Auswahl</option>
+                <option value = "-" selected>Auswahl</option>
                 {% for gruppe in gruppen %}
                     <option 
                         value="{{gruppe.id}}"
@@ -27,7 +29,7 @@
 </div>
 <script>
     function kl_grp_sct(element) {
-        if (element.value != "Auswahl")
+        if (element.value != "-")
             window.location = `/klausur/ausw_klausur/${element.value}`;
     }
 </script>

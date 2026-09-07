@@ -133,10 +133,11 @@
             });
         }
             {% comment %} Beim Start Task abfragen {% endcomment %}
-        $( document ).ready(get_task());
-            {% comment %} Task Abfrage aller 30 Sekunden {% endcomment %}
+        $( document ).ready(get_task()) {
+            // {% comment %} Task Abfrage aller 30 Sekunden {% endcomment %}
+        }
         $( document ).ready(function() {
-            var timerId = setInterval(get_task, 30000);  // aller 30 Sekunden
+            // var timerId = setInterval(get_task, 30000);  // aller 30 Sekunden
         });
 
         function ajax_login(){
