@@ -53,7 +53,8 @@ def detail_klausur(request, klausur):
     ds_gruppe       = get_object_or_404(Gruppe, id=ds_klausur.gruppe.id)
     lst_gruppen     = Gruppe.objects.filter(team = ds_klausur.gruppe.team.id)
     lst_klausur     = Klausur.objects.filter(gruppe = ds_klausur.gruppe.id)
-    
+    lst_themen      = Ausbildungseinheit.objects.all()
+
     content = {
         'gruppen'           : lst_gruppen,
         'gruppe_aktiv'      : ds_gruppe.id,
@@ -61,6 +62,7 @@ def detail_klausur(request, klausur):
         'klausur_aktiv'     : ds_klausur.id,
 
         'klausur_detail'    : ds_klausur,
+        'themen'            : lst_themen,
     }
     return render(request, "kklausur/detail_klausur.html", content)
 
@@ -69,7 +71,7 @@ def chg_klausur_title(request):
     ds_klausur = get_object_or_404(Klausur, id = request.POST['klausur'])
     ds_klausur.title = request.POST['title']
     ds_klausur.save()
-    
+
     answer = {
             'error': False,
         }

@@ -1,8 +1,10 @@
 {% extends "kklausur/aklausur.html" %}
 
 {% block detail_klausur %}
-<div class= "col-11 row">
-    <h2>Details Klausur</h2>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" integrity="sha512-Ars0BmSwpsUJnWMw+KoUKGKunT7+T8NGK0ORRKj+HT8naZzLSIQoOSIIM3oyaJljgLxFi0xImI5oZkAWEFARSA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+<h2>Details Klausur</h2>
     <form>
         <div class="mb-3">
             <label for="frmTitel" class="form-label">Titel</label>
@@ -14,24 +16,42 @@
                 onchange    = "onchange_txt_title(this, {{klausur_detail.id}})"
             >       
         </div>
+        <label for="frmSelect" class="form-label">Thema</label>
+            <select 
+                class       = "form-select" 
+                id          = "frmSelect"
+                onchange    = "onchange_sct_thema(this, {{klausur_detail.id}})"
+            >
+            <option value="-" selected>Auswahl</option>
+            {% for thema in themen %}
+                <option 
+                    value="{{thema.id}}"
+                    {% if thema_aktiv == thema.id %}selected {% endif %}
+                >{{thema}}</option>
+            {% endfor %}
     </form>
 </div>
 <script>
-    function onchange_txt_title(element, klausur) {
-    $.ajax({
-        type: "POST",
-        url: "{% url 'klausur:chg_klausur_title' %}",
-
-        data: {
-            klausur : klausur,
-            title   : element.value,
-
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-        success: function(data) {
-
-        }
+    $(document).ready(function() {
+        $('select').selectize({
+            sortField: 'text'
+        });
     });
+    function onchange_txt_title(element, klausur) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:chg_klausur_title' %}",
+
+            data: {
+                klausur : klausur,
+                title   : element.value,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+
+            }
+        });
     }
 </script>
 {% endblock detail_klausur %}   
