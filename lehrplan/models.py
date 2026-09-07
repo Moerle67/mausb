@@ -177,7 +177,7 @@ class Ausbildungseinheit(models.Model): # Lerneinheit neu / aktuell
     class Meta:
         verbose_name = "Ausbildungseinheit"
         verbose_name_plural = "Ausbildungseinheiten"
-        ordering = ['inhalt']  
+        ordering = ['inhalt']
 
     @property
     def get_aubi(self):

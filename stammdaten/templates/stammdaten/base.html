@@ -18,6 +18,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment.min.js">
     </script>
     <script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+    
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
@@ -132,14 +133,6 @@
                 }
             });
         }
-            {% comment %} Beim Start Task abfragen {% endcomment %}
-        $( document ).ready(get_task()) {
-            // {% comment %} Task Abfrage aller 30 Sekunden {% endcomment %}
-        }
-        $( document ).ready(function() {
-            // var timerId = setInterval(get_task, 30000);  // aller 30 Sekunden
-        });
-
         function ajax_login(){
             var name = $('#name').val();
             var password = $('#password').val();
