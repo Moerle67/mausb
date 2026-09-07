@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_list_or_404, get_object_or_404
+from django.shortcuts import redirect, render, get_list_or_404, get_object_or_404
 from django.contrib.auth.decorators import permission_required
 from django.http import Http404, HttpResponse
 
@@ -6,11 +6,13 @@ from stammdaten.models import Gruppe
 
 from . import renderers
 
-import datetime
+import datetime, json
 
 # Create your views here.
 
 from .models import *
+
+@permission_required('stammdaten.show_gruppe')
 def start(request, team = 1):
     lst_groups = Gruppe.objects.filter(team=team)
 
@@ -19,33 +21,60 @@ def start(request, team = 1):
     } 
     return render(request, "kklausur/start.html", content)
 
+@permission_required('kklausur.show_klausur')
 def ausw_klausur(request, gruppe):
     ds_gruppe       = get_object_or_404(Gruppe, id=gruppe)
     lst_gruppen     = Gruppe.objects.filter(team = ds_gruppe.team)
     lst_klausur     = Klausur.objects.filter(gruppe = gruppe)
 
+    # Letzte Klausur auswählen, wenn vorhanden
+    if len(lst_klausur) > 0:
+        return redirect("klausur:detail_klausur", klausur = lst_klausur[0].id)
+    
     content = {
         'gruppen'           : lst_gruppen,
         'gruppe_aktiv'      : ds_gruppe.id,
         'klausuren'         : lst_klausur,
+        'klausur_aktiv'     : "-",
     }
     return render(request, "kklausur/aklausur.html", content)
 
+@permission_required('kklausur.add_klausur')
 def new_klausur(request, gruppe):
     morgen = datetime.datetime.now() + datetime.timedelta(days=1)
     ds_gruppe = get_object_or_404(Gruppe, id = gruppe)
     ds_klausur = Klausur(gruppe = ds_gruppe, datum = morgen, title = "Neue Klausur")
     ds_klausur.save()
-    print(ds_klausur)
-    return
+    return redirect("klausur:detail_klausur", klausur = ds_klausur.id)
 
-def add_klas(request, team):
-    ds_team         = get_object_or_404(Gruppe, id = team)
-    lst_gruppen     = Gruppe.objects.filter(team = ds_team, activ = True)
-
+@permission_required('kklausur.add_klausur')
+def detail_klausur(request, klausur):
+    ds_klausur = get_object_or_404(Klausur, id = klausur)
+    ds_gruppe       = get_object_or_404(Gruppe, id=ds_klausur.gruppe.id)
+    lst_gruppen     = Gruppe.objects.filter(team = ds_klausur.gruppe.team.id)
+    lst_klausur     = Klausur.objects.filter(gruppe = ds_klausur.gruppe.id)
+    
     content = {
         'gruppen'           : lst_gruppen,
+        'gruppe_aktiv'      : ds_gruppe.id,
+        'klausuren'         : lst_klausur,
+        'klausur_aktiv'     : ds_klausur.id,
+
+        'klausur_detail'    : ds_klausur,
     }
+    return render(request, "kklausur/detail_klausur.html", content)
+
+@permission_required('kklausur.show_klausur')
+def chg_klausur_title(request):
+    ds_klausur = get_object_or_404(Klausur, id = request.POST['klausur'])
+    ds_klausur.title = request.POST['title']
+    ds_klausur.save()
+    
+    answer = {
+            'error': False,
+        }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
 
 @permission_required('kklausur.show_klausur')
 def gen_pdf(request, klausur, typ = 1):

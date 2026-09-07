@@ -1,0 +1,37 @@
+{% extends "kklausur/aklausur.html" %}
+
+{% block detail_klausur %}
+<div class= "col-11 row">
+    <h2>Details Klausur</h2>
+    <form>
+        <div class="mb-3">
+            <label for="frmTitel" class="form-label">Titel</label>
+            <input 
+                type        = "text" 
+                class       = "form-control" 
+                id          = "frmTitel"
+                value       = "{{klausur_detail.title}}"
+                onchange    = "onchange_txt_title(this, {{klausur_detail.id}})"
+            >       
+        </div>
+    </form>
+</div>
+<script>
+    function onchange_txt_title(element, klausur) {
+    $.ajax({
+        type: "POST",
+        url: "{% url 'klausur:chg_klausur_title' %}",
+
+        data: {
+            klausur : klausur,
+            title   : element.value,
+
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(data) {
+
+        }
+    });
+    }
+</script>
+{% endblock detail_klausur %}   
