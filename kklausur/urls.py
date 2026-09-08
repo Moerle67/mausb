@@ -1,6 +1,5 @@
 from django.urls import path
 
-
 from .views import *
 
 app_name = "klausur"
@@ -12,6 +11,8 @@ urlpatterns = [
     path('detail_klausur/<int:klausur>', detail_klausur, name='detail_klausur'), # Start 2 Auswahl Klausur
 
     path('chg_klausur_title', chg_klausur_title, name='chg_klausur_title'),   # Neuen Titel in Klausur speichern
+    path('chg_klausur_thema', chg_klausur_thema, name='chg_klausur_thema'),   # Neuen Titel in Klausur speichern
+
     path('gen_pdf/<int:klausur>', gen_pdf, name='gen_pdf'),                     # PDF generieren     
 ]
 

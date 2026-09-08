@@ -17,24 +17,38 @@
                 onchange    = "onchange_txt_title(this, {{klausur_detail.id}})"
             >       
         </div>
+        <div class="mb-3">
         <label for="frmSelect" class="form-label">Thema</label>
             <select 
                 class       = "form-select" 
                 id          = "frmSelect"
                 onchange    = "onchange_sct_thema(this, {{klausur_detail.id}})"
             >
-            <option value="-" selected></option>
-            {% for thema in themen %}
-                <option 
-                    value="{{thema.id}}"
-                    {% if thema_aktiv == thema.id %}selected {% endif %}
-                >{{thema}}</option>
-            {% endfor %}
+                <option value="-" selected>Auswahl</option>
+                {% for thema in themen %}
+                    <option 
+                        value="{{thema.id}}"
+                        {% if thema_aktiv == thema.id %}selected {% endif %}
+                    >{{thema}}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="meeting-time">Choose a time for your appointment:</label>
+
+            <input
+            type="datetime-local"
+            id="meeting-time"
+            name="meeting-time"
+            value="{{str_date}}"
+                />
+
+                    </div>    
     </form>
 </div>
 <script>
     $(document).ready(function() {
-        $('select').selectize({
+        $('#frmSelect').selectize({
             sortField: 'text'
         });
     });
@@ -46,6 +60,22 @@
             data: {
                 klausur : klausur,
                 title   : element.value,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+
+            }
+        });
+    }
+    function onchange_sct_thema(element, klausur) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:chg_klausur_thema' %}",
+
+            data: {
+                klausur : klausur,
+                thema   : element.value,
 
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },

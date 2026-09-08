@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 from lehrplan.models import Ausbildungseinheit
 from stammdaten.models import Gruppe
@@ -10,7 +10,7 @@ class Frage(models.Model):
     titel = models.CharField(("Thema"), max_length=250)
     thema = models.ForeignKey(Ausbildungseinheit, verbose_name=("Ausbildungseinheit"), on_delete=models.RESTRICT)
     inhalt = models.CharField("Überschrift", max_length=50, default="?")
-    frage = models.TextField(("Frage"))
+    frage = models.TextField("Frage")
     musterantwort = models.TextField(("Musterantwort"), default ="")
     bild = models.ImageField(("Bild"), blank=True, null=True)
     bildmuster = models.ImageField(("Bild Muster"), blank=True, null=True)
