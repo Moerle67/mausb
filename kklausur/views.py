@@ -54,8 +54,10 @@ def detail_klausur(request, klausur):
     lst_gruppen     = Gruppe.objects.filter(team = ds_klausur.gruppe.team.id)
     lst_klausur     = Klausur.objects.filter(gruppe = ds_klausur.gruppe.id)
     lst_themen      = Ausbildungseinheit.objects.all()
+    # date_time = now.strftime("%Y-%m-%dT%H:%M")  
+    # str_date     = "2027-06-12T19:30"
+    str_date        =  ds_klausur.datum.strftime("%Y-%m-%dT%H:%M") 
 
-    str_date     = "2027-06-12T19:30"
     content = {
         'gruppen'           : lst_gruppen,
         'gruppe_aktiv'      : ds_gruppe.id,
@@ -79,7 +81,7 @@ def chg_klausur_title(request):
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
-@permission_required('kklausur.show_klausur')
+@permission_required('kklausur.change_klausur')
 def chg_klausur_thema(request):
     ds_klausur  = get_object_or_404(Klausur, id = request.POST['klausur'])
     ds_thema    =  get_object_or_404(Ausbildungseinheit, id = request.POST['thema'])
@@ -90,6 +92,20 @@ def chg_klausur_thema(request):
             'error': False,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")
+
+
+@permission_required('kklausur.change_klausur')
+def chg_klausur_termin(request):
+
+    ds_klausur          = get_object_or_404(Klausur, id = request.POST['klausur'])
+    ds_klausur.datum    = datetime.datetime.strptime(request.POST['datum'], "%Y-%m-%dT%H:%M")
+    ds_klausur.save()
+
+    answer = {
+            'error': False,
+        }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
 
 @permission_required('kklausur.show_klausur')
 def gen_pdf(request, klausur, typ = 1):
