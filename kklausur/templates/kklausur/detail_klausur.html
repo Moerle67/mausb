@@ -1,5 +1,6 @@
 {% extends "kklausur/aklausur.html" %}
 
+{% block title %}MAUSB Klausur Detail{% endblock title %}
 {% block detail_klausur %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" integrity="sha512-Ars0BmSwpsUJnWMw+KoUKGKunT7+T8NGK0ORRKj+HT8naZzLSIQoOSIIM3oyaJljgLxFi0xImI5oZkAWEFARSA==" crossorigin="anonymous" referrerpolicy="no-referrer">
@@ -28,22 +29,26 @@
                 {% for thema in themen %}
                     <option 
                         value="{{thema.id}}"
-                        {% if thema_aktiv == thema.id %}selected {% endif %}
+                        {% if klausur_detail.thema.id == thema.id %}selected {% endif %}
                     >{{thema}}</option>
                 {% endfor %}
             </select>
         </div>
-        <div class="mb-3">
-            <label for="meeting-time">Choose a time for your appointment:</label>
-
+        <div class="mb-3 col-3">
+            <label for="dt_termin">Termin</label>
             <input
-            type="datetime-local"
-            id="meeting-time"
-            name="meeting-time"
-            value="{{str_date}}"
-                />
-
-                    </div>    
+                class       = "form-control"
+                type        = "datetime-local"
+                id          = "dt_termin"
+                name        = "meeting-time"
+                value       = "{{str_date}}"
+                onchange    = "onchange_dt_termin(this, {{klausur_detail.id}})" 
+            />
+        </div>    
+        <div class="mb-3 col-4">
+            <label for="check_erledigt">Erledigt</label>
+            <input class="form-check-input" type="checkbox" value="" id="check_erledigt" checked>
+        </div> 
     </form>
 </div>
 <script>
@@ -76,6 +81,23 @@
             data: {
                 klausur : klausur,
                 thema   : element.value,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+
+            }
+        });
+    }    
+    function onchange_dt_termin(element, klausur) {
+
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:chg_klausur_termin' %}",
+
+            data: {
+                klausur : klausur,
+                datum   : element.value,
 
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
