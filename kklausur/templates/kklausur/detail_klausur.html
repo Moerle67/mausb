@@ -61,8 +61,33 @@
                 id="ta_comment" 
                 rows="1"
                 onchange    = "onchange_ta_comment(this, {{klausur_detail.id}})"
+                >{{klausur_detail.comment}}</textarea>
+        </div>
+        <div class="mb-3 row">
+            <div class="mb-3 col-6">
+                <h3>Mögliche Fragen</h3>
+                <label for="frmSelect" class="form-label">Thema</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "frmSelect"
+                    onchange    = "onchange_sct_thema(this, {{klausur_detail.id}})"
                 >
-            {{klausur_detail.comment}}</textarea>
+                    <option value="-" selected>Auswahl</option>
+                    {% for thema in themen %}
+                        <option 
+                            value="{{thema.id}}"
+                            {% if klausur_detail.thema.id == thema.id %}selected {% endif %}
+                        >{{thema}}</option>
+                    {% endfor %}
+                </select>
+        </div>
+
+
+            </div>
+            <div class="mb-3 col-6">
+                <h3>Fragen in Klausur</h3>
+                
+            </div>
         </div>
     </form>
 </div>
