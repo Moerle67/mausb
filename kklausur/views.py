@@ -106,6 +106,23 @@ def chg_klausur_termin(request):
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+@permission_required('kklausur.change_klausur')
+def chg_klausur_erledigt(request):
+    
+    ds_klausur          = get_object_or_404(Klausur, id = request.POST['klausur'])
+    if request.POST['erledigt'] == "true":
+        ds_klausur.erledigt = True
+    else:
+        ds_klausur.erledigt = False
+
+    ds_klausur.save()
+
+    answer = {
+            'error': False,
+        }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+##################################################################################################################
 
 @permission_required('kklausur.show_klausur')
 def gen_pdf(request, klausur, typ = 1):
