@@ -53,7 +53,17 @@
                 onchange    = "onchange_cb_erledigt(this, {{klausur_detail.id}})"
                 id="check_erledigt" 
                 {% if klausur_detail.erledigt  %} checked {% endif %} >
-        </div> 
+        </div>
+        <div class="mb-3">
+            <label for="ta_comment" class="form-label">Kommentar</label>
+            <textarea 
+                class="form-control" 
+                id="ta_comment" 
+                rows="1"
+                onchange    = "onchange_ta_comment(this, {{klausur_detail.id}})"
+                >
+            {{klausur_detail.comment}}</textarea>
+        </div>
     </form>
 </div>
 <script>
@@ -126,6 +136,9 @@
 
             }
         });
+    }
+    function onchange_ta_comment(element, klausur) {
+        
     }
 </script>
 {% endblock detail_klausur %}   
