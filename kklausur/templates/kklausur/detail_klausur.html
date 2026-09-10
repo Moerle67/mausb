@@ -64,39 +64,46 @@
                 >{{klausur_detail.comment}}</textarea>
         </div>
         <div class="mb-3 row">
-            <div class="mb-3 col-6">
+            <div class="m-3 col-5">
                 <h3>Mögliche Fragen</h3>
-                <label for="frmSelect" class="form-label">Thema</label>
+                {% comment %} Auswahl Thema für Fragen {% endcomment %}
+                <label for="frmSelect_qt" class="form-label">Thema</label>
                 <select 
                     class       = "form-select" 
-                    id          = "frmSelect"
-                    onchange    = "onchange_sct_thema(this, {{klausur_detail.id}})"
+                    id          = "frmSelect_qt"
+                    onchange    = "onchange_sct_fragen_thema(this)"
                 >
                     <option value="-" selected>Auswahl</option>
                     {% for thema in themen %}
-                        <option 
-                            value="{{thema.id}}"
-                            {% if klausur_detail.thema.id == thema.id %}selected {% endif %}
-                        >{{thema}}</option>
+                        {% if thema.get_count_questions > 0 %}
+                            <option 
+                                    value="{{thema.id}}"
+                            >{{thema.get_kuerzel}} {{thema.inhalt}} ({{thema.get_count_questions}} {% if thema.get_count_questions == 1 %}Frage{% else %}Fragen{% endif %})</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
-        </div>
 
+                {% comment %} Auswahl Fragen {% endcomment %}
+                <label for="frmSelect_q" class="form-label">Mögliche Fragen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "frmSelect_q"
+                    size        = "7"
+                    {% comment %} onchange    = "" {% endcomment %}
+                >
+                {{sct_lst_qp | safe }}
+                </select>
 
             </div>
-            <div class="mb-3 col-6">
+            <div class="m-3 col-5">
                 <h3>Fragen in Klausur</h3>
-                
             </div>
         </div>
     </form>
 </div>
 <script>
-    $(document).ready(function() {
-        $('select').selectize({
-            sortField: 'text'
-        });
-    });
+    $(document).ready(function() {$('#frmSelect').selectize();});
+    $(document).ready(function() {$('#frmSelect_qt').selectize();});
     function onchange_txt_title(element, klausur) {
         $.ajax({
             type: "POST",
@@ -177,6 +184,10 @@
 
             }
         });
+    }
+ 
+    function onchange_sct_fragen_thema(element) {
+        alert(element.value);
     }
 </script>
 {% endblock detail_klausur %}   

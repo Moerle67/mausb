@@ -58,6 +58,9 @@ def detail_klausur(request, klausur):
     # str_date     = "2027-06-12T19:30"
     str_date        =  ds_klausur.datum.strftime("%Y-%m-%dT%H:%M") 
 
+    sct_lst_qp      = get_pq(thema = None)
+
+    print(sct_lst_qp)
     content = {
         'gruppen'           : lst_gruppen,
         'gruppe_aktiv'      : ds_gruppe.id,
@@ -67,8 +70,22 @@ def detail_klausur(request, klausur):
         'klausur_detail'    : ds_klausur,
         'themen'            : lst_themen,
         'str_date'          : str_date,
+        'sct_lst_qp'        : sct_lst_qp,
     }
     return render(request, "kklausur/detail_klausur.html", content)
+
+
+def get_pq(thema):
+    if thema:
+        lst_pq = Frage.objects.filter(thema = thema)
+    else:
+        lst_pq = Frage.objects.all()
+
+    str_sct = ""
+    for frage in lst_pq:
+        str_sct += f"<option value='{frage.id}' title='{frage.frage}'>{frage.inhalt}</option>"
+
+    return str_sct
 
 @permission_required('kklausur.show_klausur')
 def chg_klausur_title(request):

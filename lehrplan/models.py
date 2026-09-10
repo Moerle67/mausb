@@ -4,6 +4,9 @@ from django.db.models import Sum
 
 from stammdaten.models import Beruf, Ausbilder
 
+from django.apps import apps
+
+
 # Create your models here.
 
 class Rahmenlehrplan(models.Model):
@@ -204,6 +207,11 @@ class Ausbildungseinheit(models.Model): # Lerneinheit neu / aktuell
             kuerzel = str(ae.kuerzel) + " " + kuerzel + " "
         return kuerzel
 
+    @property
+    def get_count_questions(self):
+        Frage = apps.get_model('kklausur.Frage')
+        return len(Frage.objects.filter(thema = self))
+    
     @property
     def get_time(self):
         sum_direkt = Ausbildungseinheit.objects.filter(thema=self).aggregate(Sum("time"))['time__sum']
