@@ -216,7 +216,7 @@ class Ausbildungseinheit(models.Model): # Lerneinheit neu / aktuell
     
     def __str__(self):
         thema = self.thema.inhalt if self.thema != None else ""
-        return f"{self.get_kuerzel}{self.inhalt} {self.time}/{self.get_time} UE/{self.get_aubi} ({thema}) [{self.id}]"
+        return f"{self.get_kuerzel}{self.inhalt} {self.time}/{self.get_time} UE ({thema}) [{self.id}]"
 
     def get_absolute_url(self):
         return reverse("Lerneinheit_detail", kwargs={"pk": self.pk})
