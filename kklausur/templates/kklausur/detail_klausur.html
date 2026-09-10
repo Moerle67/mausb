@@ -138,7 +138,20 @@
         });
     }
     function onchange_ta_comment(element, klausur) {
-        
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:chg_klausur_comment' %}",
+
+            data: {
+                klausur : klausur,
+                comment : element.value,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+
+            }
+        });
     }
 </script>
 {% endblock detail_klausur %}   
