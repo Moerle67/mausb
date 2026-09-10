@@ -108,19 +108,28 @@ def chg_klausur_termin(request):
 
 @permission_required('kklausur.change_klausur')
 def chg_klausur_erledigt(request):
-    
-    ds_klausur          = get_object_or_404(Klausur, id = request.POST['klausur'])
-    if request.POST['erledigt'] == "true":
-        ds_klausur.erledigt = True
-    else:
-        ds_klausur.erledigt = False
 
+    ds_klausur          = get_object_or_404(Klausur, id = request.POST['klausur'])
+    ds_klausur.erledigt = True if request.POST['erledigt'] == "true" else False
     ds_klausur.save()
 
     answer = {
             'error': False,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")
+
+@permission_required('kklausur.change_klausur')
+def chg_klausur_comment(request):
+
+    ds_klausur          = get_object_or_404(Klausur, id = request.POST['klausur'])
+    ds_klausur.comment  = request.POST['comment']
+    ds_klausur.save()
+
+    answer = {
+            'error': False,
+        }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
 
 ##################################################################################################################
 
