@@ -89,14 +89,20 @@
                     class       = "form-select" 
                     id          = "frmSelect_q"
                     size        = "7"
+                    ondblclick  = "ondblcl_q(this, {{klausur_detail.id}});"
+
                     {% comment %} onchange    = "" {% endcomment %}
-                >
-                {{sct_lst_qp | safe }}
+                >{{sct_lst_qp | safe }}
                 </select>
 
             </div>
             <div class="m-3 col-5">
                 <h3>Fragen in Klausur</h3>
+                <ol class="bg-light">
+                    {% for element in lst_questions %}
+                    <li >{{element.frage.titel}}</li>
+                    {% endfor %}
+                </ol>
             </div>
         </div>
     </form>
@@ -187,6 +193,22 @@
     }
  
     function onchange_sct_fragen_thema(element) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:chg_klausur_tq' %}",
+
+            data: {
+                thema : element.value,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+                $('#frmSelect_q').html(data['liste']);
+            }
+        });
+    }
+
+    function ondblcl_q(element, klausur) {
         alert(element.value);
     }
 </script>

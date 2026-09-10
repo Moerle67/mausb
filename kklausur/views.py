@@ -49,24 +49,25 @@ def new_klausur(request, gruppe):
 
 @permission_required('kklausur.add_klausur')
 def detail_klausur(request, klausur):
-    ds_klausur = get_object_or_404(Klausur, id = klausur)
+    ds_klausur      = get_object_or_404(Klausur, id = klausur)
     ds_gruppe       = get_object_or_404(Gruppe, id=ds_klausur.gruppe.id)
     lst_gruppen     = Gruppe.objects.filter(team = ds_klausur.gruppe.team.id)
     lst_klausur     = Klausur.objects.filter(gruppe = ds_klausur.gruppe.id)
     lst_themen      = Ausbildungseinheit.objects.all()
+    lst_questions   = KlausurFrage.objects.filter(klausur = ds_klausur)
+
     # date_time = now.strftime("%Y-%m-%dT%H:%M")  
     # str_date     = "2027-06-12T19:30"
     str_date        =  ds_klausur.datum.strftime("%Y-%m-%dT%H:%M") 
 
     sct_lst_qp      = get_pq(thema = None)
 
-    print(sct_lst_qp)
     content = {
         'gruppen'           : lst_gruppen,
         'gruppe_aktiv'      : ds_gruppe.id,
         'klausuren'         : lst_klausur,
         'klausur_aktiv'     : ds_klausur.id,
-
+        'lst_questions'     : lst_questions,
         'klausur_detail'    : ds_klausur,
         'themen'            : lst_themen,
         'str_date'          : str_date,
@@ -144,10 +145,19 @@ def chg_klausur_comment(request):
 
     answer = {
             'error': False,
-        }
+        }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+def chg_klausur_tq(request):
+    ds_thema            = get_object_or_404(Ausbildungseinheit, id = request.POST['thema'])
+    sct_lst_qp          = get_pq(thema = ds_thema)
 
+    answer = {
+            'liste'     : sct_lst_qp,
+            'error'     : False,
+        }    
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+    
 ##################################################################################################################
 
 @permission_required('kklausur.show_klausur')
