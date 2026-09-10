@@ -47,7 +47,12 @@
         </div>    
         <div class="mb-3 col-4">
             <label for="check_erledigt">Erledigt</label>
-            <input class="form-check-input" type="checkbox" value="" id="check_erledigt" checked>
+            <input 
+                class       = "form-check-input" 
+                type        = "checkbox" value=""
+                onchange    = "onchange_cb_erledigt(this, {{klausur_detail.id}})"
+                id="check_erledigt" 
+                {% if klausur_detail.erledigt  %} checked {% endif %} >
         </div> 
     </form>
 </div>
@@ -98,6 +103,22 @@
             data: {
                 klausur : klausur,
                 datum   : element.value,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(data) {
+
+            }
+        });
+    }
+    function onchange_cb_erledigt(element, klausur) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:chg_klausur_erledigt' %}",
+
+            data: {
+                klausur : klausur,
+                erledigt   : element.checked,
 
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             },
