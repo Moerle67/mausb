@@ -78,6 +78,15 @@ def new_klausur(request, gruppe):
 
 @permission_required('kklausur.add_klausur')
 def detail_klausur(request, klausur):
+    """ Formular Detail Klasur
+
+    Args:
+        request (_type_): _description_
+        klausur (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     ds_klausur      = get_object_or_404(Klausur, id = klausur)
     ds_gruppe       = get_object_or_404(Gruppe, id=ds_klausur.gruppe.id)
     lst_gruppen     = Gruppe.objects.filter(team = ds_klausur.gruppe.team.id)
@@ -93,8 +102,8 @@ def detail_klausur(request, klausur):
     sct_lst_qp      = get_pq(thema = None, klausur = None)
 
     content = {
-        'gruppen'           : lst_gruppen,
-        'gruppe_aktiv'      : ds_gruppe.id,
+        'gruppen'           : lst_gruppen,          # Liste aller Gruppe
+        'gruppe_aktiv'      : ds_gruppe.id,         # aktuelle Gruppe
         'klausuren'         : lst_klausur,
         'klausur_aktiv'     : ds_klausur.id,
         'lst_questions'     : lst_questions,
@@ -146,6 +155,38 @@ def get_pq(thema, klausur):
         str_sct += f"<option value='{frage.id}' title='{frage.frage}'>{frage.inhalt}</option>"
 
     return str_sct
+
+def get_kq(klausur):
+    """ Liefert 
+
+    Args:
+        klausur (_type_): _description_
+
+    Raises:
+        Http404: _description_
+
+    Returns:
+        _type_: _description_
+    """
+
+    # ds_klausur = get_object_or_404(Klausur, id = klausur)
+    lst_qk = KlausurFrage.objects.filter(klausur = klausur)
+    str_anwer = ""
+
+    str_anwer += "<h3>Fragen in Klausur</h3>"
+    str_anwer += "<ol class='bg-body'>"
+    for question in lst_qk:
+        str_anwer += f"<li class='m-2 border' >{question.frage.titel} ({question.position})"
+        str_anwer += "<div class='float-end fs-5'>"
+        str_anwer +=    "<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben'></i>"
+        str_anwer +=    "<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben'></i>"
+        str_anwer +=    "<i class='bi bi-x-square shadow' title='Frage aus Klausur entfernen'></i>"
+        str_anwer += " </div>"
+        str_anwer += "</li>"
+    str_anwer += "</ol>"
+
+    return str_anwer
+
 
 @permission_required('kklausur.show_klausur')
 def chg_klausur_title(request):
@@ -240,6 +281,7 @@ def add_klausur_q(request):
         lst_kq: SELECT List Klausur-Questions
 
     """
+
 
 ##################################################################################################################
 
