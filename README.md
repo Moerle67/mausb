@@ -1,5 +1,7 @@
 # TODO:
 # - Klausur
-#    - Auslesen Datum
-
+#    - Formular
+# 
+# Allg
+# - Border JF
 # FIXME:

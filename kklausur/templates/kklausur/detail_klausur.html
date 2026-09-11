@@ -71,7 +71,7 @@
                 <select 
                     class       = "form-select" 
                     id          = "frmSelect_qt"
-                    onchange    = "onchange_sct_fragen_thema(this)"
+                    onchange    = "onchange_sct_fragen_thema(this, {{klausur_detail.id}})"
                 >
                     <option value="-" selected>Auswahl</option>
                     {% for thema in themen %}
@@ -96,11 +96,17 @@
                 </select>
 
             </div>
-            <div class="m-3 col-5">
+            <div class="m-3 col-6">
                 <h3>Fragen in Klausur</h3>
-                <ol class="bg-light">
+                <ol class="bg-body">
                     {% for element in lst_questions %}
-                    <li >{{element.frage.titel}}</li>
+                        <li class="m-2 border" >{{element.frage.titel}}
+                            <div class="float-end fs-5">
+                                <i class="bi bi-arrow-up-square shadow" title="Nach oben verschieben"></i>
+                                <i class="bi bi-arrow-down-square shadow" title="Nach unten verschieben"></i>
+                                <i class="bi bi-x-square shadow" title="Frage aus Klausur entfernen"></i>
+                            </div>
+                        </li>
                     {% endfor %}
                 </ol>
             </div>
@@ -192,15 +198,16 @@
         });
     }
  
-    function onchange_sct_fragen_thema(element) {
+    function onchange_sct_fragen_thema(element, klausur) {
         $.ajax({
             type: "POST",
             url: "{% url 'klausur:chg_klausur_tq' %}",
 
             data: {
-                thema : element.value,
+                thema   : element.value,
+                klausur : klausur,
 
-                csrfmiddlewaretoken: '{{ csrf_token }}'
+                csrfmiddlewaretoken: '{{ csrf_token }}',
             },
             success: function(data) {
                 $('#frmSelect_q').html(data['liste']);

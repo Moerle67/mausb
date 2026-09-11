@@ -12,6 +12,8 @@ import datetime, json
 
 from .models import *
 
+# TODO: Filter vorhenden Fragen
+
 @permission_required('stammdaten.show_gruppe')
 def start(request, team = 1):
     lst_groups = Gruppe.objects.filter(team=team)
@@ -56,11 +58,12 @@ def detail_klausur(request, klausur):
     lst_themen      = Ausbildungseinheit.objects.all()
     lst_questions   = KlausurFrage.objects.filter(klausur = ds_klausur)
 
+
     # date_time = now.strftime("%Y-%m-%dT%H:%M")  
     # str_date     = "2027-06-12T19:30"
     str_date        =  ds_klausur.datum.strftime("%Y-%m-%dT%H:%M") 
 
-    sct_lst_qp      = get_pq(thema = None)
+    sct_lst_qp      = get_pq(thema = None, klausur = None)
 
     content = {
         'gruppen'           : lst_gruppen,
@@ -76,14 +79,35 @@ def detail_klausur(request, klausur):
     return render(request, "kklausur/detail_klausur.html", content)
 
 
-def get_pq(thema):
+def get_pq(thema, klausur):
+
+    klausur = None if klausur == "-" else klausur
+
     if thema:
         lst_pq = Frage.objects.filter(thema = thema)
     else:
         lst_pq = Frage.objects.all()
 
+    lst_q = []
+    lst_pq = list(lst_pq)
+
+    if klausur:
+        ds_klausur = get_object_or_404(Klausur, id = klausur)
+        lst_quest_klaus = KlausurFrage.objects.filter(klausur=ds_klausur.id)
+        lst_list_qk = []
+
+        for quest in lst_quest_klaus:
+            lst_list_qk.append(quest.frage)
+
+        for quest in lst_pq:
+            if quest not in lst_list_qk:
+                lst_q.append(quest)
+    else:
+        for quest in lst_pq:
+            lst_q.append(quest)
+
     str_sct = ""
-    for frage in lst_pq:
+    for frage in lst_q:
         str_sct += f"<option value='{frage.id}' title='{frage.frage}'>{frage.inhalt}</option>"
 
     return str_sct
@@ -102,7 +126,7 @@ def chg_klausur_title(request):
 @permission_required('kklausur.change_klausur')
 def chg_klausur_thema(request):
     ds_klausur  = get_object_or_404(Klausur, id = request.POST['klausur'])
-    ds_thema    =  get_object_or_404(Ausbildungseinheit, id = request.POST['thema'])
+    ds_thema    = get_object_or_404(Ausbildungseinheit, id = request.POST['thema'])
     ds_klausur.thema = ds_thema
     ds_klausur.save()
 
@@ -149,8 +173,15 @@ def chg_klausur_comment(request):
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 def chg_klausur_tq(request):
-    ds_thema            = get_object_or_404(Ausbildungseinheit, id = request.POST['thema'])
-    sct_lst_qp          = get_pq(thema = ds_thema)
+
+    if request.POST['thema'] != "-":
+        ds_thema            = get_object_or_404(Ausbildungseinheit, id = request.POST['thema'])
+    else:
+        ds_thema            = None
+
+    klausur             = request.POST['klausur']
+
+    sct_lst_qp          = get_pq(thema = ds_thema, klausur = klausur)
 
     answer = {
             'liste'     : sct_lst_qp,
@@ -166,6 +197,7 @@ def gen_pdf(request, klausur, typ = 1):
     #     2 - Muster
     #     3 - Design Fragen
     #     4 - Design Muster
+
     klausur = Klausur.objects.get(pk=klausur)
     fragen = []
     if typ == 1 or typ == 2:
