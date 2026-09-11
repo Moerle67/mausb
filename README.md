@@ -1,7 +1,6 @@
-# TODO:
-# - Klausur
-#    - Formular
+# TODO: Klausur, Formular
 # 
 # Allg
+# TODO: Export Bild
 # - Border JF
 # FIXME:

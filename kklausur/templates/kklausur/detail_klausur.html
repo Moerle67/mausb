@@ -100,7 +100,7 @@
                 <h3>Fragen in Klausur</h3>
                 <ol class="bg-body">
                     {% for element in lst_questions %}
-                        <li class="m-2 border" >{{element.frage.titel}}
+                        <li class="m-2 border" >{{element.frage.titel}} ({{element.position}})
                             <div class="float-end fs-5">
                                 <i class="bi bi-arrow-up-square shadow" title="Nach oben verschieben"></i>
                                 <i class="bi bi-arrow-down-square shadow" title="Nach unten verschieben"></i>
@@ -216,7 +216,20 @@
     }
 
     function ondblcl_q(element, klausur) {
-        alert(element.value);
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:add_klausur_q' %}",
+
+            data: {
+                quest   : element.value,
+                klausur : klausur,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(data) {
+
+            }
+        });        
     }
 </script>
 {% endblock detail_klausur %}   

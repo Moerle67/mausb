@@ -12,10 +12,19 @@ import datetime, json
 
 from .models import *
 
-# TODO: Filter vorhenden Fragen
+# TODO: Filter vorhandene Fragen
 
 @permission_required('stammdaten.show_gruppe')
 def start(request, team = 1):
+    """start
+
+    Args:
+        request (_type_): Browser Daten
+        team (int, optional): Team ID Defaults to 1.
+
+    Returns:
+        HTTP: Auswahl Gruppe
+    """
     lst_groups = Gruppe.objects.filter(team=team)
 
     content = {
@@ -25,6 +34,15 @@ def start(request, team = 1):
 
 @permission_required('kklausur.show_klausur')
 def ausw_klausur(request, gruppe):
+    """ Klausur auswählen
+
+    Args:
+        request (_type_): Browser Daten
+        gruppe (_type_): Gruppe Id
+
+    Returns:
+        HTTP: Klausur auswählen
+    """
     ds_gruppe       = get_object_or_404(Gruppe, id=gruppe)
     lst_gruppen     = Gruppe.objects.filter(team = ds_gruppe.team)
     lst_klausur     = Klausur.objects.filter(gruppe = gruppe)
@@ -43,6 +61,15 @@ def ausw_klausur(request, gruppe):
 
 @permission_required('kklausur.add_klausur')
 def new_klausur(request, gruppe):
+    """ Neue Klausur erstellen
+
+    Args:
+        request (_type_): Browser Daten
+        gruppe (_type_): Gruppe ID
+
+    Returns:
+        HTML: Formular Klausur Detail
+    """
     morgen = datetime.datetime.now() + datetime.timedelta(days=1)
     ds_gruppe = get_object_or_404(Gruppe, id = gruppe)
     ds_klausur = Klausur(gruppe = ds_gruppe, datum = morgen, title = "Neue Klausur")
@@ -80,6 +107,14 @@ def detail_klausur(request, klausur):
 
 
 def get_pq(thema, klausur):
+    """ Generierung Select Liste für Mögliche Frage
+
+    Args:
+        thema (int): Thema ID
+        klausur (int): Klausur ID
+    Returns:
+        str_sct: Liste für Select
+    """
 
     klausur = None if klausur == "-" else klausur
 
@@ -188,7 +223,24 @@ def chg_klausur_tq(request):
             'error'     : False,
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
-    
+
+
+def add_klausur_q(request):
+    """Neue Frage zur Klausur hinzufügen
+
+    Args:
+        request
+        'klausur' : Klausur ID
+        'quest'   : Question ID
+
+    Raises:
+        Http404: _description_
+
+    Returns:
+        lst_kq: SELECT List Klausur-Questions
+
+    """
+
 ##################################################################################################################
 
 @permission_required('kklausur.show_klausur')
