@@ -96,19 +96,8 @@
                 </select>
 
             </div>
-            <div class="m-3 col-6">
-                <h3>Fragen in Klausur</h3>
-                <ol class="bg-body">
-                    {% for element in lst_questions %}
-                        <li class="m-2 border" >{{element.frage.titel}} ({{element.position}})
-                            <div class="float-end fs-5">
-                                <i class="bi bi-arrow-up-square shadow" title="Nach oben verschieben"></i>
-                                <i class="bi bi-arrow-down-square shadow" title="Nach unten verschieben"></i>
-                                <i class="bi bi-x-square shadow" title="Frage aus Klausur entfernen"></i>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ol>
+            <div class="m-3 col-6" id = "frmSelect_qk">
+                {{sct_str_qk | safe}}
             </div>
         </div>
     </form>
@@ -227,7 +216,8 @@
                 csrfmiddlewaretoken: '{{ csrf_token }}',
             },
             success: function(data) {
-
+                $('#frmSelect_qk').html(data['liste']);
+                $('#pq_'+element.value).remove();
             }
         });        
     }

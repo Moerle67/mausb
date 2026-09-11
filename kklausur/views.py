@@ -99,7 +99,7 @@ def detail_klausur(request, klausur):
     # str_date     = "2027-06-12T19:30"
     str_date        =  ds_klausur.datum.strftime("%Y-%m-%dT%H:%M") 
 
-    sct_lst_qp      = get_pq(thema = None, klausur = None)
+    sct_lst_qp      = get_pq(thema = None, klausur = klausur)
 
     content = {
         'gruppen'           : lst_gruppen,          # Liste aller Gruppe
@@ -111,6 +111,7 @@ def detail_klausur(request, klausur):
         'themen'            : lst_themen,
         'str_date'          : str_date,
         'sct_lst_qp'        : sct_lst_qp,
+        'sct_str_qk'        : get_kq(klausur),
     }
     return render(request, "kklausur/detail_klausur.html", content)
 
@@ -152,15 +153,15 @@ def get_pq(thema, klausur):
 
     str_sct = ""
     for frage in lst_q:
-        str_sct += f"<option value='{frage.id}' title='{frage.frage}'>{frage.inhalt}</option>"
+        str_sct += f"<option value='{frage.id}' title='{frage.frage}' id='pq_{frage.id}' >{frage.inhalt}</option>"
 
     return str_sct
 
 def get_kq(klausur):
-    """ Liefert 
+    """ Liefert die Liste der Fragen in einer Klausur
 
     Args:
-        klausur (_type_): _description_
+        klausur (int): Klausur ID
 
     Raises:
         Http404: _description_
@@ -176,7 +177,7 @@ def get_kq(klausur):
     str_anwer += "<h3>Fragen in Klausur</h3>"
     str_anwer += "<ol class='bg-body'>"
     for question in lst_qk:
-        str_anwer += f"<li class='m-2 border' >{question.frage.titel} ({question.position})"
+        str_anwer += f"<li class='m-2 border' title = '{question.frage.frage}'>{question.frage.titel} ({question.position})"
         str_anwer += "<div class='float-end fs-5'>"
         str_anwer +=    "<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben'></i>"
         str_anwer +=    "<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben'></i>"
@@ -281,6 +282,25 @@ def add_klausur_q(request):
         lst_kq: SELECT List Klausur-Questions
 
     """
+
+    quest   = get_object_or_404(Frage, id = request.POST['quest'])
+    klausur = get_object_or_404(Klausur, id = request.POST['klausur'])
+    lst_qk  = KlausurFrage.objects.filter(klausur = klausur.id).order_by('-position')
+
+    if len(lst_qk) == 0:
+        number = 0
+    else:
+        number = lst_qk[0].position + 1
+    print(number)
+
+    ds_fk = KlausurFrage(frage = quest, klausur = klausur, position = number)
+    ds_fk.save()
+
+    answer = {
+            'liste'     : get_kq(request.POST['klausur']),
+            'error'     : False,
+        }    
+    return HttpResponse(json.dumps(answer), content_type="application/json")
 
 
 ##################################################################################################################

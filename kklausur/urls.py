@@ -10,7 +10,7 @@ urlpatterns = [
     path('new_klausur/<int:gruppe>', new_klausur, name='ausw_klausur'),         # Start 2 Auswahl Klausur
     path('detail_klausur/<int:klausur>', detail_klausur, name='detail_klausur'), # Start 2 Auswahl Klausur
 
-    path('chg_klausur_title',   chg_klausur_title, n ame='chg_klausur_title'),         # Neuen Titel in Klausur speichern
+    path('chg_klausur_title',   chg_klausur_title, name='chg_klausur_title'),         # Neuen Titel in Klausur speichern
     path('chg_klausur_thema',   chg_klausur_thema, name='chg_klausur_thema'),         # Neuen Thema in Klausur speichern
     path('chg_klausur_termin',  chg_klausur_termin, name='chg_klausur_termin'),      # Neuen Termin in Klausur speichern
     path('chg_klausur_erledigt',chg_klausur_erledigt, name='chg_klausur_erledigt'),   # Neuen erledigt in Klausur speichern
