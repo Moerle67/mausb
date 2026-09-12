@@ -1,15 +1,15 @@
-from django.shortcuts import redirect, render, get_list_or_404, get_object_or_404
+import datetime
+import json
+
 from django.contrib.auth.decorators import permission_required
 from django.http import Http404, HttpResponse
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 
 from stammdaten.models import Gruppe
 
 from . import renderers
 
-import datetime, json
-
 # Create your views here.
-
 from .models import *
 
 # TODO: Filter vorhandene Fragen
@@ -172,6 +172,9 @@ def get_kq(klausur):
 
     # ds_klausur = get_object_or_404(Klausur, id = klausur)
     lst_qk = KlausurFrage.objects.filter(klausur = klausur)
+    if len(lst_qk) > 0:
+        last_position  = KlausurFrage.objects.filter(klausur = klausur).order_by('-position')[0].position
+
     str_anwer = ""
 
     str_anwer += "<h3>Fragen in Klausur</h3>"
@@ -179,15 +182,22 @@ def get_kq(klausur):
     for question in lst_qk:
         str_anwer += f"<li class='m-2 border' title = '{question.frage.frage}'>{question.frage.titel} ({question.position})"
         str_anwer += "<div class='float-end fs-5'>"
-        str_anwer +=    "<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben'></i>"
-        str_anwer +=    "<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben'></i>"
-        str_anwer +=    "<i class='bi bi-x-square shadow' title='Frage aus Klausur entfernen'></i>"
+        if question.position != 0             : str_anwer += "<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben'></i>"
+        if question.position != last_position : str_anwer += "<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben'></i>"
+        else                                  : str_anwer += "<i class='bi bi-dash-circle'></i>"
+        str_anwer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausur entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
         str_anwer += " </div>"
         str_anwer += "</li>"
     str_anwer += "</ol>"
 
     return str_anwer
 
+def sort_kq(klausur):
+    lst_kq = KlausurFrage.objects.filter(klausur = klausur).order_by('position')
+    for pos, quest in enumerate(lst_kq):
+        quest.position = pos
+        quest.save()
+    
 
 @permission_required('kklausur.show_klausur')
 def chg_klausur_title(request):
@@ -302,6 +312,21 @@ def add_klausur_q(request):
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+def del_qk(request):
+    print(request.POST['klausur'],request.POST['quest'] )
+    ds_question = KlausurFrage.objects.get(id = request.POST['quest'])
+    thema = ds_question.frage.thema.id
+    ds_question.delete()
+    sort_kq(request.POST['klausur'])
+    lst_kq = get_kq(request.POST['klausur'])
+    lst_pq = get_pq(request.POST['klausur'], thema)
+
+    answer = {
+            'liste_pq'  : lst_pq,
+            'liste_kq'  : lst_kq,
+            'error'     : False,
+        }    
+    return HttpResponse(json.dumps(answer), content_type="application/json")
 
 ##################################################################################################################
 

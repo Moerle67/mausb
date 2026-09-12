@@ -221,5 +221,23 @@
             }
         });        
     }
+    function oncl_del_qk(klausur, quest) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:del_qk' %}",
+
+            data: {
+                quest   : quest,
+                klausur : klausur,
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(data) {
+                $('#frmSelect_q').html(data['liste_pq']);
+                $('#frmSelect_qk').html(data['liste_kq']);
+            }
+        });        
+        
+    }
 </script>
 {% endblock detail_klausur %}   
