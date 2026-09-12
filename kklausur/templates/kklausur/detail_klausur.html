@@ -96,9 +96,13 @@
                 </select>
 
             </div>
-            <div class="m-3 col-6" id = "frmSelect_qk">
-                {{sct_str_qk | safe}}
-                <a href=""><button type="button" class="btn btn-outline-primary">Klausur</button></a>
+            <div class="m-3 col-6">
+                <div id = "frmSelect_qk">
+                    {{sct_str_qk | safe}}
+                </div>
+                <div>
+                    <a href="{% url 'klausur:gen_pdf' klausur=klausur_detail.id %}" target='_empty'><button type="button" class="btn btn-outline-primary">Klausur</button></a>
+                </div>
             </div>
         </div>
     </form>
