@@ -127,6 +127,7 @@ def get_pq(thema, klausur):
     """
 
     klausur = None if klausur == "-" else klausur
+    thema = None if thema == "-" else thema
 
     if thema:
         lst_pq = Frage.objects.filter(thema = thema)
@@ -313,13 +314,12 @@ def add_klausur_q(request):
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 def del_qk(request):
-    print(request.POST['klausur'],request.POST['quest'] )
+    print(request.POST['klausur'],request.POST['quest'], request.POST['thema'] )
     ds_question = KlausurFrage.objects.get(id = request.POST['quest'])
-    thema = ds_question.frage.thema.id
     ds_question.delete()
     sort_kq(request.POST['klausur'])
     lst_kq = get_kq(request.POST['klausur'])
-    lst_pq = get_pq(request.POST['klausur'], thema)
+    lst_pq = get_pq(request.POST['klausur'], request.POST['thema'])
 
     answer = {
             'liste_pq'  : lst_pq,
