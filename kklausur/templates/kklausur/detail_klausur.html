@@ -98,6 +98,7 @@
             </div>
             <div class="m-3 col-6" id = "frmSelect_qk">
                 {{sct_str_qk | safe}}
+                <a href=""><button type="button" class="btn btn-outline-primary">Klausur</button></a>
             </div>
         </div>
     </form>
@@ -239,6 +240,25 @@
                 $('#frmSelect_qk').html(data['liste_kq']);
             }
         });   
+    }
+
+    function oncl_down_qk(klausur, quest, richtung) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:down_qk' %}",
+
+            data: {
+                quest   : quest,
+                klausur : klausur,
+                richtung: richtung,
+                thema   : $('#frmSelect_qt').val(),
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(data) {
+                $('#frmSelect_qk').html(data['liste_kq']);
+            }
+        });          
     }
 </script>
 {% endblock detail_klausur %}   

@@ -18,6 +18,7 @@ urlpatterns = [
     path('chg_klausur_tq',      chg_klausur_tq,         name='chg_klausur_tq'),             # Neuen Thema der Fragen in Klausur speichern
     path('add_klausur_q',       add_klausur_q,          name='add_klausur_q'),              # Neuen Thema der Fragen in Klausur speichern
     path('del_qk',              del_qk,                 name='del_qk'),                     # Frage in der Klausur löschen
+    path('down_qk',             down_qk,                name='down_qk'),                    # Frage in der Klausur verschieben
 
-    path('gen_pdf/<int:klausur>', gen_pdf, name='gen_pdf'),                         # PDF generieren
+    path('gen_pdf/<int:klausur>', gen_pdf,              name='gen_pdf'),                    # PDF generieren
 ]

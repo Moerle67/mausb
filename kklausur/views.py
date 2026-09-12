@@ -183,8 +183,8 @@ def get_kq(klausur):
     for question in lst_qk:
         str_anwer += f"<li class='m-2 border' title = '{question.frage.frage}'>{question.frage.titel} ({question.position})"
         str_anwer += "<div class='float-end fs-5'>"
-        if question.position != 0             : str_anwer += "<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben'></i>"
-        if question.position != last_position : str_anwer += "<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben'></i>"
+        if question.position != 0             : str_anwer += f"<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben' onclick='oncl_down_qk({klausur}, {question.id}, -1)'></i>"
+        if question.position != last_position : str_anwer += f"<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben' onclick='oncl_down_qk({klausur}, {question.id}, 1)'></i>"
         else                                  : str_anwer += "<i class='bi bi-dash-circle'></i>"
         str_anwer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausur entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
         str_anwer += " </div>"
@@ -323,6 +323,22 @@ def del_qk(request):
     answer = {
             'liste_pq'  : lst_pq,
             'liste_kq'  : lst_kq,
+            'error'     : False,
+        }    
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def down_qk(request):
+    ds_qk = get_object_or_404(KlausurFrage, id = request.POST['quest'])
+    if request.POST['richtung'] == '1':
+        ds_qk.position += 2
+    else:
+        ds_qk.position -= 2
+
+    ds_qk.save()
+    sort_kq(request.POST['klausur'])
+
+    answer = {
+            'liste_kq'  : get_kq(request.POST['klausur']),
             'error'     : False,
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
