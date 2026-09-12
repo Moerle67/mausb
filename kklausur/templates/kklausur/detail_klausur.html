@@ -221,6 +221,7 @@
             }
         });        
     }
+
     function oncl_del_qk(klausur, quest) {
         $.ajax({
             type: "POST",
@@ -237,8 +238,7 @@
                 $('#frmSelect_q').html(data['liste_pq']);
                 $('#frmSelect_qk').html(data['liste_kq']);
             }
-        });        
-        
+        });   
     }
 </script>
 {% endblock detail_klausur %}   

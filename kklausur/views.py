@@ -314,12 +314,11 @@ def add_klausur_q(request):
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
 def del_qk(request):
-    print(request.POST['klausur'],request.POST['quest'], request.POST['thema'] )
     ds_question = KlausurFrage.objects.get(id = request.POST['quest'])
     ds_question.delete()
     sort_kq(request.POST['klausur'])
     lst_kq = get_kq(request.POST['klausur'])
-    lst_pq = get_pq(request.POST['klausur'], request.POST['thema'])
+    lst_pq = get_pq(request.POST['thema'], request.POST['klausur'])
 
     answer = {
             'liste_pq'  : lst_pq,
