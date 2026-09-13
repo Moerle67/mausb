@@ -176,22 +176,24 @@ def get_kq(klausur):
     if len(lst_qk) > 0:
         last_position  = KlausurFrage.objects.filter(klausur = klausur).order_by('-position')[0].position
 
-    str_anwer = ""
+    str_answer = ""
 
-    str_anwer += "<h3>Fragen in Klausur</h3>"
-    str_anwer += "<ol class='bg-body'>"
+    str_answer += "<h3>Fragen in Klausur</h3>"
+    str_answer += "<ol class='bg-body'>"
     for question in lst_qk:
-        str_anwer += f"<li class='m-2 border' title = '{question.frage.frage}'>{question.frage.titel} ({question.position})"
-        str_anwer += "<div class='float-end fs-5'>"
-        if question.position != 0             : str_anwer += f"<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben' onclick='oncl_down_qk({klausur}, {question.id}, -1)'></i>"
-        if question.position != last_position : str_anwer += f"<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben' onclick='oncl_down_qk({klausur}, {question.id}, 1)'></i>"
-        else                                  : str_anwer += "<i class='bi bi-dash-circle'></i>"
-        str_anwer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausur entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
-        str_anwer += " </div>"
-        str_anwer += "</li>"
-    str_anwer += "</ol>"
+        str_answer += f"<li class='m-2 border' title = '{question.frage.frage}'>{question.frage.titel} ({question.position})"
+        str_answer += "<div class='float-end fs-5'>"
+        if question.position != 0             : str_answer += f"<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben' onclick='oncl_down_qk({klausur}, {question.id}, -1)'></i>"
+        if question.position != last_position : str_answer += f"<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben' onclick='oncl_down_qk({klausur}, {question.id}, 1)'></i>"
+        else                                  : str_answer += "<i class='bi bi-dash-circle'></i>"
+        if question.startnp : str_answer += f"<i class='bi bi-check2-square' title='Start mit neuer Seite'></i>"
+        else                : str_answer += f"<i class='bi bi-square' title='Start mit neuer Seite'></i>"
+        str_answer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausu entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
+        str_answer += " </div>"
+        str_answer += "</li>"
+    str_answer += "</ol>"
 
-    return str_anwer
+    return str_answer
 
 def sort_kq(klausur):
     lst_kq = KlausurFrage.objects.filter(klausur = klausur).order_by('position')
