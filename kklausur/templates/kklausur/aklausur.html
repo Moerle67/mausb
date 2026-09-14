@@ -11,7 +11,7 @@
             id="sct_klausur"
             onchange = "oncl_klausur_detail(this)" 
         >
-            <option value="-" selected>Auswahl</option>
+            {% comment %} <option value="-" selected>Auswahl</option> {% endcomment %}
             {% for klausur in klausuren %}
                 <option 
                     value="{{klausur.id}}"

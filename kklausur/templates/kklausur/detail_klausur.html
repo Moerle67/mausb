@@ -101,7 +101,10 @@
                     {{sct_str_qk | safe}}
                 </div>
                 <div>
-                    <a href="{% url 'klausur:gen_pdf' klausur=klausur_detail.id %}" target='_empty'><button type="button" class="btn btn-outline-primary">Klausur</button></a>
+                    <a href="{% url 'klausur:gen_pdf' klausur=klausur_detail.id %}" target='_empty'><button type="button" class="btn btn-outline-primary">Klausur generieren</button></a>
+                    
+                    <button type="button" class="btn btn-outline-danger" onclick="oncl_btn_delkl('{{klausur_detail}}', {{klausur_detail.id}})">Klausur löschen</button>
+                    
                 </div>
             </div>
         </div>
@@ -263,6 +266,31 @@
                 $('#frmSelect_qk').html(data['liste_kq']);
             }
         });          
+    }
+    function oncl_np_qk(klausur, quest) {
+        $.ajax({
+            type: "POST",
+            url: "{% url 'klausur:np_qk' %}",
+
+            data: {
+                quest   : quest,
+                klausur : klausur,
+                thema   : $('#frmSelect_qt').val(),
+
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function(data) {
+                $('#frmSelect_qk').html(data['liste_kq']);
+            }
+        });          
+        
+    }
+
+    function oncl_btn_delkl(klausur_titel, klausur_id) {
+       if (confirm('Möchten Sie Klausur\n\n'+klausur_titel+'\n\nwirklich löschen?')) {
+            url = "/klausur/delk/"+klausur_id;
+            window.open(url);
+       }
     }
 </script>
 {% endblock detail_klausur %}   

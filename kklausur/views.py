@@ -181,13 +181,19 @@ def get_kq(klausur):
     str_answer += "<h3>Fragen in Klausur</h3>"
     str_answer += "<ol class='bg-body'>"
     for question in lst_qk:
+        if question.startnp : str_answer += "<hr />"
+        # Frage Text
         str_answer += f"<li class='m-2 border' title = '{question.frage.frage}'>{question.frage.titel} ({question.position})"
         str_answer += "<div class='float-end fs-5'>"
+        # Pfeil hoch
         if question.position != 0             : str_answer += f"<i class='bi bi-arrow-up-square shadow' title='Nach oben verschieben' onclick='oncl_down_qk({klausur}, {question.id}, -1)'></i>"
+        # Pfeil runter
         if question.position != last_position : str_answer += f"<i class='bi bi-arrow-down-square shadow' title='Nach unten verschieben' onclick='oncl_down_qk({klausur}, {question.id}, 1)'></i>"
         else                                  : str_answer += "<i class='bi bi-dash-circle'></i>"
-        if question.startnp : str_answer += f"<i class='bi bi-check2-square' title='Start mit neuer Seite'></i>"
-        else                : str_answer += f"<i class='bi bi-square' title='Start mit neuer Seite'></i>"
+        # Start neue Seite
+        if question.startnp : str_answer += f"<i class='bi bi-check2-square' title='Start mit neuer Seite' onclick='oncl_np_qk({klausur}, {question.id})'></i>"
+        else                : str_answer += f"<i class='bi bi-square' title='Start mit neuer Seite' onclick='oncl_np_qk({klausur}, {question.id})'></i>"
+        # Frage löschen
         str_answer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausu entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
         str_answer += " </div>"
         str_answer += "</li>"
@@ -262,6 +268,7 @@ def chg_klausur_comment(request):
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+@permission_required('kklausur.change_klausur')
 def chg_klausur_tq(request):
 
     if request.POST['thema'] != "-":
@@ -279,7 +286,7 @@ def chg_klausur_tq(request):
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
-
+@permission_required('kklausur.change_klausur')
 def add_klausur_q(request):
     """Neue Frage zur Klausur hinzufügen
 
@@ -315,6 +322,7 @@ def add_klausur_q(request):
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+@permission_required('kklausur.delete_klausur')
 def del_qk(request):
     ds_question = KlausurFrage.objects.get(id = request.POST['quest'])
     ds_question.delete()
@@ -329,6 +337,7 @@ def del_qk(request):
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+@permission_required('kklausur.change_klausur')
 def down_qk(request):
     ds_qk = get_object_or_404(KlausurFrage, id = request.POST['quest'])
     if request.POST['richtung'] == '1':
@@ -344,6 +353,26 @@ def down_qk(request):
             'error'     : False,
         }    
     return HttpResponse(json.dumps(answer), content_type="application/json")
+
+@permission_required('kklausur.change_klausur')
+def np_qk(request):
+
+    ds_qk = get_object_or_404(KlausurFrage, id = request.POST['quest'])
+    ds_qk.startnp = not ds_qk.startnp
+    ds_qk.save()
+
+    answer = {
+            'liste_kq'  : get_kq(request.POST['klausur']),
+            'error'     : False,
+    }    
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+@permission_required('kklausur.delete_klausur')
+def delk(request, klausur):
+    ds_klausur = get_object_or_404(Klausur, id = klausur)
+    ds_klausur.delete()
+
+    return redirect("klausur:start")
 
 ##################################################################################################################
 
