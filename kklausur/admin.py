@@ -13,5 +13,5 @@ class KlausurFrageAdmin(admin.ModelAdmin):
 
 @admin.register(Frage)
 class FrageAdmin(admin.ModelAdmin):
-    list_filter = ['thema']
+    search_fields = ['titel', 'frage', 'inhalt', 'musterantwort']
     
