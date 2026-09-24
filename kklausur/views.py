@@ -193,8 +193,10 @@ def get_kq(klausur):
         # Start neue Seite
         if question.startnp : str_answer += f"<i class='bi bi-check2-square' title='Start mit neuer Seite' onclick='oncl_np_qk({klausur}, {question.id})'></i>"
         else                : str_answer += f"<i class='bi bi-square' title='Start mit neuer Seite' onclick='oncl_np_qk({klausur}, {question.id})'></i>"
+        # Frage editieren
+        str_answer += f"<a style='text-decoration: none; color: inherit;' href='/admin/kklausur/frage/{question.frage.id}/change/' target='_empty' ><i class='bi bi-pencil-square' title='Frage editieren'></i></a>"
         # Frage löschen
-        str_answer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausu entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
+        str_answer +=    f"<i class='bi bi-x-square shadow' title='Frage aus Klausur entfernen' onclick='oncl_del_qk({klausur}, {question.id})'></i>"
         str_answer += " </div>"
         str_answer += "</li>"
     str_answer += "</ol>"
