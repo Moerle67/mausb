@@ -72,12 +72,20 @@ def get_details_ae(ae):
     # gibt es Children?
     if len(lst_ae) > 0:
         antwort += "<div><details class='p-2 border'>"
-        antwort += f"<summary><a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{ae}</a> <a href='/inh/add/{ae.id}' title='Neues untergeordnetes Element'><i class='bi bi-plus-circle text-bg-secondary'></i></a></summary>"
+        antwort += f"<summary>"
+        # Link zur Ausbildungseinheit
+        antwort +=  f"<a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{ae}</a>"
+        # Neue untergeordnete AE
+        antwort +=  f"<a href='/inh/add/{ae.id}' title='Neues untergeordnetes Element' target='_blank'><i class='bi bi-plus-circle text-bg-secondary ms-1'></i></a>"
+        # Neue Frage zum Thema
+        antwort +=  f"<a href='/klausur/newq/{ae.id}' title='Neue Klausurfrage zum Thema' target='_blank'><i class='bi bi-question-circle text-bg-secondary ms-2'></i></a>"
+        antwort += f"</summary>"
+        antwort += f""
         for child_ae in lst_ae:
             antwort += f"<a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{get_details_ae(child_ae)}</a>"
         antwort += "</details><div>"
     else:
-        antwort += f"<p ><a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{ae}</a> <a href='/inh/add/{ae.id}'><i class='bi bi-plus-circle text-bg-secondary'></i></a></p>"
+        antwort += f"<p ><a class='text-bg-secondary' href='/admin/lehrplan/ausbildungseinheit/{ae.id}/change/' target='__empty'>{ae}</a> <a href='/inh/add/{ae.id}'><i class='bi bi-plus-circle text-bg-secondary'></i></a><a href='/klausur/newq/{ae.id}' title='Neue Klausurfrage zum Thema' target='_blank'><i class='bi bi-question-circle text-bg-secondary ms-2'></i></a></p>"
 
     return antwort
 

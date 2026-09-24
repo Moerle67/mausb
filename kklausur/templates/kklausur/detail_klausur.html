@@ -73,7 +73,7 @@
                     id          = "frmSelect_qt"
                     onchange    = "onchange_sct_fragen_thema(this, {{klausur_detail.id}})"
                 >
-                    <option value="-" selected>Auswahl</option>
+                    <option value="-" selected>Alle Bereiche</option>
                     {% for thema in themen %}
                         {% if thema.get_count_questions > 0 %}
                             <option 
@@ -94,7 +94,10 @@
                     {% comment %} onchange    = "" {% endcomment %}
                 >{{sct_lst_qp | safe }}
                 </select>
-
+                <button type="button" 
+                        class="btn btn-outline-success mt-3" 
+                        onclick="onc_btn_newquest()" 
+                        >Frage erstellen</button>
             </div>
             <div class="m-3 col-6">
                 <div id = "frmSelect_qk">
@@ -291,6 +294,14 @@
             url = "/klausur/delk/"+klausur_id;
             window.open(url);
        }
+    }
+    function onc_btn_newquest() {
+        let auswahl = $('#frmSelect_qt').val();
+        if (auswahl == "-"){
+            auswahl = "-1"
+        }
+        url = "/klausur/newq/"+auswahl;
+        window.open(url);
     }
 </script>
 {% endblock detail_klausur %}   

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import permission_required
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 
-from stammdaten.models import Gruppe
+from stammdaten.models import Gruppe, Ausbilder
 
 from . import renderers
 
@@ -313,7 +313,6 @@ def add_klausur_q(request):
         number = 0
     else:
         number = lst_qk[0].position + 1
-    print(number)
 
     ds_fk = KlausurFrage(frage = quest, klausur = klausur, position = number)
     ds_fk.save()
@@ -425,3 +424,15 @@ def gen_pdf(request, klausur, typ = 1):
         content = f"attachment; filename={filename}"
     response["Content-Disposition"] = content
     return response
+
+@permission_required('lehrplan.add_ausbildungseinheit')
+def newq(request, thema):
+    thema = int(thema)
+    if thema != -1:
+        ds_thema = get_object_or_404(Ausbildungseinheit, id = thema)
+        ds_thema_string = ds_thema.inhalt
+    else:
+        ds_thema_string = ""    
+    ds_teacher = get_object_or_404(Ausbilder, user=request.user.id)
+    url = f"/admin/kklausur/frage/add/?titel={ds_thema_string}&author={ds_teacher.id}&thema={thema}"
+    return redirect(url)

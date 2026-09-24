@@ -21,6 +21,7 @@ urlpatterns = [
     path('down_qk',             down_qk,                name='down_qk'),                    # Frage in der Klausur verschieben
     path('np_qk',               np_qk,                  name='np_qk'),                      # Start mit neuer Seite
     path('delk/<int:klausur>',  delk,                   name='delk'),                       # Start mit neuer Seite
+    path('newq/<str:thema>',    newq,                   name='newq'),                       # Neue Frage
 
     path('gen_pdf/<int:klausur>', gen_pdf,              name='gen_pdf'),                    # PDF generieren
 ]
