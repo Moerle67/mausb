@@ -14,7 +14,7 @@ from .models import *
 
 # TODO: Filter vorhandene Fragen
 
-@permission_required('stammdaten.show_gruppe')
+@permission_required('stammdaten.view_gruppe')
 def start(request, team = 1):
     """start
 
@@ -32,7 +32,7 @@ def start(request, team = 1):
     } 
     return render(request, "kklausur/start.html", content)
 
-@permission_required('kklausur.show_klausur')
+@permission_required('kklausur.view_klausur')
 def ausw_klausur(request, gruppe):
     """ Klausur auswählen
 
@@ -210,7 +210,7 @@ def sort_kq(klausur):
         quest.save()
     
 
-@permission_required('kklausur.show_klausur')
+@permission_required('kklausur.view_klausur')
 def chg_klausur_title(request):
     ds_klausur = get_object_or_404(Klausur, id = request.POST['klausur'])
     ds_klausur.title = request.POST['title']
@@ -377,7 +377,7 @@ def delk(request, klausur):
 
 ##################################################################################################################
 
-@permission_required('kklausur.show_klausur')
+@permission_required('kklausur.view_klausur')
 def gen_pdf(request, klausur, typ = 1):
     # typ 1 - Klausur 
     #     2 - Muster
