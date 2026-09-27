@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'frageantwort.apps.FrageantwortConfig',         # Befragung Teilnehmer
     'kklausur.apps.KklausurConfig',                 # Kurzklausuren
     'learn.apps.LearnConfig',                       # Übungen
+    'faecher.apps.FaecherConfig'                     # Schließfächer
 ]
 
 MIDDLEWARE = [
