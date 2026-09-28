@@ -42,3 +42,15 @@ def start(request, schrank = -1):
     }
     return render(request, "faecher/start.html", content)
 
+def get_user(gruppe):
+    #####################
+    #
+    # Liste aller Mitglieder einer Gruppe ohne Fach
+    #
+
+    liste = []
+    lst_user = Teilnehmer.objects.filter(activ = True, group = gruppe)
+    for user in lst_user:
+        ds_fach = Fach.objects.filter(user=user.id)
+        if len(ds_fach)==0:
+            liste.append(user)
