@@ -1,0 +1,65 @@
+{% extends "stammdaten/base.html" %}
+
+{% comment %} Auswahl Gruppe {% endcomment %}
+
+{% block content_fluid %}
+    <div class="row">
+        <div class = "col-10 row">
+            <div class="col-3 opacity-50 mb-3">
+                <label for="sct_schrank" class="form-label">Schrank auswählen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "sct_schrank"
+                    onchange    = "onchange_sct_schrank(this)"
+                 >
+                 {% for schrank in schraenke %}
+                    <option 
+                        value="{{schrank.id}}" 
+                        {% if schrank_akt.id == schrank.id %}selected {% endif %}
+                    >{{schrank}}</option>
+                {% endfor %}
+                </select>
+            </div>
+            {% for zeile in zeilen %}
+                <div class="row">
+                {% for fach in zeile %}
+                    <div class="col d-grid gap-2 mb-2 mx-0">
+                        <button type="button" 
+                        {% if fach.1 == 1 %}title="{{fach.2}}"{% endif %} 
+                        class="btn btn-{% if fach.1 == 0 %}secondary{%else%}primary{% endif %} "
+                        >{{fach.0}}<br />
+                        {% if fach.1 == 0 %}frei{%else%}bel.{% endif %}</button>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-2">
+            <div class="mb-3">
+                <label for="inp_fach_number" class="form-label">Fachnummer</label>
+                <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+            <div class="opacity-50 mb-3">
+                <label for="sct_gruppe" class="form-label">Gruppe auswählen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "sct_schrank"
+                    onchange    = "onchange_sct_gruppe(this)"
+                 >
+                 {% for gruppe in gruppen %}
+                    <option 
+                        value="{{gruppe.id}}" 
+                    >{{gruppe}}</option>
+                {% endfor %}
+                </select>
+            </div>
+        </div>    
+    </div>
+    <script>
+        function onchange_sct_schrank(element) {
+        url = "/faecher/start/"+element.value;
+        window.open(url, "_self");
+        }
+    </script>   
+{% endblock content_fluid %}
+

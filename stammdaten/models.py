@@ -114,7 +114,7 @@ class Gruppe(models.Model):
 
 class Teilnehmer(models.Model):
     name = models.CharField("Name", max_length=50)
-    profession = models.ForeignKey(Beruf, verbose_name=("Beruf"), on_delete=models.RESTRICT)
+    profession = models.ForeignKey(Beruf, verbose_name=("Beruf"), on_delete=models.RESTRICT, blank=True, null=True)
     group = models.ForeignKey(Gruppe, verbose_name=("Gruppe"), on_delete=models.CASCADE)
     picture = models.ImageField(("Bild"), upload_to="stammdaten/tnimg", height_field=None, width_field=None, max_length=None, null=True, blank=True)
     activ = models.BooleanField(("aktiv"), default=True)

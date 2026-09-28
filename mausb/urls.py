@@ -29,6 +29,8 @@ urlpatterns = [
     path('task/', include('task.urls')),                                # Aufgaben
     path('fa/', include('frageantwort.urls')),                          # Mitarbeit
     path('lrn/', include('learn.urls')),                                # Übungen
+    path('faecher/', include('faecher.urls')),                           # Schließfächer
+
     path('admin/', admin.site.urls, name="admin"),
     path('', include('start.urls')),
 ]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
