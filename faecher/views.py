@@ -1,8 +1,12 @@
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.http import HttpResponse
 
 from .models import *
 
 from stammdaten.models import Gruppe
+
+import json
+
 # Create your views here.
 
 def start(request, schrank = -1):
@@ -13,6 +17,7 @@ def start(request, schrank = -1):
     ds_schrank = get_object_or_404(Schrank, id = schrank)
     lst_gruppen  = Gruppe.objects.all()
 
+    lst_tn = Teilnehmer.objects.filter(group=lst_gruppen[0].id)
     belegung = []
     ##########################
     # Fachbelegung
@@ -39,6 +44,7 @@ def start(request, schrank = -1):
         'schrank_akt'   : ds_schrank,
         'zeilen'        : zeilen,
         'gruppen'       : lst_gruppen,
+        'teilnehmer'    : lst_tn,
     }
     return render(request, "faecher/start.html", content)
 
@@ -54,3 +60,28 @@ def get_user(gruppe):
         ds_fach = Fach.objects.filter(user=user.id)
         if len(ds_fach)==0:
             liste.append(user)
+
+
+def get_fach(request):
+    fach = request.POST['fach']
+    print(fach)
+    ds_fach = get_object_or_404(Fach, number=fach)
+
+    str_tn = get_slct_tn(ds_fach.user.group.id, ds_fach.user.id)
+    print(str_tn)
+    answer = {
+        'error': False,
+        'lst_tn' : str_tn,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def get_slct_tn(gruppe, teilnehmer):
+    lst_tn = get_list_or_404(Teilnehmer, group=gruppe)
+    str_tn = ""
+    #str_tn  = f"<select class = 'form-select' id = 'sct_tn' onchange = 'onchange_sct_tn(this)'>"
+    for tn in lst_tn:
+        str_slc = "selected " if tn.id == teilnehmer else ""
+        str_tn += f"<option value='{tn.id}' {str_slc}>{tn}</option>"
+    # str_tn += "</select>"
+    return str_tn
+

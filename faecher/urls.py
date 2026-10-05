@@ -6,6 +6,8 @@ app_name = "faecher"
     
 urlpatterns = [
     path('start',start ,name='start'),
-    path('start/<int:schrank>',start ,name='start_nr'),
+    path('start/<int:schrank>', start, name='start_nr'),
+    
+    path('get_fach', get_fach, name='get_fach'),
 
 ]

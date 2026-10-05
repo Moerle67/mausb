@@ -12,6 +12,7 @@
                     id          = "sct_schrank"
                     onchange    = "onchange_sct_schrank(this)"
                  >
+                 {% comment %} Auswahl Schrank {% endcomment %}
                  {% for schrank in schraenke %}
                     <option 
                         value="{{schrank.id}}" 
@@ -20,11 +21,13 @@
                 {% endfor %}
                 </select>
             </div>
+            {% comment %} Feld für Fächer {% endcomment %}
             {% for zeile in zeilen %}
                 <div class="row">
                 {% for fach in zeile %}
                     <div class="col d-grid gap-2 mb-2 mx-0">
                         <button type="button" 
+                        onclick = "onc_btn_fach({{fach.0}})" 
                         {% if fach.1 == 1 %}title="{{fach.2}}"{% endif %} 
                         class="btn btn-{% if fach.1 == 0 %}secondary{%else%}primary{% endif %} "
                         >{{fach.0}}<br />
@@ -34,12 +37,13 @@
                 </div>
             {% endfor %}
         </div>
+        {% comment %} Formular Fach {% endcomment %}
         <div class="col-2">
-            <div class="mb-3">
+            <div class="mb-3 opacity-75 ">
                 <label for="inp_fach_number" class="form-label">Fachnummer</label>
-                <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <input type="number" class="form-control" id="inp_fach_number" aria-describedby="emailHelp">
             </div>
-            <div class="opacity-50 mb-3">
+            <div class="opacity-75 mb-3">
                 <label for="sct_gruppe" class="form-label">Gruppe auswählen</label>
                 <select 
                     class       = "form-select" 
@@ -53,12 +57,52 @@
                 {% endfor %}
                 </select>
             </div>
+            <div class="opacity-75 mb-3">
+                <label for="sct_tn" class="form-label">Teilnehmer auswählen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "sct_tn"
+                    onchange    = "onchange_sct_tn(this)"
+                 >
+                 {% for tn in teilnehmer %}
+                    <option 
+                        value="{{tn.id}}" 
+                    >{{tn}}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 opacity-75 ">
+                <label for="inp_fach_number" class="form-label">Rückgabe</label>
+                <input type="datetime-local" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3 opacity-75 raw">
+                <button type="button" class="btn btn-outline-success col">Speichern</button>
+                <button type="button" class="btn btn-outline-danger col">Zurück geben</button>
+            </div>
+          
         </div>    
     </div>
     <script>
         function onchange_sct_schrank(element) {
-        url = "/faecher/start/"+element.value;
-        window.open(url, "_self");
+            url = "/faecher/start/"+element.value;
+            window.open(url, "_self");
+        }
+
+        function onc_btn_fach(fach) {
+            // Daten holen
+            $.ajax({
+                type: "POST",
+                url: "{% url 'faecher:get_fach' %}",
+                data: {
+                    fach: fach,
+
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    $('#sct_tn').html(data['lst_tn'])
+                }
+            });             
+            $('#inp_fach_number').val(fach);
         }
     </script>   
 {% endblock content_fluid %}
