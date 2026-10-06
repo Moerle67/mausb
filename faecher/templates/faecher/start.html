@@ -47,7 +47,7 @@
                 <label for="sct_gruppe" class="form-label">Gruppe auswählen</label>
                 <select 
                     class       = "form-select" 
-                    id          = "sct_schrank"
+                    id          = "sct_gruppe"
                     onchange    = "onchange_sct_gruppe(this)"
                  >
                  {% for gruppe in gruppen %}
@@ -100,6 +100,7 @@
                 },
                 success: function(data) {
                     $('#sct_tn').html(data['lst_tn'])
+                    $('#sct_gruppe').html(data['lst_gr'])
                 }
             });             
             $('#inp_fach_number').val(fach);

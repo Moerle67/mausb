@@ -64,14 +64,15 @@ def get_user(gruppe):
 
 def get_fach(request):
     fach = request.POST['fach']
-    print(fach)
-    ds_fach = get_object_or_404(Fach, number=fach)
 
+    ds_fach = get_object_or_404(Fach, number=fach)
     str_tn = get_slct_tn(ds_fach.user.group.id, ds_fach.user.id)
-    print(str_tn)
+    str_gr = get_slct_gruppe(ds_fach.user.group.id)
+
     answer = {
         'error': False,
         'lst_tn' : str_tn,
+        'lst_gr' : str_gr,
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
@@ -84,4 +85,13 @@ def get_slct_tn(gruppe, teilnehmer):
         str_tn += f"<option value='{tn.id}' {str_slc}>{tn}</option>"
     # str_tn += "</select>"
     return str_tn
+
+def get_slct_gruppe(gruppeid):
+    lst_gr = Gruppe.objects.all()
+    str_gr = ""
+    for gruppe in lst_gr:
+        str_slc = "selected " if gruppe.id == gruppeid else ""
+        str_gr += f"<option value='{gruppe.id}' {str_slc}>{gruppe}</option>"
+    # str_tn += "</select>"
+    return str_gr
 
