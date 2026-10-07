@@ -18,7 +18,6 @@ def start(request, schrank = -1):
     lst_gruppen  = Gruppe.objects.all()
 
     lst_tn = Teilnehmer.objects.filter(group=lst_gruppen[0].id)
-    belegung = []
     ##########################
     # Fachbelegung
     # 0 - unbelegt
