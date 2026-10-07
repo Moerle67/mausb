@@ -72,8 +72,8 @@
                 </select>
             </div>
             <div class="mb-3 opacity-75 ">
-                <label for="inp_fach_number" class="form-label">Rückgabe</label>
-                <input type="datetime-local" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <label for="inp_fach_date" class="form-label">Rückgabe</label>
+                <input type="datetime-local" class="form-control" id="inp_fach_date" aria-describedby="emailHelp">
             </div>
             <div class="mb-3 opacity-75 raw">
                 <button type="button" class="btn btn-outline-success col">Speichern</button>
@@ -101,7 +101,11 @@
                 success: function(data) {
                     $('#sct_tn').html(data['lst_tn'])
                     $('#sct_gruppe').html(data['lst_gr'])
-                }
+                    $('#inp_fach_date').val(data['datern'])
+                },
+                error: function(objRequest) {
+                    $('#sct_tn').html("")
+                },
             });             
             $('#inp_fach_number').val(fach);
         }

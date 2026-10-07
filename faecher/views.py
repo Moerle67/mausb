@@ -67,11 +67,13 @@ def get_fach(request):
     ds_fach = get_object_or_404(Fach, number=fach)
     str_tn = get_slct_tn(ds_fach.user.group.id, ds_fach.user.id)
     str_gr = get_slct_gruppe(ds_fach.user.group.id)
+    datertn = ds_fach.belegtbis 
 
     answer = {
         'error': False,
         'lst_tn' : str_tn,
         'lst_gr' : str_gr,
+        'datern' : datertn.strftime("%Y-%m-%dT00:00"),
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
