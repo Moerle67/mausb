@@ -1,11 +1,12 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render 
 from django.http import HttpResponse
 
 from .models import *
 
-from stammdaten.models import Gruppe
+from stammdaten.models import Gruppe, Ausbilder
 
-import json
+import json, datetime
 
 # Create your views here.
 
@@ -47,6 +48,38 @@ def start(request, schrank = -1):
     }
     return render(request, "faecher/start.html", content)
 
+def save_fach(request):
+    schrank = request.POST['schrank']
+    number = request.POST['number']
+    tn = request.POST['tn']
+    date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d")
+
+    ausbilder = get_object_or_404(Ausbilder, user=request.user.id)
+
+    # Evtuell vorhandenes Fach löschen
+    lst_fach = Fach.objects.filter(number = number)
+    for fach in lst_fach:
+        fach.delete()
+
+    tn = get_object_or_404(Teilnehmer, id = tn)
+    schrank = get_object_or_404(Schrank, id = schrank)
+
+    ds_fach = Fach(
+        user = tn, 
+        number = number, 
+        schrank = schrank,
+        belegtbis = date,
+        eingetragenvon = ausbilder
+    )    
+    ds_fach.save()
+    answer = {
+        'fach': ds_fach.user.__str__(),
+
+        'error': False,
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+
 def get_user(gruppe):
     #####################
     #
@@ -63,7 +96,6 @@ def get_user(gruppe):
 
 def get_fach(request):
     fach = request.POST['fach']
-
     ds_fach = get_object_or_404(Fach, number=fach)
     str_tn = get_slct_tn(ds_fach.user.group.id, ds_fach.user.id)
     str_gr = get_slct_gruppe(ds_fach.user.group.id)
@@ -73,18 +105,28 @@ def get_fach(request):
         'error': False,
         'lst_tn' : str_tn,
         'lst_gr' : str_gr,
-        'datern' : datertn.strftime("%Y-%m-%dT00:00"),
+        'datern' : datertn.strftime("%Y-%m-%d"),
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
-def get_slct_tn(gruppe, teilnehmer):
+def get_group(request):
+    group = request.POST['group']
+    get_object_or_404(Gruppe, id = group)
+    str_tn = get_slct_tn(group)
+
+    answer = {
+        'error': False,
+        'slc_tn': str_tn,
+        
+    }
+    return HttpResponse(json.dumps(answer), content_type="application/json")
+
+def get_slct_tn(gruppe, teilnehmer = None):
     lst_tn = get_list_or_404(Teilnehmer, group=gruppe)
-    str_tn = ""
-    #str_tn  = f"<select class = 'form-select' id = 'sct_tn' onchange = 'onchange_sct_tn(this)'>"
+    str_tn = "<option value='-'>-</option>"
     for tn in lst_tn:
-        str_slc = "selected " if tn.id == teilnehmer else ""
+        str_slc = "selected " if teilnehmer and tn.id == teilnehmer else ""
         str_tn += f"<option value='{tn.id}' {str_slc}>{tn}</option>"
-    # str_tn += "</select>"
     return str_tn
 
 def get_slct_gruppe(gruppeid):

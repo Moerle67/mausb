@@ -26,7 +26,8 @@
                 <div class="row">
                 {% for fach in zeile %}
                     <div class="col d-grid gap-2 mb-2 mx-0">
-                        <button type="button" 
+                        <button type="button"
+                        id = 'btn_fach_{{fach.0}}' 
                         onclick = "onc_btn_fach({{fach.0}})" 
                         {% if fach.1 == 1 %}title="{{fach.2}}"{% endif %} 
                         class="btn btn-{% if fach.1 == 0 %}secondary{%else%}primary{% endif %} "
@@ -50,6 +51,7 @@
                     id          = "sct_gruppe"
                     onchange    = "onc_sct_group(this)"
                  >
+                 <option value="-">-</option>
                  {% for gruppe in gruppen %}
                     <option 
                         value="{{gruppe.id}}" 
@@ -64,6 +66,7 @@
                     id          = "sct_tn"
                     onchange    = "onchange_sct_tn(this)"
                  >
+                 <option value="-">-</option>
                  {% for tn in teilnehmer %}
                     <option 
                         value="{{tn.id}}" 
@@ -73,11 +76,11 @@
             </div>
             <div class="mb-3 opacity-75 ">
                 <label for="inp_fach_date" class="form-label">Rückgabe</label>
-                <input type="datetime-local" class="form-control" id="inp_fach_date" aria-describedby="emailHelp">
+                <input type="date" class="form-control" id="inp_fach_date" aria-describedby="emailHelp">
             </div>
             <div class="mb-3 opacity-75 raw">
-                <button type="button" class="btn btn-outline-success col">Speichern</button>
-                <button type="button" class="btn btn-outline-danger col">Zurück geben</button>
+                <button type="button" class="btn btn-outline-success col" onclick="oncl_btn_save()">speichern</button>
+                <button type="button" class="btn btn-outline-danger col">zurückgeben</button>
             </div>
           
         </div>    
@@ -104,16 +107,70 @@
                     $('#inp_fach_date').val(data['datern'])
                 },
                 error: function(objRequest) {
-                    $('#sct_tn').html("")
+                    // $('#sct_tn').html("")
                 },
             });             
             $('#inp_fach_number').val(fach);
         }
 
-        function onc_sct_gr(gruppe){
+        function onc_sct_group(element){
+            let group = element.value;
+            if (group != '-') {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'faecher:get_group' %}",
+                    data: {
+                        group: group,
 
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        $('#sct_tn').html(data['slc_tn'])
+                    },
+                    error: function(objRequest) {
+                        // $('#sct_tn').html("")
+                    },
+                });               
+            }
         }
 
+        function oncl_btn_save() {
+            let schrank  = $('#sct_schrank').val()
+            
+            let number   = $('#inp_fach_number').val();
+            if (number == "") {alert("Bitte Fachnummer eingeben"); return;}
+
+            let group   = $('#sct_gruppe').val();
+            if (group == "-") {alert("Bitte Gruppe auswählen "); return;}
+            
+            let tn      = $('#sct_tn').val();
+            if (tn == "-") {alert("Bitte Teilnehmer auswählen "); return;}
+
+            let date    = $('#inp_fach_date').val();
+            if (date == "") {alert("Bitte Rückgabe auswählen "); return;}
+            $.ajax({
+                type: "POST",
+                url: "{% url 'faecher:save_fach' %}",
+                data: {
+                    schrank: schrank,
+                    number: number,                    
+                    group: group,
+                    tn: tn,
+                    date: date,
+
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    $('#btn_fach_'+number).removeClass('btn-secondary');
+                    $('#btn_fach_'+number).addClass('btn-primary');
+                    $('#btn_fach_'+number).html(number+'<br />bel.');
+                    $('#btn_fach_'+number).prop('title', data['fach'])
+                },
+                error: function(objRequest) {
+                    // $('#sct_tn').html("")
+                },
+            });                
+        }
     </script>   
 {% endblock content_fluid %}
 
