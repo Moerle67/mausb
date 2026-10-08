@@ -1,4 +1,3 @@
-
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render 
 from django.http import HttpResponse
 
@@ -37,7 +36,7 @@ def start(request, schrank = -1):
                 spalten.append((number, 0,))
             else:
                 # Fach belegt
-                spalten.append((number, 1, lst_fach[0].user))
+                spalten.append((number, 1, lst_fach[0].user, lst_fach[0].belegtbis))
         zeilen.append(spalten)
     content = {
         'schraenke'     : lst_schrank,
@@ -49,11 +48,21 @@ def start(request, schrank = -1):
     return render(request, "faecher/start.html", content)
 
 def save_fach(request):
-    schrank = request.POST['schrank']
-    number = request.POST['number']
-    tn = request.POST['tn']
+    schrank = int(request.POST['schrank'])
+    number = int(request.POST['number'])
+    tn = int(request.POST['tn'])
     date = datetime.datetime.strptime(request.POST['date'], "%Y-%m-%d")
 
+    ds_schrank = get_object_or_404(Schrank, id = schrank)
+    if number < ds_schrank.start or number > ds_schrank.start+ds_schrank.breite*ds_schrank.hoehe-1:
+        print(f"Falsche Fachnummer {number}")
+        answer = {
+            'msg': "Fachnummer gehört nicht zum Schrank",
+
+            'error': True,
+        }
+        return HttpResponse(json.dumps(answer), content_type="application/json")
+    
     ausbilder = get_object_or_404(Ausbilder, user=request.user.id)
 
     # Evtuell vorhandenes Fach löschen
@@ -73,7 +82,7 @@ def save_fach(request):
     )    
     ds_fach.save()
     answer = {
-        'fach': ds_fach.user.__str__(),
+        'fach': ds_fach.user.__str__()+' - ' + ds_fach.belegtbis.strftime("%d. %B %Y"),
 
         'error': False,
     }
@@ -135,6 +144,4 @@ def get_slct_gruppe(gruppeid):
     for gruppe in lst_gr:
         str_slc = "selected " if gruppe.id == gruppeid else ""
         str_gr += f"<option value='{gruppe.id}' {str_slc}>{gruppe}</option>"
-    # str_tn += "</select>"
     return str_gr
-

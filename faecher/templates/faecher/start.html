@@ -29,8 +29,8 @@
                         <button type="button"
                         id = 'btn_fach_{{fach.0}}' 
                         onclick = "onc_btn_fach({{fach.0}})" 
-                        {% if fach.1 == 1 %}title="{{fach.2}}"{% endif %} 
-                        class="btn btn-{% if fach.1 == 0 %}secondary{%else%}primary{% endif %} "
+                        {% if fach.1 == 1 %}title="{{fach.2}} - {{fach.3}}"{% endif %} 
+                        class="btn btn-{% if fach.1 == 0 %}secondary{%else%}primary{% endif %} btn_fach"
                         >{{fach.0}}<br />
                         {% if fach.1 == 0 %}frei{%else%}bel.{% endif %}</button>
                     </div>
@@ -42,7 +42,13 @@
         <div class="col-2">
             <div class="mb-3 opacity-75 ">
                 <label for="inp_fach_number" class="form-label">Fachnummer</label>
-                <input type="number" class="form-control" id="inp_fach_number" aria-describedby="emailHelp">
+                <input 
+                    type="number" 
+                    class="form-control" 
+                    id="inp_fach_number" 
+                    aria-describedby="emailHelp" 
+                    onchange = "onc_number(this)" 
+                >
             </div>
             <div class="opacity-75 mb-3">
                 <label for="sct_gruppe" class="form-label">Gruppe auswählen</label>
@@ -93,12 +99,14 @@
 
         function onc_btn_fach(fach) {
             // Daten holen
+            $('.btn_fach').removeClass('border border-danger shadow-lg border-4');
+            $('#btn_fach_'+fach).addClass('border border-danger shadow-lg border-4');
             $.ajax({
                 type: "POST",
                 url: "{% url 'faecher:get_fach' %}",
                 data: {
                     fach: fach,
-
+                    
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
@@ -107,12 +115,14 @@
                     $('#inp_fach_date').val(data['datern'])
                 },
                 error: function(objRequest) {
+                    console.log("Es ist ein Fehler aufgetreten.");
+                    console.log(objRequest.status, objRequest.statusText);
                     // $('#sct_tn').html("")
                 },
             });             
             $('#inp_fach_number').val(fach);
         }
-
+        
         function onc_sct_group(element){
             let group = element.value;
             if (group != '-') {
@@ -121,7 +131,7 @@
                     url: "{% url 'faecher:get_group' %}",
                     data: {
                         group: group,
-
+                        
                         csrfmiddlewaretoken: '{{ csrf_token }}'
                     },
                     success: function(data) {
@@ -133,6 +143,11 @@
                 });               
             }
         }
+
+        function onc_number(element) {
+            $('.btn_fach').removeClass('border border-danger shadow-lg border-4');
+            $('#btn_fach_'+element.value).addClass('border border-danger shadow-lg border-4');
+        }   
 
         function oncl_btn_save() {
             let schrank  = $('#sct_schrank').val()
@@ -161,6 +176,10 @@
                     csrfmiddlewaretoken: '{{ csrf_token }}'
                 },
                 success: function(data) {
+                    if (data['error']) {
+                        alert(data['msg']);
+                        return;
+                    }
                     $('#btn_fach_'+number).removeClass('btn-secondary');
                     $('#btn_fach_'+number).addClass('btn-primary');
                     $('#btn_fach_'+number).html(number+'<br />bel.');
