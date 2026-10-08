@@ -1,0 +1,237 @@
+{% extends "stammdaten/base.html" %}
+
+{% comment %} Auswahl Gruppe {% endcomment %}
+
+{% block content_fluid %}
+    <div class="row">
+        <div class = "col-10 row">
+            <div class="col-3 opacity-50 mb-3">
+                <label for="sct_schrank" class="form-label">Schrank auswählen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "sct_schrank"
+                    onchange    = "onc_sct_schrank(this)"
+                 >
+                 {% comment %} Auswahl Schrank {% endcomment %}
+                 {% for schrank in schraenke %}
+                    <option 
+                        value="{{schrank.id}}" 
+                        {% if schrank_akt.id == schrank.id %}selected {% endif %}
+                    >{{schrank}}</option>
+                {% endfor %}
+                </select>
+            </div>
+            {% comment %} Feld für Fächer {% endcomment %}
+            {% for zeile in zeilen %}
+                <div class="row">
+                {% for fach in zeile %}
+                    <div class="col d-grid gap-2 mb-2 mx-0">
+                        <button type="button"
+                        id = 'btn_fach_{{fach.0}}' 
+                        onclick = "onc_btn_fach({{fach.0}})" 
+                        {% if fach.1 == 1 %}title="{{fach.2}} - {{fach.3}}"{% endif %} 
+                        class="btn btn-{% if fach.1 == 0 %}secondary{%else%}primary{% endif %} btn_fach"
+                        >{{fach.0}}<br />
+                        {% if fach.1 == 0 %}frei{%else%}bel.{% endif %}</button>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+        {% comment %} Formular Fach {% endcomment %}
+        <div class="col-2">
+            <div class="mb-3 opacity-75 ">
+                <label for="inp_fach_number" class="form-label">Fachnummer</label>
+                <input 
+                    type="number" 
+                    class="form-control" 
+                    id="inp_fach_number" 
+                    aria-describedby="emailHelp" 
+                    onchange = "onc_number(this)" 
+                >
+            </div>
+            <div class="opacity-75 mb-3">
+                <label for="sct_gruppe" class="form-label">Gruppe auswählen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "sct_gruppe"
+                    onchange    = "onc_sct_group(this)"
+                 >
+                 <option value="-">-</option>
+                 {% for gruppe in gruppen %}
+                    <option 
+                        value="{{gruppe.id}}" 
+                    >{{gruppe}}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div class="opacity-75 mb-3">
+                <label for="sct_tn" class="form-label">Teilnehmer auswählen</label>
+                <select 
+                    class       = "form-select" 
+                    id          = "sct_tn"
+                    onchange    = "onchange_sct_tn(this)"
+                 >
+                 <option value="-">-</option>
+                 {% for tn in teilnehmer %}
+                    <option 
+                        value="{{tn.id}}" 
+                    >{{tn}}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3 opacity-75 ">
+                <label for="inp_fach_date" class="form-label">Rückgabe</label>
+                <input type="date" class="form-control" id="inp_fach_date" aria-describedby="emailHelp">
+            </div>
+            <div class="mb-3 opacity-75 raw">
+                <button type="button" class="btn btn-outline-success col" onclick="oncl_btn_save()">speichern</button>
+                <button type="button" class="btn btn-outline-danger col" onclick="oncl_btn_del()">zurückgeben</button>
+            </div>
+          
+        </div>    
+    </div>
+    <script>
+        function onc_sct_schrank(element) {
+            url = "/faecher/"+element.value;
+            window.open(url, "_self");
+        }
+
+        function onc_btn_fach(fach) {
+            // Daten holen
+            $('.btn_fach').removeClass('border border-danger shadow-lg border-4');
+            $('#btn_fach_'+fach).addClass('border border-danger shadow-lg border-4');
+            $.ajax({
+                type: "POST",
+                url: "{% url 'faecher:get_fach' %}",
+                data: {
+                    fach: fach,
+                    
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    $('#sct_tn').html(data['lst_tn'])
+                    $('#sct_gruppe').html(data['lst_gr'])
+                    $('#inp_fach_date').val(data['datern'])
+                },
+                error: function(objRequest) {
+                    console.log("Es ist ein Fehler aufgetreten.");
+                    console.log(objRequest.status, objRequest.statusText);
+                    // $('#sct_tn').html("")
+                },
+            });             
+            $('#inp_fach_number').val(fach);
+        }
+        
+        function onc_sct_group(element){
+            let group = element.value;
+            if (group != '-') {
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'faecher:get_group' %}",
+                    data: {
+                        group: group,
+                        
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(data) {
+                        $('#sct_tn').html(data['slc_tn'])
+                    },
+                    error: function(objRequest) {
+                        // $('#sct_tn').html("")
+                    },
+                });               
+            }
+        }
+
+        function onc_number(element) {
+            $('.btn_fach').removeClass('border border-danger shadow-lg border-4');
+            $('#btn_fach_'+element.value).addClass('border border-danger shadow-lg border-4');
+        }   
+
+        function oncl_btn_save() {
+            let schrank  = $('#sct_schrank').val()
+            
+            let number   = $('#inp_fach_number').val();
+            if (number == "") {alert("Bitte Fachnummer eingeben"); return;}
+
+            let group   = $('#sct_gruppe').val();
+            if (group == "-") {alert("Bitte Gruppe auswählen "); return;}
+            
+            let tn      = $('#sct_tn').val();
+            if (tn == "-") {alert("Bitte Teilnehmer auswählen "); return;}
+
+            let date    = $('#inp_fach_date').val();
+            if (date == "") {alert("Bitte Rückgabe auswählen "); return;}
+            $.ajax({
+                type: "POST",
+                url: "{% url 'faecher:save_fach' %}",
+                data: {
+                    schrank: schrank,
+                    number: number,                    
+                    group: group,
+                    tn: tn,
+                    date: date,
+
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    if (data['error']) {
+                        alert(data['msg']);
+                        return;
+                    }
+                    $('#btn_fach_'+number).removeClass('btn-secondary');
+                    $('#btn_fach_'+number).addClass('btn-primary');
+                    $('#btn_fach_'+number).html(number+'<br />bel.');
+                    $('#btn_fach_'+number).prop('title', data['fach'])
+                },
+                error: function(objRequest) {
+                    // $('#sct_tn').html("")
+                },
+            });                
+        }
+
+        function oncl_btn_del() {
+            fach = $('#inp_fach_number').val();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'faecher:get_fach' %}",
+                data: {
+                    fach: fach,
+                    
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    if (confirm('Möchten Sie das Fach\n' + data['str_fach'] + '\nFreigeben?')) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'faecher:del_fach' %}",
+                            data: {
+                                fach: fach,
+                                
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function(data) {
+                                $('#btn_fach_'+fach).removeClass('btn-primary');
+                                $('#btn_fach_'+fach).addClass('btn-secondary');
+                                $('#btn_fach_'+fach).html(fach+'<br />frei');
+                                $('#btn_fach_'+fach).prop('title', "")                                
+                            },
+                            error: function(objRequest) {
+                                console.log("Es ist ein Fehler aufgetreten.");
+                                console.log(objRequest.status, objRequest.statusText);
+                                // $('#sct_tn').html("")
+                            },
+                        });                         
+                    }       
+                },
+                error: function(objRequest) {
+                    console.log("Es ist ein Fehler aufgetreten.");
+                    console.log(objRequest.status, objRequest.statusText);
+                    // $('#sct_tn').html("")
+                },
+            }); 
+        }
+    </script>   
+{% endblock content_fluid %}
+
