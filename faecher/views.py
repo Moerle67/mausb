@@ -1,4 +1,5 @@
-from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render 
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 
 from .models import *
@@ -9,6 +10,8 @@ import json, datetime
 
 # Create your views here.
 
+
+@permission_required("faecher.view_fach")
 def start(request, schrank = -1):
     lst_schrank = Schrank.objects.all()
     if schrank == -1:

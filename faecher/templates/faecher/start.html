@@ -47,7 +47,7 @@
                     class="form-control" 
                     id="inp_fach_number" 
                     aria-describedby="emailHelp" 
-                    onchange = "onc_number(this)" 
+                    onchange = "onc_number(this.value)" 
                 >
             </div>
             <div class="opacity-75 mb-3">
@@ -92,6 +92,30 @@
         </div>    
     </div>
     <script>
+        window.addEventListener('keydown', (event) => {
+        let number = $('#inp_fach_number').val();
+        if (number == "") {
+            return;
+        }
+        console.log("number: "+number);
+            switch (event.key) {
+                case 'ArrowUp':
+                // number += 14;
+                break;
+                case 'ArrowDown':
+                // number -= 14;
+                break;
+                case 'ArrowLeft':
+                number--;
+                break;
+                case 'ArrowRight':
+                number++;
+                break;
+            }
+        $('#inp_fach_number').val(number);
+        onc_number(number);
+        onc_btn_fach(number);
+        });
         function onc_sct_schrank(element) {
             url = "/faecher/"+element.value;
             window.open(url, "_self");
@@ -117,6 +141,7 @@
                 error: function(objRequest) {
                     console.log("Es ist ein Fehler aufgetreten.");
                     console.log(objRequest.status, objRequest.statusText);
+                    // $('#sct_tn').find('option:selected').remove();
                     // $('#sct_tn').html("")
                 },
             });             
@@ -144,9 +169,10 @@
             }
         }
 
-        function onc_number(element) {
+        function onc_number(number) {
             $('.btn_fach').removeClass('border border-danger shadow-lg border-4');
-            $('#btn_fach_'+element.value).addClass('border border-danger shadow-lg border-4');
+            $('#btn_fach_'+number).addClass('border border-danger shadow-lg border-4');
+            // $('#sct_tn').find('option:selected').remove();
         }   
 
         function oncl_btn_save() {
