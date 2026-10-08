@@ -11,5 +11,6 @@ urlpatterns = [
     path('get_fach', get_fach, name='get_fach'),
     path('get_group', get_group, name='get_group'),
     path('save_fach', save_fach, name='save_fach'),
+    path('del_fach', del_fach, name='del_fach'),
 
 ]

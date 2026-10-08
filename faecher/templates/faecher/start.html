@@ -86,7 +86,7 @@
             </div>
             <div class="mb-3 opacity-75 raw">
                 <button type="button" class="btn btn-outline-success col" onclick="oncl_btn_save()">speichern</button>
-                <button type="button" class="btn btn-outline-danger col">zurückgeben</button>
+                <button type="button" class="btn btn-outline-danger col" onclick="oncl_btn_del()">zurückgeben</button>
             </div>
           
         </div>    
@@ -189,6 +189,48 @@
                     // $('#sct_tn').html("")
                 },
             });                
+        }
+
+        function oncl_btn_del() {
+            fach = $('#inp_fach_number').val();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'faecher:get_fach' %}",
+                data: {
+                    fach: fach,
+                    
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(data) {
+                    if (confirm('Möchten Sie das Fach\n' + data['str_fach'] + '\nFreigeben?')) {
+                        $.ajax({
+                            type: "POST",
+                            url: "{% url 'faecher:del_fach' %}",
+                            data: {
+                                fach: fach,
+                                
+                                csrfmiddlewaretoken: '{{ csrf_token }}'
+                            },
+                            success: function(data) {
+                                $('#btn_fach_'+fach).removeClass('btn-primary');
+                                $('#btn_fach_'+fach).addClass('btn-secondary');
+                                $('#btn_fach_'+fach).html(fach+'<br />frei');
+                                $('#btn_fach_'+fach).prop('title', "")                                
+                            },
+                            error: function(objRequest) {
+                                console.log("Es ist ein Fehler aufgetreten.");
+                                console.log(objRequest.status, objRequest.statusText);
+                                // $('#sct_tn').html("")
+                            },
+                        });                         
+                    }       
+                },
+                error: function(objRequest) {
+                    console.log("Es ist ein Fehler aufgetreten.");
+                    console.log(objRequest.status, objRequest.statusText);
+                    // $('#sct_tn').html("")
+                },
+            }); 
         }
     </script>   
 {% endblock content_fluid %}

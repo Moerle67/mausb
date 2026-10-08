@@ -88,6 +88,16 @@ def save_fach(request):
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
+def del_fach(request):
+    fach = request.POST['fach']
+    ds_fach = get_object_or_404(Fach, number=fach)
+    ds_fach.delete()
+    
+    answer = {
+        'error': False,
+    }
+
+    return HttpResponse(json.dumps(answer), content_type="application/json")
 
 def get_user(gruppe):
     #####################
@@ -111,10 +121,11 @@ def get_fach(request):
     datertn = ds_fach.belegtbis 
 
     answer = {
-        'error': False,
-        'lst_tn' : str_tn,
-        'lst_gr' : str_gr,
-        'datern' : datertn.strftime("%Y-%m-%d"),
+        'error'     : False,
+        'lst_tn'    : str_tn,
+        'lst_gr'    : str_gr,
+        'datern'    : datertn.strftime("%Y-%m-%d"),
+        'str_fach'  : ds_fach.__str__()
     }
     return HttpResponse(json.dumps(answer), content_type="application/json")
 
