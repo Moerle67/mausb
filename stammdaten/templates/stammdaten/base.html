@@ -59,6 +59,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'task:start' %}">Aufgaben <span id="task" class="badge text-bg-danger"></span></a>
                         </li>
+                        {% endif %}{% if perms.faecher %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'faecher:start' %}">Schließfächer</a>
+                        </li>
                         {% endif %}
                     </ul>
                 </div>

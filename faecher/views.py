@@ -39,7 +39,23 @@ def start(request, schrank = -1):
                 spalten.append((number, 0,))
             else:
                 # Fach belegt
-                spalten.append((number, 1, lst_fach[0].user, lst_fach[0].belegtbis))
+                # Status (Zeitraum)
+                # primary - mehr als eine Woche
+                # warning - unter einer Woche
+                # danger - Abgelaufen
+                date_bis = lst_fach[0].belegtbis
+                heute = datetime.date.today()
+                date_diff = date_bis - heute
+                if date_diff.days > 7:
+                    # Länger als eine Woche
+                    status = "primary"
+                elif date_diff.days < 0:
+                    # Abgelaufen
+                    status = "danger"
+                else:
+                    # keine Woche mehr
+                    status = "warning"
+                spalten.append((number, 1, lst_fach[0].user, lst_fach[0].belegtbis, status))
         zeilen.append(spalten)
     content = {
         'schraenke'     : lst_schrank,
