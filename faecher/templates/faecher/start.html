@@ -30,7 +30,7 @@
                         id = 'btn_fach_{{fach.0}}' 
                         onclick = "onc_btn_fach({{fach.0}})" 
                         {% if fach.1 == 1 %}title="{{fach.2}} - {{fach.3}}"{% endif %} 
-                        class="btn btn-{% if fach.1 == 0 %}secondary{%else%}{{fach.4}}{% endif %} btn_fach"
+                        class="btn btn-{% if fach.1 == 0 %}secondary{%else%}{{fach.4}}{% endif %} btn_fach shadow"
                         >{{fach.0}}<br />
                         {% if fach.1 == 0 %}frei{%else%}bel.{% endif %}</button>
                     </div>
