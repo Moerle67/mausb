@@ -1,12 +1,15 @@
 from django.contrib import admin
-
-from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung, Raum, LaptopTN, AbwesendMA, Jourfixe
+from import_export import resources  
+from import_export.admin import ImportExportMixin
+from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnmerkung, Raum, LaptopTN, AbwesendMA, Jourfixe, TN_rios
 # Register your models here.
 
 admin.site.register(Standort)
 admin.site.register(Beruf)
 admin.site.register(Gruppe)
 admin.site.register(Raum)
+#admin.site.register(TN_rios)
+
 # admin.site.register(Teilnehmer)
 
 
@@ -42,3 +45,16 @@ class AbwesendMAAdmin(admin.ModelAdmin):
 class JourfixeAdmin(admin.ModelAdmin):
     list_filter = ['gruppe', 'date']
 
+class TN_rios_ressorce(resources.ModelResource):
+    class Meta:
+        model = TN_rios
+        fields = ('id', 'nachname', 'vorname', 'geburtstag', 'grundlage', 'zusatz','massnahme', 'start', 'ende')
+
+@admin.register(TN_rios)
+class TN_riosAdmin(ImportExportMixin, admin.ModelAdmin):
+    list_display = ('id', 'vorname', 'nachname', 'massnahme', 'start', 'ende', )
+    search_fields = ('nachname', 'vorname', 'massnahme',)
+    list_filter = ('massnahme', )
+    import_order = ('name', 'vorname', )
+    resource_classes = (TN_rios_ressorce, )
+    import_id_fields = ['id', 'nachname', 'vorname', 'geburtstag', 'grundlage', 'zusatz','massnahme', 'start', 'ende',]

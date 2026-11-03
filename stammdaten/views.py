@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 
 from task.models import Aufgabe
+from .models import *
 
 import json
 # Create your views here.
@@ -61,3 +62,55 @@ def task(request):
             'error': True,
         }
     return HttpResponse(json.dumps(answer), content_type="application/json")
+
+# Leilnehmer mit Liste abgleichen
+def abgleich(request):
+    lst_tn_neu = []
+    lst_grp_neu = []
+
+    lst_tn_old = []
+
+    str_stg = "-S-"
+    lst_rios = TN_rios.objects.all()
+    ds_renningen = Team.objects.get(name="Renningen")
+    for tnr in lst_rios:
+        short_massnahme = tnr.massnahme.split(str_stg)[0]
+        # Beruf lesen
+        beruf = Beruf.objects.filter(short=short_massnahme)
+        if beruf:
+            # IT-ler
+            gruppe = "IT-S-"+tnr.massnahme.split(str_stg)[1]
+        else:
+            # Keine IT
+            gruppe = tnr.massnahme
+        ds_gruppe = Gruppe.objects.filter(name=gruppe)
+        if not ds_gruppe:
+            # Gruppe muss neu erstellt werden
+            ds_gruppe = Gruppe()
+            ds_gruppe.name=gruppe
+            ds_gruppe.short=gruppe
+            ds_gruppe.team = ds_renningen
+            ds_gruppe.save()
+            lst_grp_neu.append(ds_gruppe)
+        else:
+            ds_gruppe = ds_gruppe[0]
+        name = tnr.nachname+", "+tnr.vorname
+        # Nach TN Nummer suchen
+        ds_tn = Teilnehmer.objects.filter(tn_number=tnr.id)
+        if not ds_tn:
+            # Alternativ nach Namen suchen
+            ds_tn = Teilnehmer.objects.filter(name=name)
+            if ds_tn:
+               ds_tn[0].tn_number=tnr.id
+               ds_tn[0].save()
+            # Auch nicht, neu erfasssen 
+            ds_tn = Teilnehmer()
+            ds_tn.name = name
+            ds_tn.group = ds_gruppe
+            ds_tn.tn_number = tnr.id
+            ds_tn.save()
+            lst_tn_neu.append(ds_tn)
+
+
+    print("Neue Teilnehmer: ",lst_tn_neu)
+    print("Neue Gruppe:", lst_grp_neu)

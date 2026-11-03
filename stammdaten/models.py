@@ -61,7 +61,7 @@ class Standort(models.Model):
 class Team(models.Model):
     name = models.CharField(("Bezeichnung"), max_length=50)
     short = models.CharField(("Kürzel"), max_length=10)
-    aubi = models.ManyToManyField(Ausbilder, verbose_name=("Ausbilder"))
+    aubi = models.ManyToManyField(Ausbilder, verbose_name=("Ausbilder"), blank=True)
     standort = models.ForeignKey(Standort, verbose_name=("Standort"), on_delete=models.CASCADE)
     head = models.ForeignKey(Ausbilder, verbose_name=("Teamleiter"), related_name="Teamleiter", on_delete=models.RESTRICT, null=True, blank=True)
     activ = models.BooleanField(("aktiv"), default=True)
@@ -78,7 +78,7 @@ class Team(models.Model):
 
 class Beruf(models.Model):
     short = models.CharField(("Kürzel"), max_length=10)
-    name = models.CharField(("Bezeichnung"), max_length=50)
+    name = models.CharField(("Bezeichnung"), max_length=50, null=True, blank=True)
     activ = models.BooleanField(("Aktiv"), default=True)
 
     class Meta:
@@ -116,16 +116,21 @@ class Teilnehmer(models.Model):
     name = models.CharField("Name", max_length=50)
     profession = models.ForeignKey(Beruf, verbose_name=("Beruf"), on_delete=models.RESTRICT, blank=True, null=True)
     group = models.ForeignKey(Gruppe, verbose_name=("Gruppe"), on_delete=models.CASCADE)
+    tn_number = models.CharField("TN Number", max_length=15, default="unbekannt")
     picture = models.ImageField(("Bild"), upload_to="stammdaten/tnimg", height_field=None, width_field=None, max_length=None, null=True, blank=True)
     activ = models.BooleanField(("aktiv"), default=True)
 
     class Meta:
         verbose_name = "Teilnehmer"
         verbose_name_plural = "Teilnehmer"
-        ordering = ["name"]
+        ordering = ["group", "name"]
 
     def __str__(self):
-        return f"{self.name} ({self.profession.short}/{self.group.short})"
+        if self.profession:
+            prof = self.profession
+        else:
+            prof = "-"
+        return f"{self.name} ({prof}/{self.group.short})"
 
     def get_absolute_url(self):
         return reverse("Teilnehmer_detail", kwargs={"pk": self.pk})
@@ -216,3 +221,26 @@ class Jourfixe(models.Model):
 
     def get_absolute_url(self):
         return reverse("Jourfixe_detail", kwargs={"pk": self.pk})
+
+class TN_rios(models.Model):
+    id = models.CharField("Teilnehmer Nummer", max_length=50, primary_key=True)
+    nachname = models.CharField("Name", max_length=50)
+    vorname = models.CharField("Vorname", max_length=50)
+    geburtstag = models.CharField("Geburtstag", max_length=50)
+    grundlage = models.CharField("Grundlage", max_length=50)
+    zusatz = models.CharField("zusatz", max_length=50)
+    massnahme = models.CharField("Maßnahme", max_length=50)
+    start = models.CharField("Start", max_length=50)
+    ende = models.CharField("Ende", max_length=50)
+
+    # https://appliku.com/post/csv-and-excel-import-and-export-in-django-admin-site/
+
+    class Meta:
+        verbose_name = "Teilnehmer RIOS"
+        verbose_name_plural = "Teilnehmer RIOS"
+
+    def __str__(self):
+        return self.nachname
+
+    def get_absolute_url(self):
+        return reverse("tn_list_detail", kwargs={"pk": self.pk})
