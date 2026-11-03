@@ -29,7 +29,7 @@ urlpatterns = [
     path('task/', include('task.urls')),                                # Aufgaben
     path('fa/', include('frageantwort.urls')),                          # Mitarbeit
     path('lrn/', include('learn.urls')),                                # Übungen
-    path('faecher/', include('faecher.urls')),                           # Schließfächer
+    path('faecher/', include('faecher.urls')),                          # Schließfächer
 
     path('admin/', admin.site.urls, name="admin"),
     path('', include('start.urls')),

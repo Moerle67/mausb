@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'import_export',                                # Import - Export
+
     'stammdaten.apps.StammdatenConfig',             # Stammdaten
     'anwesenheit.apps.AnwesenheitConfig',           # Anwesenheit der TN 
     'start.apps.StartConfig',                       # Startbildschirm
@@ -126,6 +128,7 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = 'static/'
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
