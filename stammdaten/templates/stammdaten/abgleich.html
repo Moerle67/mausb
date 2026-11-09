@@ -1,0 +1,23 @@
+{% extends "stammdaten/base.html" %}
+
+{% block content %}
+<h1>Abgleich Teilnehmerdaten</h1>
+<h2>Neue Teilnehmer<h2>
+<ol>    
+{% for tn in tn_new %}
+    <li>{{tn}}</li>
+{% endfor %}
+</ol>
+<h2>Neue Gruppen<h2>
+<ol>    
+{% for group in grp_new %}
+    <li>{{group}}</li>
+{% endfor %}
+</ol>
+<h2>Fehlende Teilnehmer<h2>
+<ol>    
+{% for tn in tn_old %}
+    <li><a href="/admin/stammdaten/teilnehmer/{{tn.id}}/change/" target="_blank">{{tn}}</a></li>
+{% endfor %}
+</ol>
+{% endblock content %}
