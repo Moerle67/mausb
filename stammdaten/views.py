@@ -111,6 +111,18 @@ def abgleich(request):
             ds_tn.save()
             lst_tn_neu.append(ds_tn)
 
-
-    print("Neue Teilnehmer: ",lst_tn_neu)
-    print("Neue Gruppe:", lst_grp_neu)
+    # Nach fehlenden Teilnehmern suchen
+    lst_tn = Teilnehmer.objects.all()
+    for tn in lst_tn:
+        ds_tn_rios = TN_rios.objects.filter(id = tn.tn_number)
+        if len(ds_tn_rios) == 0:
+            lst_tn_old.append(tn)
+    # print("Neue Teilnehmer: ",lst_tn_neu)
+    # print("Neue Gruppe: ", lst_grp_neu)
+    # print("Fehlende Teilnehmer: ", lst_tn_old)
+    content = {
+        'tn_new': lst_tn_neu,
+        'grp_new': lst_grp_neu,
+        'tn_old': lst_tn_old,
+    }
+    return render(request, "stammdaten/abgleich.html", content)
