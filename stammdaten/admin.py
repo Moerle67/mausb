@@ -6,12 +6,17 @@ from .models import Ausbilder, Standort, Team, Beruf, Gruppe, Teilnehmer, TNAnme
 
 admin.site.register(Standort)
 admin.site.register(Beruf)
-admin.site.register(Gruppe)
+# admin.site.register(Gruppe)
 admin.site.register(Raum)
 #admin.site.register(TN_rios)
 
 # admin.site.register(Teilnehmer)
 
+
+@admin.register(Gruppe)
+class GruppAdmin(admin.ModelAdmin):
+     list_display = ("name", "get_count",)
+     list_filter = ['team', 'activ',]
 
 @admin.register(Ausbilder)
 class AusbilderAdmin(admin.ModelAdmin):

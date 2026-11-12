@@ -107,10 +107,15 @@ class Gruppe(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.get_count})"
 
     def get_absolute_url(self):
         return reverse("Gruppe_detail", kwargs={"pk": self.pk})
+
+    
+    @property
+    def get_count(self):
+        return len(Teilnehmer.objects.filter(group = self)); 
 
 class Teilnehmer(models.Model):
     name = models.CharField("Name", max_length=50)
