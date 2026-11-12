@@ -44,7 +44,7 @@ def start(request, team=None, date=None):
     nm_ds = Daytime.objects.get(short="nm")
     daytimes = (vm_ds, nm_ds)
 
-    # Listen bschäfftigter Mitarbeiter
+    # Listen beschäfftigter Mitarbeiter
     besch_ma = []
     # Montag bestimmen
     date_monday = date - datetime.timedelta(days=date.weekday())
@@ -53,13 +53,14 @@ def start(request, team=None, date=None):
     days_date = []                      # Wochentage als Date Objekt
     abwesend_lst =[[], [], [], [], []]  # Abwesenheit nach Wochentagen
     wochentage = ("Mo", "Di", "Mi", "Do", "Fr")
+    lst_ma = team.aubi.all()
     for day in range(5):
         date = date_monday + datetime.timedelta(days=day)
         days.append((date.strftime(date_format_str), wochentage[day]))
         days_date.append(date)
-        aubi_anwesend_lst = AbwesendMA.objects.filter(date=date)    # Abwesenheit nach Datum
+        aubi_anwesend_lst = AbwesendMA.objects.filter(date=date,aubi__in = lst_ma)    # Abwesenheit nach Datum
         abwesend_lst[day] = list(aubi_anwesend_lst)
-        aubi_anwesend_lst = list(AbwesendMA.objects.filter(day=day))
+        aubi_anwesend_lst = list(AbwesendMA.objects.filter(day=day, aubi__in = lst_ma))
         for element in aubi_anwesend_lst:                           # Regelmäßige Abwesenheit
             abwesend_lst[day].append(element)
                           
