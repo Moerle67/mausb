@@ -103,13 +103,14 @@ def abgleich(request):
             if ds_tn:
                ds_tn[0].tn_number=tnr.id
                ds_tn[0].save()
+            else:
             # Auch nicht, neu erfasssen 
-            ds_tn = Teilnehmer()
-            ds_tn.name = name
-            ds_tn.group = ds_gruppe
-            ds_tn.tn_number = tnr.id
-            ds_tn.save()
-            lst_tn_neu.append(ds_tn)
+                ds_tn = Teilnehmer()
+                ds_tn.name = name
+                ds_tn.group = ds_gruppe
+                ds_tn.tn_number = tnr.id
+                ds_tn.save()
+                lst_tn_neu.append(ds_tn)
 
     # Nach fehlenden Teilnehmern suchen
     lst_tn = Teilnehmer.objects.all()
