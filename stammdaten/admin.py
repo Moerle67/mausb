@@ -59,7 +59,7 @@ class TN_rios_ressorce(resources.ModelResource):
 class TN_riosAdmin(ImportExportMixin, admin.ModelAdmin):
     list_display = ('id', 'vorname', 'nachname', 'massnahme', 'start', 'ende', )
     search_fields = ('nachname', 'vorname', 'massnahme',)
-    list_filter = ('massnahme', )
+    list_filter = ('massnahme', 'start', 'ende', )
     import_order = ('name', 'vorname', )
     resource_classes = (TN_rios_ressorce, )
     import_id_fields = ['id', 'nachname', 'vorname', 'geburtstag', 'grundlage', 'zusatz','massnahme', 'start', 'ende',]
