@@ -6,7 +6,9 @@ cffi==2.1.0
 charset-normalizer==3.4.5
 cryptography==49.0.0
 cssselect2==0.9.0
+diff-match-patch==20241021
 Django==6.0.1
+django-import-export==4.4.4
 html5lib==1.1
 idna==3.18
 lxml==6.1.1
@@ -23,6 +25,7 @@ requests==2.34.2
 six==1.17.0
 sqlparse==0.5.5
 svglib==2.0.2
+tablib==3.10.0
 tinycss2==1.5.1
 tzdata==2025.3
 tzlocal==5.4.4
