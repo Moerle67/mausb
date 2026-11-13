@@ -7,7 +7,7 @@ urlpatterns = [
     path('', start, name='start'),
     path('task', task, name='task'),
 
-    path('abgleich', abgleich, name='chk_teilnehmer'),
+    path('abgleich', abgleich, name='abgleich'),
 
     path('login', user_login, name="login"),                                                                                  # Login
     path('logout', user_logout, name="logout"), 

@@ -36,33 +36,36 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if user.is_staff %}
                         <li class="nav-item ">
-                            <a class="nav-link text-danger" aria-current="page" href="/admin" target="__blank">Admin</a>
+                            <a class="nav-link text-danger" aria-current="page" href="/admin" target="__blank" title="Admin-Bereich">Admin</a>
                         </li>
-                        {% if perms.ausbildungsplan %}
+                        {% endif %}{% if perms.ausbildungsplan %}
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{% url 'ausbildungsplan:start' %}">Ausbildungsplan</a>
+                            <a class="nav-link" aria-current="page" href="{% url 'ausbildungsplan:start' %}" title="Stundenplan für die Ausbildung">Ausbildungsplan</a>
                         </li>
                         {% endif %} {% if perms.lehrplan %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'inh:start' %}">Inhalte</a>
+                            <a class="nav-link" href="{% url 'inh:start' %}" title="Ausbildungsinhalte und Rahmenlehrplan">Inhalte</a>
                         </li>
                         {% endif %} {% if perms.anwesenheit %}                                
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'anw:start' %}">Anwesenheit</a>
+                            <a class="nav-link" href="{% url 'anw:start' %}" title="Anwesenheit der Teilnehmer während der Ausbildung">Anwesenheit</a>
                         </li>
                         {% endif %} {% if perms.klausur %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'klausur:start' %}">Klausur</a>
+                            <a class="nav-link" href="{% url 'klausur:start' %}" title="Kurzklausuren verwalten">Klausur</a>
                         </li>
                         {% endif %}{% if perms.task %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'task:start' %}">Aufgaben <span id="task" class="badge text-bg-danger"></span></a>
+                            <a class="nav-link" href="{% url 'task:start' %}"  title="Kanban für Aufgaben">Aufgaben <span id="task" class="badge text-bg-danger"></span></a>
                         </li>
                         {% endif %}{% if perms.faecher %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'faecher:start' %}">Schließfächer</a>
+                            <a class="nav-link" href="{% url 'faecher:start' %}"  title="Schließfachverwaltung in Renningen">Schließfächer</a>
                         </li>
+                        {% endif %}{% if perms.stammdaten %}
+                            <a class="nav-link" href="{% url 'stammdaten:abgleich' %}" title="Teilnehmerdaten mit RIOS-Daten abgleichen">Abgleich</a>
                         {% endif %}
                     </ul>
                 </div>
